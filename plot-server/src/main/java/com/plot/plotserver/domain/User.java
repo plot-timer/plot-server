@@ -2,10 +2,7 @@ package com.plot.plotserver.domain;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,26 +11,26 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Setter
-@Table(name = "user")
+@Table(name = "users")
 public class User {
 
     @Id
-    @Column(name = "id", nullable = false, columnDefinition = "bigint")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email", nullable = false, length = 40, columnDefinition = "varchar")
+    @Column(name = "email", nullable = false, columnDefinition = "varchar (36)")
     private String email;
 
-    @Column(name = "nickname", nullable = false, length = 16, columnDefinition = "varchar")
+    @Column(name = "nickname", nullable = false, columnDefinition = "varchar (16)")
     private String nickname;
 
-    @Column(name = "password", nullable = true, length = 36, columnDefinition = "varchar")
+    @Column(name = "password", nullable = true, columnDefinition = "varchar (36)")
     private String password;
 
-    @Column(name = "gender", nullable = true, columnDefinition = "bit")
+    @Column(name = "gender", nullable = true, columnDefinition = "bit (1)")
     private boolean gender;
 
-    @Column(name = "profile_birth", nullable = true, length = 16, columnDefinition = "varchar")
+    @Column(name = "profile_birth", nullable = true, columnDefinition = "varchar (16)")
     private String profileBirth;
 
     @Column(name = "profile_image_path", nullable = true, columnDefinition = "text")
