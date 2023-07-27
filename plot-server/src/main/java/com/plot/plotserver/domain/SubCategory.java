@@ -16,9 +16,6 @@ public class SubCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "tags", nullable = true, columnDefinition = "text")
-    private String tags;
-
     @Column(name = "name", nullable = false, columnDefinition = "varchar (36)")
     private String name;
 
@@ -33,7 +30,4 @@ public class SubCategory {
 
     @Column(name = "main_category_id", nullable = false, columnDefinition = "bigint")
     private Long mainCategoryId;
-
-    @Column(name = "main_category_name", nullable = false, columnDefinition = "varchar (36)")
-    private Long mainCategoryName;
 }
