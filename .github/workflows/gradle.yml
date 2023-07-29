@@ -53,11 +53,10 @@ jobs:
       shell: bash
       
     ## gradle build
-  
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
     - name: Build with Gradle
-      run:  |
-          ./gradlew wrapper 
-          ./gradlew clean build --exclude-task test
+      run:  ./gradlew clean build --exclude-task test
       
    ## docker build & push to develop
     - name: Docker build & push to dev
