@@ -64,6 +64,7 @@ jobs:
       if: contains(github.ref, 'main')
       run: |
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        cd plot-server
         docker build -t ${{ secrets.DOCKER_REPO }}/plot-dev .
         
         docker push ${{ secrets.DOCKER_REPO }}/plot-dev
