@@ -82,6 +82,6 @@ jobs:
         #key : ${{ secrets.PRIVATE_KEY }}
         scripts: |
             sudo docker rm -f $(docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKER_REPO }}/plot-dev
+            sudo docker pull ${{ secrets.DOCKER_REPO }}:plot-server
             docker-compose up -d
             docker image prune -f
