@@ -53,11 +53,11 @@ jobs:
       shell: bash
       
     ## gradle build
-    - name: Setup Gradle
-      uses: gradle/gradle-build-action@v2
-      
+  
     - name: Build with Gradle
-      run: ./gradlew clean build --exclude-task test
+      run:  |
+          ./gradlew wrapper 
+          ./gradlew clean build --exclude-task test
       
    ## docker build & push to develop
     - name: Docker build & push to dev
