@@ -54,7 +54,9 @@ jobs:
       
     ## gradle build
     - name: Build with Gradle
-      run:  ./gradlew clean build -x test
+      run: |
+        cd plot-server
+        ./gradlew clean build -x test
       shell: bash
       
    ## docker build & push to develop
