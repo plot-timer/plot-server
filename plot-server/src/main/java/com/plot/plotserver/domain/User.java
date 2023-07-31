@@ -2,9 +2,11 @@ package com.plot.plotserver.domain;
 
 import lombok.*;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -18,18 +20,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email", nullable = false, columnDefinition = "varchar (36)")
-    private String email;
+    @Column(name = "username", nullable = false, columnDefinition = "varchar (16)")
+    private String username;
 
-    @Comment("일반 로그인시 사용자가 직접 입력, 소셜 로그인시 해당 계정의 프로필 이름으로 설정됨 (추후에 변경 가능)")
-    @Column(name = "nickname", nullable = false, columnDefinition = "varchar (16)")
-    private String nickname;
-
-    @Column(name = "password", nullable = true, columnDefinition = "varchar (36)")
+    @Column(name = "password", nullable = true, columnDefinition = "text")
     private String password;
 
-    @Column(name = "gender", nullable = true, columnDefinition = "bit (1)")
-    private boolean gender;
+    @Column(name = "salt", nullable = true)
+    @Type(type = "uuid-char")
+    private UUID salt;
+
+    @Column(name = "roles", nullable = true, columnDefinition = "varchar(36)")
+    private String roles;
+
+    @Column(name = "profile_name", nullable = true, columnDefinition = "varchar(36)")
+    private String profileName;
 
     @Column(name = "profile_birth", nullable = true, columnDefinition = "varchar (16)")
     private String profileBirth;
@@ -43,7 +48,7 @@ public class User {
     @Column(name = "updated_at", nullable = true, columnDefinition = "datetime")
     private LocalDateTime updatedAt;
 
-    @Comment("소셜 로그인시 갱신됨 (네이버, 카카오, 구글 중 하나)")
-    @Column(name = "social_login", nullable = true, columnDefinition = "varchar(36)")
-    private String socialLogin;
+    //    @Comment("소셜 로그인시 갱신됨 (네이버, 카카오, 구글 중 하나)")
+    @Column(name = "provider", nullable = true, columnDefinition = "varchar(36)")
+    private String provider;
 }
