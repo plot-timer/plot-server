@@ -22,7 +22,7 @@ public class RefreshToken {
 
     private String refreshToken;
 
-    @Column(name = "name", nullable = false, columnDefinition = "datetime")
+    @Column(name = "created_at", nullable = false, columnDefinition = "datetime")
     private LocalDateTime createdAt;
 
     @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
