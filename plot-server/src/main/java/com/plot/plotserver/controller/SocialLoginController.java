@@ -53,8 +53,7 @@ public class SocialLoginController {
 
         ResponseCookie cookie = ResponseCookie.from("plot_token", accessToken)
                 .httpOnly(true)
-                .domain("localhost")
-                .sameSite("Strict")
+                .sameSite("Lax")
                 .path("/")
                 .maxAge(60 * 60 * 3) // 3시간
                 .build();

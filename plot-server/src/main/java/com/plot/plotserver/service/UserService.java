@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,26 +50,37 @@ public class UserService {
         return UserResponseDto.of(user);
     }
 
-    public boolean deleteOne(UserReqDto.DeleteUser req) throws Exception {
-        String username = SecurityContextHolderUtil.getUsername();
-        if(!req.getUsername().equals(username)){
-            throw new Exception("username 확인 요망");
+    public User findOne(Long id) throws Exception {
+        if(id==null) {
+            throw new IllegalArgumentException("parameter:[id] is null");
         }
+        Optional<User> findUser = userRepository.findById(id);
+        if(!findUser.isPresent()) {
+            throw new Exception("parameter:[id] is wrong");
+        }
+        return findUser.get();
+    }
+
+    public List<UserResponseDto> findAll() {
+        List<User> users = userRepository.findAll();
+        List<UserResponseDto> userResDtos = new ArrayList<>();
+        users.forEach(user->userResDtos.add(UserResponseDto.of(user)));
+
+        return userResDtos;
+    }
+    
+    public boolean deleteOne() throws Exception {
+        String username = SecurityContextHolderUtil.getUsername();
+
         Optional<User> findUser = userRepository.findByUsername(username);
         User user = findUser.get();
 
-        String password = user.getPassword();
-        String inputPassword = req.getPassword() + user.getSalt();
+        userRepository.delete(user);
+        Optional<RefreshToken> findRefreshToken = refreshTokenRepository.findByUserId(user.getId());
 
-        if(encoder.matches(inputPassword, password)){
-            userRepository.delete(user);
-            Optional<RefreshToken> findRefreshToken = refreshTokenRepository.findByUserId(user.getId());
-            if(findRefreshToken.isPresent()){
-                refreshTokenRepository.delete(findRefreshToken.get());
-            }
-            return true;
-        }else{
-            throw new Exception("password 확인 요망");
+        if(findRefreshToken.isPresent()){
+            refreshTokenRepository.delete(findRefreshToken.get());
         }
+        return true;
     }
 }
