@@ -18,9 +18,8 @@ public class CustomLogoutHandler implements LogoutSuccessHandler {
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
         Message message = new Message();
-        message.setMessage("success");
         message.setStatus(HttpStatus.OK);
-        message.setMemo("logout success");
+        message.setMessage("logout success");
 
         response.setStatus(message.getStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON.toString());

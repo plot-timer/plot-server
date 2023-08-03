@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plot.plotserver.domain.Message;
 import com.plot.plotserver.domain.RefreshToken;
 import com.plot.plotserver.domain.User;
+import com.plot.plotserver.exception.user.WrongLoginException;
 import com.plot.plotserver.repository.RefreshTokenRepository;
 import com.plot.plotserver.util.JwtUtil;
 import org.springframework.http.HttpHeaders;
@@ -41,7 +42,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
+            throws WrongLoginException {
 
         try {
             // form으로 넘어온 값으로 user 객체를 생성
@@ -52,7 +53,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             // AuthenticationManager에 인증 위임
             return getAuthenticationManager().authenticate(userToken);
         } catch (IOException e) {
-            throw new AuthenticationServiceException("아이디와 비밀번호를 올바르게 입력해주세요.");
+            throw new WrongLoginException("아이디와 비밀번호를 올바르게 입력해주세요.");
         }
     }
 
@@ -102,8 +103,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 로그인 성공 메세지
         Message message = new Message();
         message.setStatus(HttpStatus.OK);
-        message.setMessage("success");
-        message.setMemo("login_success");
+        message.setMessage("login_success");
 
         this.createResponseMessage(response, message, HttpStatus.OK);
     }
@@ -119,15 +119,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         if(failedType.equals(BadCredentialsException.class) || failedType.equals(UsernameNotFoundException.class)) {
             Message message = new Message();
             message.setStatus(HttpStatus.UNAUTHORIZED);
-            message.setMessage("auth_fail");
-            message.setMemo(failed.getLocalizedMessage());
+            message.setMessage(failed.getLocalizedMessage());
 
             this.createResponseMessage(response, message, HttpStatus.UNAUTHORIZED);
         } else {
             Message message = new Message();
             message.setStatus(HttpStatus.BAD_REQUEST);
-            message.setMessage("undefined_error");
-            message.setMemo(failed.getLocalizedMessage());
+            message.setMessage(failed.getLocalizedMessage());
 
             this.createResponseMessage(response, message, HttpStatus.UNAUTHORIZED);
         }

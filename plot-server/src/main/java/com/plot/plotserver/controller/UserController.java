@@ -26,14 +26,19 @@ public class UserController {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "유저 생성 완료"),
-                    @ApiResponse(responseCode = "401", description = "토큰 만료"),
-                    @ApiResponse(responseCode = "403", description = "권한 없음"),
+                    @ApiResponse(responseCode = "400", description = "유저 이메일이 이미 존재할 때"),
                     @ApiResponse(responseCode = "404", description = "해당 페이지 존재하지 않음"),
             }
     )
     @PostMapping("/one")
-    public ResponseEntity<UserResponseDto> createOne(@RequestBody UserReqDto.CreateOne req) throws Exception {
-        return ResponseEntity.ok(userService.createOne(req));
+    public ResponseEntity<?> createOne(@RequestBody UserReqDto.CreateOne req) throws Exception {
+        userService.createOne(req);
+
+        Message message = Message.builder()
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        return new ResponseEntity<>(message, message.getStatus());
     }
 
 
@@ -41,14 +46,20 @@ public class UserController {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "유저 삭제 완료"),
-                    @ApiResponse(responseCode = "401", description = "토큰 만료"),
-                    @ApiResponse(responseCode = "403", description = "권한 없음"),
+                    @ApiResponse(responseCode = "401", description = "토큰 만료,"),
+                    @ApiResponse(responseCode = "401", description = "권한 없음"),
                     @ApiResponse(responseCode = "404", description = "해당 페이지 존재하지 않음"),
             }
     )
     @DeleteMapping("/one")
-    public ResponseEntity<Boolean> deleteOne(@RequestBody UserReqDto.DeleteUser req) throws Exception {
-        return ResponseEntity.ok(userService.deleteOne());
+    public ResponseEntity<?> deleteOne() throws Exception {
+        userService.deleteOne();
+
+        Message message = Message.builder()
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        return new ResponseEntity<>(message, message.getStatus());
     }
 
 
@@ -71,7 +82,6 @@ public class UserController {
         }catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
-                    .message("searching_error")
                     .message(e.getMessage())
                     .build();
             return new ResponseEntity<>(message, message.getStatus());

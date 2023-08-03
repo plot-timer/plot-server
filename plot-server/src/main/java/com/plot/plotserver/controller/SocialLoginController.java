@@ -37,16 +37,14 @@ public class SocialLoginController {
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
-                    .message("error")
-                    .memo(e.getMessage())
+                    .message(e.getMessage())
                     .build();
             om.writeValue(response.getOutputStream(), message);
             return;
         }
         Message message = Message.builder()
                 .status(HttpStatus.OK)
-                .message("success")
-                .memo("소셜 로그인 성공. 엑세스 토큰을 발급힙니다.")
+                .message("소셜 로그인 성공. 엑세스 토큰을 발급힙니다.")
                 .build();
 
         String accessToken = loginResponse.getAccess_token();

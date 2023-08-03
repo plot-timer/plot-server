@@ -4,6 +4,7 @@ import com.plot.plotserver.domain.RefreshToken;
 import com.plot.plotserver.domain.User;
 import com.plot.plotserver.dto.request.user.UserReqDto;
 import com.plot.plotserver.dto.response.user.UserResponseDto;
+import com.plot.plotserver.exception.user.SecurityContextUserNotFoundException;
 import com.plot.plotserver.repository.RefreshTokenRepository;
 import com.plot.plotserver.repository.UserRepository;
 import com.plot.plotserver.util.SecurityContextHolderUtil;
@@ -32,7 +33,7 @@ public class UserService {
         String encodedPassword = encoder.encode(password);
 
         if(userRepository.findByUsername(reqDto.getUsername()).isPresent()){
-            throw new Exception("해당 유저네임이 이미 존재합니다. 다른 이름을 입력해주세요.");
+            throw new SecurityContextUserNotFoundException("이미 존재하는 이메일입니다");
         }
 
         User user = User.builder()
@@ -73,9 +74,12 @@ public class UserService {
         String username = SecurityContextHolderUtil.getUsername();
 
         Optional<User> findUser = userRepository.findByUsername(username);
+        if(!findUser.isPresent()){
+            throw new SecurityContextUserNotFoundException("유저를 찾을 수 없습니다.");
+        }
         User user = findUser.get();
-
         userRepository.delete(user);
+
         Optional<RefreshToken> findRefreshToken = refreshTokenRepository.findByUserId(user.getId());
 
         if(findRefreshToken.isPresent()){

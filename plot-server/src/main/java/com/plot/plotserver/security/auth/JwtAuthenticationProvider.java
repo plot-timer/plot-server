@@ -1,5 +1,6 @@
 package com.plot.plotserver.security.auth;
 
+import com.plot.plotserver.exception.user.WrongLoginException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,7 +18,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     // 실제 인증을 담당
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException, WrongLoginException {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
 
         String username = token.getName();
@@ -29,7 +30,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         String saltedPassword = password + salt.toString();
 
         if(!passwordEncoder.matches(saltedPassword, savedUser.getPassword())) {
-            throw new BadCredentialsException("로그인 정보가 올바르지 않습니다.");
+            throw new WrongLoginException("로그인 정보가 올바르지 않습니다.");
         }
 
         return new UsernamePasswordAuthenticationToken(savedUser, password, savedUser.getAuthorities());
