@@ -1,14 +1,19 @@
 package com.plot.plotserver.controller;
 
+import com.plot.plotserver.domain.Message;
 import com.plot.plotserver.dto.request.user.UserReqDto;
 import com.plot.plotserver.dto.response.user.UserResponseDto;
 import com.plot.plotserver.service.UserService;
+import com.plot.plotserver.util.SecurityContextHolderUtil;
 import lombok.RequiredArgsConstructor;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,7 +48,46 @@ public class UserController {
     )
     @DeleteMapping("/one")
     public ResponseEntity<Boolean> deleteOne(@RequestBody UserReqDto.DeleteUser req) throws Exception {
-        return ResponseEntity.ok(userService.deleteOne(req));
+        return ResponseEntity.ok(userService.deleteOne());
+    }
+
+
+
+    /**
+     * TEST URL : 테스트가 끝나면 필수적으로 지워야 함.
+     * */
+    @Operation(summary = "로그인 테스트 api", description = "로그인 상태에서, 해당 유저의 정보를 출력.")
+    @GetMapping("/test1")
+    public ResponseEntity<?> TestApi() throws Exception {
+        Long userId = SecurityContextHolderUtil.getUserId();
+        try {
+            UserResponseDto userResDto = UserResponseDto.of(userService.findOne(userId));
+            Message message = Message.builder()
+                    .data(userResDto)
+                    .status(HttpStatus.OK)
+                    .message("success")
+                    .build();
+            return new ResponseEntity<>(message, message.getStatus());
+        }catch (Exception e) {
+            Message message = Message.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message("searching_error")
+                    .message(e.getMessage())
+                    .build();
+            return new ResponseEntity<>(message, message.getStatus());
+        }
+    }
+
+    @GetMapping("/test2")
+    public ResponseEntity<?> searchAll(){
+        List<UserResponseDto> result = userService.findAll();
+
+        Message message = Message.builder()
+                .data(result)
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        return new ResponseEntity<>(message, message.getStatus());
     }
 
 }
