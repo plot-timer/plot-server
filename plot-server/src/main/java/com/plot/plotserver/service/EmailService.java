@@ -1,8 +1,10 @@
-package com.plot.plotserver.web.email;
+package com.plot.plotserver.service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -18,6 +20,8 @@ public class EmailService {
     private final JavaMailSender emailSender;
 
     private final SpringTemplateEngine templateEngine;
+
+    private final MimeMessageHelper mimeMessageHelper;
 
     private String authNum;//랜덤 인증 코드
 
@@ -35,18 +39,22 @@ public class EmailService {
 
 
     public MimeMessage createEmailForm(String email) throws MessagingException {
-
         createCode();
-        String setFrom="gntjd135@gmail.com";
-        String toEmail=email;//받는 사람
-        String title="PLAN PLAYER 회원가입 인증 번호";//제목
-
+        String setFrom = "PLOT";
+        String toEmail = email; //받는 사람
+        String title = "PLOT 회원가입 인증 번호 " + "[" + authNum + "]";
 
         MimeMessage message = emailSender.createMimeMessage();
-        message.addRecipients(MimeMessage.RecipientType.TO, email);//보낼 이메일 설정.
-        message.setSubject(title);
-        message.setFrom(setFrom);
-        message.setText(setContext(authNum),"utf-8","html");
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "UTF-8");
+
+        mimeMessageHelper.setTo(toEmail); // 수신자 설정
+        mimeMessageHelper.setSubject(title);
+        mimeMessageHelper.setFrom(setFrom);
+        mimeMessageHelper.setText(setContext(authNum), true); // true: HTML 포맷 사용
+
+        String imageResourceName = "plot_logo.png"; // 이미지 파일명
+        ClassPathResource imageResource = new ClassPathResource("templates/" + imageResourceName);
+        mimeMessageHelper.addInline(imageResourceName, imageResource);
 
         return message;
     }
@@ -67,7 +75,7 @@ public class EmailService {
     public String setContext(String code) {
         Context context = new Context();
         context.setVariable("code", code);
-        return templateEngine.process("mail", context);//mail.html
+        return templateEngine.process("mail2", context);//mail.html
     }
 
 

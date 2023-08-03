@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div
+        style="margin: 100px; display: flex; flex-direction: column; align-items: center"
+>
+    <img src="cid:plot_logo.png" alt="Plot logo" style="width: 120px" />
+    <h1 style="font-size: 36px; font-weight: 900; margin-top: -8px; margin-bottom: 0">
+        PLOT
+    </h1>
+    <h3 style="margin: 0">회원가입 인증 코드입니다</h3>
+
+    <div
+            align="center"
+            style="
+          background-color: #f6f6f6;
+          border-radius: 16px;
+          width: 400px;
+          margin: 32px 0;
+          padding: 16px 0;
+        "
+    >
+        <div
+                style="font-size: 240%; font-weight: 600; text-decoration: underline"
+                th:text="${code}"
+        ></div>
+    </div>
+    <p style="margin: 0">이 코드는 3분간 유효합니다</p>
+    <br />
+</div>
+</body>
+</html>
