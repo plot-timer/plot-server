@@ -16,8 +16,8 @@ public class SchedulerService {
     private final EmailTmpRepository emailTmpRepository;
 
     @Transactional
-    @Scheduled(cron = "0 0/2 * * * *")//매 5분 마다 실행
+    @Scheduled(cron = "0 0/5 * * * *")//매 5분 마다 실행
     public void authDelete(){
-        emailTmpRepository.deleteByCreatedAtGreaterThanEqual(LocalDateTime.now().minusMinutes(2));
+        emailTmpRepository.deleteByCreatedAtGreaterThanEqual(LocalDateTime.now().minusMinutes(5));
     }
 }
