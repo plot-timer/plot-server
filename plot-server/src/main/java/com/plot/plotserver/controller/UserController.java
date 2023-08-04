@@ -71,21 +71,14 @@ public class UserController {
     @GetMapping("/test1")
     public ResponseEntity<?> TestApi() throws Exception {
         Long userId = SecurityContextHolderUtil.getUserId();
-        try {
-            UserResponseDto userResDto = UserResponseDto.of(userService.findOne(userId));
-            Message message = Message.builder()
-                    .data(userResDto)
-                    .status(HttpStatus.OK)
-                    .message("success")
-                    .build();
-            return new ResponseEntity<>(message, message.getStatus());
-        }catch (Exception e) {
-            Message message = Message.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message(e.getMessage())
-                    .build();
-            return new ResponseEntity<>(message, message.getStatus());
-        }
+        UserResponseDto userResDto = UserResponseDto.of(userService.findOne(userId));
+
+        Message message = Message.builder()
+                .data(userResDto)
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        return new ResponseEntity<>(message, message.getStatus());
     }
 
     @GetMapping("/test2")
