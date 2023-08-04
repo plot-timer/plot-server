@@ -1,12 +1,14 @@
 package com.plot.plotserver.dto.request.email;
 
+
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class EmailRequestDto {
+public class EmailCodeReqDto {
 
     private String email;
+
+    private String code;
 }

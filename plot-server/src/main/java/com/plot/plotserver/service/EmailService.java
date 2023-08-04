@@ -1,16 +1,20 @@
 package com.plot.plotserver.service;
 
 
+import com.plot.plotserver.domain.EmailTmp;
+import com.plot.plotserver.repository.EmailTmpRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.validation.constraints.Email;
 import java.util.Random;
 
 @Service
@@ -22,6 +26,8 @@ public class EmailService {
     private final SpringTemplateEngine templateEngine;
 
     private final MimeMessageHelper mimeMessageHelper;
+
+    private final EmailTmpRepository emailTmpRepository;
 
     private String authNum;//랜덤 인증 코드
 
@@ -35,6 +41,11 @@ public class EmailService {
 
         }
         authNum=key.toString();
+    }
+
+    @Transactional
+    public void save(EmailTmp emailTmp) {
+        emailTmpRepository.save(emailTmp);
     }
 
 
@@ -69,6 +80,8 @@ public class EmailService {
 
         return authNum;//인증 코드 반환.
     }
+
+
 
 
     //타임 리프를 이용한 context 설정
