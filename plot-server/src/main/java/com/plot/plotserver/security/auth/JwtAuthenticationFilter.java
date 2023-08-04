@@ -20,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -53,7 +54,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             // AuthenticationManager에 인증 위임
             return getAuthenticationManager().authenticate(userToken);
         } catch (IOException e) {
-            throw new WrongLoginException("아이디와 비밀번호를 올바르게 입력해주세요.");
+            throw new AuthenticationServiceException("아이디와 비밀번호를 올바르게 입력해주세요.");
         }
     }
 
@@ -93,7 +94,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 4. Cookie에 Access Token (access_token) 주입
         ResponseCookie cookies = ResponseCookie.from("plot_token", accessToken)
                 .httpOnly(true)
-                .sameSite("Lax")
+                .sameSite("Strict")
+                .domain("localhost")
                 .path("/")
                 .maxAge(3 * 24 * 60 * 60)     // 3일
                 .build();
