@@ -2,10 +2,7 @@ package com.plot.plotserver.config;
 
 import com.plot.plotserver.repository.RefreshTokenRepository;
 import com.plot.plotserver.repository.UserRepository;
-import com.plot.plotserver.security.auth.CustomUserDetailsService;
-import com.plot.plotserver.security.auth.JwtAuthenticationFilter;
-import com.plot.plotserver.security.auth.JwtAuthenticationProvider;
-import com.plot.plotserver.security.auth.JwtAuthorizationFilter;
+import com.plot.plotserver.security.auth.*;
 import com.plot.plotserver.security.handler.CustomLogoutHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,9 +13,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.context.SecurityContextRepository;
 
 @Configuration
@@ -56,8 +55,6 @@ public class SecurityConfig {
 
         http
                 .authorizeRequests()
-                .antMatchers("/api/admin/**")
-                .access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/api/test/**")
                 .access("hasRole('ROLE_USER')")
                 .antMatchers("/api/social-login/**", "/api/login", "/api/user/one")

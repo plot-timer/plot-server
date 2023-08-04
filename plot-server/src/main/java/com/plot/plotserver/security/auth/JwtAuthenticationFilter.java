@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plot.plotserver.domain.Message;
 import com.plot.plotserver.domain.RefreshToken;
 import com.plot.plotserver.domain.User;
+import com.plot.plotserver.exception.user.WrongLoginException;
 import com.plot.plotserver.repository.RefreshTokenRepository;
 import com.plot.plotserver.util.JwtUtil;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -41,7 +43,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
+            throws WrongLoginException {
 
         try {
             // form으로 넘어온 값으로 user 객체를 생성
@@ -92,7 +94,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 4. Cookie에 Access Token (access_token) 주입
         ResponseCookie cookies = ResponseCookie.from("plot_token", accessToken)
                 .httpOnly(true)
-                .sameSite("Lax")
+                .sameSite("Strict")
+                .domain("localhost")
                 .path("/")
                 .maxAge(3 * 24 * 60 * 60)     // 3일
                 .build();
@@ -102,8 +105,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 로그인 성공 메세지
         Message message = new Message();
         message.setStatus(HttpStatus.OK);
-        message.setMessage("success");
-        message.setMemo("login_success");
+        message.setMessage("login_success");
 
         this.createResponseMessage(response, message, HttpStatus.OK);
     }
@@ -119,15 +121,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         if(failedType.equals(BadCredentialsException.class) || failedType.equals(UsernameNotFoundException.class)) {
             Message message = new Message();
             message.setStatus(HttpStatus.UNAUTHORIZED);
-            message.setMessage("auth_fail");
-            message.setMemo(failed.getLocalizedMessage());
+            message.setMessage(failed.getLocalizedMessage());
 
             this.createResponseMessage(response, message, HttpStatus.UNAUTHORIZED);
         } else {
             Message message = new Message();
             message.setStatus(HttpStatus.BAD_REQUEST);
-            message.setMessage("undefined_error");
-            message.setMemo(failed.getLocalizedMessage());
+            message.setMessage(failed.getLocalizedMessage());
 
             this.createResponseMessage(response, message, HttpStatus.UNAUTHORIZED);
         }

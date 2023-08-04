@@ -4,6 +4,10 @@ import com.plot.plotserver.domain.RefreshToken;
 import com.plot.plotserver.domain.User;
 import com.plot.plotserver.dto.request.user.UserReqDto;
 import com.plot.plotserver.dto.response.user.UserResponseDto;
+import com.plot.plotserver.exception.user.PasswordFormatException;
+import com.plot.plotserver.exception.user.SecurityContextUserNotFoundException;
+import com.plot.plotserver.exception.user.UserNotFoundException;
+import com.plot.plotserver.exception.user.UsernameExistException;
 import com.plot.plotserver.repository.RefreshTokenRepository;
 import com.plot.plotserver.repository.UserRepository;
 import com.plot.plotserver.util.SecurityContextHolderUtil;
@@ -27,13 +31,16 @@ public class UserService {
 
     public UserResponseDto createOne(UserReqDto.CreateOne reqDto) throws Exception{
 
-        UUID salt = UUID.randomUUID();
-        String password = reqDto.getPassword() + salt.toString();
-        String encodedPassword = encoder.encode(password);
+        if(userRepository.findByUsername(reqDto.getUsername()).isPresent())
+            throw new UsernameExistException("이미 존재하는 이메일입니다.");
 
-        if(userRepository.findByUsername(reqDto.getUsername()).isPresent()){
-            throw new Exception("해당 유저네임이 이미 존재합니다. 다른 이름을 입력해주세요.");
-        }
+        String password = reqDto.getPassword();
+
+        if(password.length() < 4 || password.length() > 16)
+            throw new PasswordFormatException("비밀번호의 길이는 4~16자여야 합니다.");
+
+        UUID salt = UUID.randomUUID();
+        String encodedPassword = encoder.encode(password + salt.toString());
 
         User user = User.builder()
                 .username(reqDto.getUsername())
@@ -51,12 +58,9 @@ public class UserService {
     }
 
     public User findOne(Long id) throws Exception {
-        if(id==null) {
-            throw new IllegalArgumentException("parameter:[id] is null");
-        }
         Optional<User> findUser = userRepository.findById(id);
         if(!findUser.isPresent()) {
-            throw new Exception("parameter:[id] is wrong");
+            throw new UserNotFoundException("해당 [id]를 갖는 유저를 찾을 수 없습니다.");
         }
         return findUser.get();
     }
@@ -68,14 +72,17 @@ public class UserService {
 
         return userResDtos;
     }
-    
+
     public boolean deleteOne() throws Exception {
         String username = SecurityContextHolderUtil.getUsername();
 
         Optional<User> findUser = userRepository.findByUsername(username);
+        if(!findUser.isPresent()){
+            throw new SecurityContextUserNotFoundException("유저를 찾을 수 없습니다.");
+        }
         User user = findUser.get();
-
         userRepository.delete(user);
+
         Optional<RefreshToken> findRefreshToken = refreshTokenRepository.findByUserId(user.getId());
 
         if(findRefreshToken.isPresent()){
