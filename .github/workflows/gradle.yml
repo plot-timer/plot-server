@@ -47,9 +47,7 @@ jobs:
     - name: make application.yml
       if: contains(github.ref, 'main')
       run: |
-        cd ./plot-server/src/main
-        mkdir resources
-        cd ./resources
+        cd ./plot-server/src/main/resources
         touch ./application.yml
         echo "${{ secrets.PROPERTIES_YMI_DEV }}" > ./application.yml
       shell: bash
