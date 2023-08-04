@@ -53,11 +53,12 @@ dependencies {
 	implementation group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.7.5'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
-	//swagger
+
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 
 	//spring email
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.6.3'
+
 
 }
 

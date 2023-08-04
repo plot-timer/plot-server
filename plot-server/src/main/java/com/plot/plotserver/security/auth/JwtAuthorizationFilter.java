@@ -2,6 +2,7 @@ package com.plot.plotserver.security.auth;
 
 import com.plot.plotserver.domain.RefreshToken;
 import com.plot.plotserver.domain.User;
+import com.plot.plotserver.exception.user.UserPrincipalNotFoundException;
 import com.plot.plotserver.repository.RefreshTokenRepository;
 import com.plot.plotserver.repository.UserRepository;
 import com.plot.plotserver.util.JwtUtil;
@@ -23,7 +24,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,7 +42,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     // 2. 액세스토큰이 유효하다면 -> 인증된 객체 저장하고 doFilter, 그렇지 않다면 -> 리프레스토큰 검사
     // 3. DB에서 리프레시토큰 조회. 리프레시 토큰이 유효하다면 -> 새로운 액세스토큰 발급, 그렇지 않다면 -> 인증된 객체를 저장하지 않고 doFilter
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, com.plot.plotserver.exception.user.UserPrincipalNotFoundException {
 
         Cookie cookie = null;
         try {
@@ -79,7 +79,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         // 토큰에 저장된 유저정보가 존재하지 않는 경우 예외처리
         User savedUser = userRepository.findByUsername(claims.get("username").toString())
-                .orElseThrow(() -> new UserPrincipalNotFoundException("not found user."));
+                .orElseThrow(() -> new UserPrincipalNotFoundException("엑세스 토큰에 저장된 유저 정보가 존재하지 않습니다."));
 
         // 액세스토큰이 만료된 경우
         if(isAccessTokenExpired) {
@@ -113,9 +113,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 if(refreshTokenClaims != null) {
                     ResponseCookie cookies = ResponseCookie.from("plot_token", newAccessToken)
                             .httpOnly(true)
-                            .domain("localhost")
-                            // .secure(true)
                             .sameSite("Strict")
+                            .domain("localhost")
                             .path("/")
                             .maxAge(3 * 24 * 60 * 60)     // 3일
                             .build();

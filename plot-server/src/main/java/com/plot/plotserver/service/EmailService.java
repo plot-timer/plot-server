@@ -14,7 +14,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.validation.constraints.Email;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -90,6 +90,10 @@ public class EmailService {
         context.setVariable("code", code);
         return templateEngine.process("mail2", context);//mail.html
     }
+
+   public Optional<EmailTmp> findByUserEmail(String userEmail){
+       return emailTmpRepository.findByUserEmail(userEmail);
+   }
 
 
 }

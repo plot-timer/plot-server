@@ -12,6 +12,12 @@ import org.springframework.http.HttpStatus;
 public class Message {
     private Object data;
     private HttpStatus status;
+    private int code;
     private String message;
-    private String memo;
+
+    public Message(String message, int code, HttpStatus status) {
+        this.message = message;
+        this.code = code;
+        this.status = status;
+    }
 }

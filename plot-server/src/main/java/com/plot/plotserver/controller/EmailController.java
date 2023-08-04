@@ -8,6 +8,9 @@ import com.plot.plotserver.domain.Message;
 import com.plot.plotserver.domain.RefreshToken;
 import com.plot.plotserver.dto.request.email.EmailCodeReqDto;
 import com.plot.plotserver.dto.request.email.EmailRequestDto;
+import com.plot.plotserver.exception.email.EmailCodeExpiredException;
+import com.plot.plotserver.exception.email.EmailCodeMismatchException;
+import com.plot.plotserver.exception.email.EmailCodeSendingFailureException;
 import com.plot.plotserver.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +25,7 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,27 +53,40 @@ public class EmailController {
                     .build();
             emailService.save(emailTmp);
         } catch (Exception e) {
-            Message message = Message.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message("error")
-                    .memo(e.getMessage())
-                    .build();
-            om.writeValue(response.getOutputStream(), message);
-            return;
+            throw new EmailCodeSendingFailureException("인증번호 전송에 실패하였습니다.");
         }
 
         Message message = Message.builder()
                 .status(HttpStatus.OK)
                 .message("success")
-                .memo("인증코드를 성공적으로 전송하였습니다.!")
                 .build();
         om.writeValue(response.getOutputStream(), message);
     }
 
     @PostMapping("login/authenticate")//사용자 인즌코드 입력으로, 유효한 인증번호인지 authenticate함.
-    public void mailCodeAuthenticate(HttpServletResponse response,@RequestBody EmailCodeReqDto emailCodeReqDto) {
+    public void mailCodeAuthenticate(HttpServletResponse response,@RequestBody EmailCodeReqDto emailCodeReqDto) throws IOException {
 
-        
+        ObjectMapper om = new ObjectMapper();
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
+
+        Optional<EmailTmp> findUserEmail = emailService.findByUserEmail(emailCodeReqDto.getEmail());
+
+        if (!findUserEmail.isPresent()) {
+            throw new EmailCodeExpiredException("인증번호가 만료되었습니다.! 다시 전송해주세요.");
+        } else if (findUserEmail.isPresent()) {
+                log.info("code={}",findUserEmail.get().getCode());
+            if (!emailCodeReqDto.getCode().equals(findUserEmail.get().getCode())) {//인증번호 틀림
+                throw new EmailCodeMismatchException("이메일 코드 틀림. 다시 입력해주세요");
+            }
+            else{
+                Message message = Message.builder()//정상 응답
+                        .status(HttpStatus.OK)
+                        .message("success")
+                        .build();
+                om.writeValue(response.getOutputStream(), message);
+            }
+
+        }
 
     }
 
