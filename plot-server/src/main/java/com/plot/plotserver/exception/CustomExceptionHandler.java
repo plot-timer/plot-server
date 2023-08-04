@@ -1,6 +1,9 @@
 package com.plot.plotserver.exception;
 
 import com.plot.plotserver.domain.Message;
+import com.plot.plotserver.exception.email.EmailCodeExpiredException;
+import com.plot.plotserver.exception.email.EmailCodeMismatchException;
+import com.plot.plotserver.exception.email.EmailCodeSendingFailureException;
 import com.plot.plotserver.exception.token.TokenExpiredException;
 import com.plot.plotserver.exception.user.*;
 import org.springframework.http.HttpStatus;
@@ -55,4 +58,23 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
+
+    @ExceptionHandler(EmailCodeSendingFailureException.class)//email 관련 오류 -200~300
+    public ResponseEntity<?> handleException(EmailCodeSendingFailureException e) {
+        Message message = new Message(e.getMessage(), -200, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+
+    @ExceptionHandler(EmailCodeExpiredException.class)//email 관련 오류 -200~300
+    public ResponseEntity<?> handleException(EmailCodeExpiredException e) {
+        Message message = new Message(e.getMessage(), -201, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+    @ExceptionHandler(EmailCodeMismatchException.class)//email 관련 오류 -200~300
+    public ResponseEntity<?> handleException(EmailCodeMismatchException e) {
+        Message message = new Message(e.getMessage(), -202, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, message.getStatus());
+    }
 }
