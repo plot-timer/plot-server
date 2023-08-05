@@ -43,6 +43,7 @@ public class EmailController {
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
+        emailService.handlerNewCode(emailDto);// 이미 유효기간내 사용가능한 코드가 있으면, 삭제하고, 다시 send.
 
         String authCode = emailService.sendMailCodeAndSave(emailDto);
 

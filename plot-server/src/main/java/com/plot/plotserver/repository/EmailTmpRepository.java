@@ -16,6 +16,6 @@ public interface EmailTmpRepository extends JpaRepository<EmailTmp, Long> {
     public Optional<EmailTmp> findByUserEmail(String userEmail);
 
 
-
+    void delete(EmailTmp findByUserEmail);
 
 }
