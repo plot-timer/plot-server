@@ -1,99 +1,72 @@
 package com.plot.plotserver.service;
 
-
 import com.plot.plotserver.domain.EmailTmp;
+import com.plot.plotserver.domain.Message;
+import com.plot.plotserver.dto.request.email.EmailCodeReqDto;
+import com.plot.plotserver.dto.request.email.EmailRequestDto;
+import com.plot.plotserver.exception.email.EmailCodeExpiredException;
+import com.plot.plotserver.exception.email.EmailCodeMismatchException;
+import com.plot.plotserver.exception.email.EmailCodeSendingFailureException;
 import com.plot.plotserver.repository.EmailTmpRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EmailService {
-
-    private final JavaMailSender emailSender;
-
-    private final SpringTemplateEngine templateEngine;
-
-    private final MimeMessageHelper mimeMessageHelper;
 
     private final EmailTmpRepository emailTmpRepository;
 
-    private String authNum;//랜덤 인증 코드
+    private final EmailSendingService emailSendingService;
 
-    //렌덤 인증 코드 생성
-    public void createCode(){
-        Random random = new Random();
-        StringBuffer key = new StringBuffer();
-
-        for (int i = 0; i < 6; i++) {
-            key.append(random.nextInt(9));
-
-        }
-        authNum=key.toString();
-    }
 
     @Transactional
     public void save(EmailTmp emailTmp) {
         emailTmpRepository.save(emailTmp);
     }
 
+    @Transactional(rollbackFor = EmailCodeSendingFailureException.class)
+    public String sendMailCodeAndSave(EmailRequestDto emailRequestDto) throws MessagingException {
 
-    public MimeMessage createEmailForm(String email) throws MessagingException {
-        createCode();
-        String setFrom = "PLOT";
-        String toEmail = email; //받는 사람
-        String title = "PLOT 회원가입 인증 번호 " + "[" + authNum + "]";
+        String authCode = emailSendingService.sendEmail(emailRequestDto.getEmail());//인증번호 전송과, emailTmp 저장을 transaction으로 묶음.
 
-        MimeMessage message = emailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "UTF-8");
+        //db에 사용자가 이미 먼저 보낸 인증 코드가 있으면, 삭제하기.
 
-        mimeMessageHelper.setTo(toEmail); // 수신자 설정
-        mimeMessageHelper.setSubject(title);
-        mimeMessageHelper.setFrom(setFrom);
-        mimeMessageHelper.setText(setContext(authNum), true); // true: HTML 포맷 사용
-
-        String imageResourceName = "plot_logo.png"; // 이미지 파일명
-        ClassPathResource imageResource = new ClassPathResource("templates/" + imageResourceName);
-        mimeMessageHelper.addInline(imageResourceName, imageResource);
-
-        return message;
-    }
-
-    //실제 이메일 전송
-    public String sendEmail(String toEmail) throws MessagingException {
-
-        //메일 전송에 필요한 정보 설정.
-        MimeMessage emailForm = createEmailForm(toEmail);
-        //실제 이메일 전송
-        emailSender.send(emailForm);
-
-        return authNum;//인증 코드 반환.
+        EmailTmp emailTmp = EmailTmp.builder()
+                .userEmail(emailRequestDto.getEmail())
+                .code(authCode)
+                .createdAt(LocalDateTime.now())
+                .build();
+        save(emailTmp);
+        return authCode;
     }
 
 
+    public void mailCodeAuthenticate(EmailCodeReqDto emailCodeReqDto) {
+
+        Optional<EmailTmp> findUserEmail = emailTmpRepository.findByUserEmail(emailCodeReqDto.getEmail());
+
+        if (!findUserEmail.isPresent()) {
+            throw new EmailCodeExpiredException("인증번호가 만료되었습니다.! 다시 전송해주세요.");
+        } else if (findUserEmail.isPresent()) {
+            log.info("code={}",findUserEmail.get().getCode());
+            if (!emailCodeReqDto.getCode().equals(findUserEmail.get().getCode())) {//인증번호 틀림
+                throw new EmailCodeMismatchException("이메일 코드 틀림. 다시 입력해주세요");
+            }
+
+        }
 
 
-    //타임 리프를 이용한 context 설정
-    public String setContext(String code) {
-        Context context = new Context();
-        context.setVariable("code", code);
-        return templateEngine.process("mail2", context);//mail.html
     }
-
-   public Optional<EmailTmp> findByUserEmail(String userEmail){
-       return emailTmpRepository.findByUserEmail(userEmail);
-   }
-
 
 }
