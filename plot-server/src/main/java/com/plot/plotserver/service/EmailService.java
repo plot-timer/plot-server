@@ -40,7 +40,8 @@ public class EmailService {
 
         String authCode = emailSendingService.sendEmail(emailRequestDto.getEmail());//인증번호 전송과, emailTmp 저장을 transaction으로 묶음.
 
-        //db에 사용자가 이미 먼저 보낸 인증 코드가 있으면, 삭제하기.
+        //db에 사용자가 이미 먼저 보낸 인증 코드가 있으면, 그 레코드 삭제하고, 새로 생성.
+
 
         EmailTmp emailTmp = EmailTmp.builder()
                 .userEmail(emailRequestDto.getEmail())
@@ -66,6 +67,17 @@ public class EmailService {
 
         }
 
+
+    }
+
+    @Transactional
+    public void handlerNewCode(EmailRequestDto emailRequestDto) throws MessagingException {
+
+        Optional<EmailTmp> findByUserEmail = emailTmpRepository.findByUserEmail(emailRequestDto.getEmail());
+
+        if (findByUserEmail.isPresent()) {
+            emailTmpRepository.delete(findByUserEmail.get());
+        }
 
     }
 
