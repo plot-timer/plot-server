@@ -89,6 +89,7 @@ public class SocialLoginService {
 
         return LoginResponseDto.builder()
                 .token_type(BEARER_TYPE)
+                .user(userEntity)
                 .access_token(accessToken)
                 .build();
     }
