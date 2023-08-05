@@ -1,9 +1,12 @@
 package com.plot.plotserver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.plot.plotserver.domain.Message;
 import com.plot.plotserver.dto.request.login.SocialLoginReqDto;
 import com.plot.plotserver.dto.response.login.LoginResponseDto;
+import com.plot.plotserver.dto.response.user.UserResponseDto;
 import com.plot.plotserver.service.SocialLoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +32,9 @@ public class SocialLoginController {
     public void socialLogin(HttpServletResponse response, @RequestBody SocialLoginReqDto req) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
+        om.registerModule(new JavaTimeModule());
+        om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
         LoginResponseDto loginResponse = null;
@@ -44,6 +50,7 @@ public class SocialLoginController {
         }
         Message message = Message.builder()
                 .status(HttpStatus.OK)
+                .data(UserResponseDto.of(loginResponse.getUser()))
                 .message("소셜 로그인 성공. 엑세스 토큰을 발급힙니다.")
                 .build();
 

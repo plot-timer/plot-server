@@ -3,9 +3,12 @@ package com.plot.plotserver.security.auth;
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.plot.plotserver.domain.Message;
 import com.plot.plotserver.domain.RefreshToken;
 import com.plot.plotserver.domain.User;
+import com.plot.plotserver.dto.response.user.UserResponseDto;
 import com.plot.plotserver.exception.user.WrongLoginException;
 import com.plot.plotserver.repository.RefreshTokenRepository;
 import com.plot.plotserver.util.JwtUtil;
@@ -105,6 +108,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 로그인 성공 메세지
         Message message = new Message();
         message.setStatus(HttpStatus.OK);
+        message.setData(UserResponseDto.of(user));
         message.setMessage("login_success");
 
         this.createResponseMessage(response, message, HttpStatus.OK);
@@ -136,7 +140,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     // response message 설정
     private void createResponseMessage(HttpServletResponse response, Message message, HttpStatus status) throws StreamWriteException, DatabindException, IOException {
         response.setStatus(status.value());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         response.setContentType(MediaType.APPLICATION_JSON.toString());
-        new ObjectMapper().writeValue(response.getOutputStream(), message);
+
+        objectMapper.writeValue(response.getOutputStream(), message);
     }
 }
