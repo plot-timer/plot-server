@@ -17,4 +17,5 @@ public interface EmailTmpRepository extends JpaRepository<EmailTmp, Long> {
 
 
 
+
 }
