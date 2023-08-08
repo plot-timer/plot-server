@@ -21,7 +21,7 @@ public class TodoController {
 
 
 
-    @PostMapping("")
+    @PostMapping("")//todo 저장.
     public void addTodo(@RequestBody NewTodoReqDto newTodoReqDto) {
 
     }
