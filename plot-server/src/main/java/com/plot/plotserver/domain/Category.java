@@ -9,8 +9,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "sub_category")
-public class SubCategory {
+@Table(name = "category")
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +28,6 @@ public class SubCategory {
     @Column(name = "icon_image_path", nullable = true, columnDefinition = "text")
     private String iconImagePath;
 
-    @Column(name = "main_category_id", nullable = false, columnDefinition = "bigint")
-    private Long mainCategoryId;
+    @Column(name = "category_group_id", nullable = false, columnDefinition = "bigint")
+    private Long CategoryGroupId;
 }

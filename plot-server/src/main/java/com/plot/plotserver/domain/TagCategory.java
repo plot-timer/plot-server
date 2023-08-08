@@ -12,15 +12,15 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "tag_sub_category")
-public class TagSubCategory {
+@Table(name = "tag_category")
+public class TagCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "sub_category_id", nullable = false, columnDefinition = "bigint")
-    private Long subCategoryId;
+    @Column(name = "category_id", nullable = false, columnDefinition = "bigint")
+    private Long categoryId;
 
     @Column(name = "tag_id", nullable = false, columnDefinition = "bigint")
     private Long tagId;

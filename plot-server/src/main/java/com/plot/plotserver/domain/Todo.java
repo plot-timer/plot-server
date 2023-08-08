@@ -35,14 +35,15 @@ public class Todo {
     @Column(name = "memo", nullable = true, columnDefinition = "varchar (36)")
     private String memo;
 
-    @Column(name = "cur_time", nullable = false, columnDefinition = "time")
-    private Time curTime;
 
     @Column(name = "star", nullable = false, columnDefinition = "bit (1)")
     private boolean star;
 
     @Column(name = "icon_image_path", nullable = true, columnDefinition = "text")
     private String iconImagePath;
+
+    @Column(name = "done",nullable = false,columnDefinition = "bit (1)")
+    private boolean done;
 
     @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
     private Long userId;

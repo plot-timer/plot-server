@@ -9,8 +9,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "main_category")
-public class MainCategory {
+@Table(name = "category_group")
+public class CategoryGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
