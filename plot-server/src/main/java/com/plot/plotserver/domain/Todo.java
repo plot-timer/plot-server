@@ -35,15 +35,6 @@ public class Todo {
     @Column(name = "memo", nullable = true, columnDefinition = "varchar (36)")
     private String memo;
 
-    @Column(name = "total_time", nullable = false, columnDefinition = "time")
-    private Time totalTime;
-
-    @Column(name = "start_date", nullable = false, columnDefinition = "datetime")
-    private LocalDateTime startDate;
-
-    @Column(name = "end_date", nullable = true, columnDefinition = "datetime")
-    private LocalDateTime endDate;
-
     @Column(name = "cur_time", nullable = false, columnDefinition = "time")
     private Time curTime;
 

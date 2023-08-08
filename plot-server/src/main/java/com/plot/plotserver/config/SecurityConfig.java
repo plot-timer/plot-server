@@ -51,6 +51,7 @@ public class SecurityConfig {
                 .logout()
                 .logoutUrl("/api/logout")
                 .logoutSuccessHandler(new CustomLogoutHandler())
+
                 .deleteCookies("plot_token");
 
         http
