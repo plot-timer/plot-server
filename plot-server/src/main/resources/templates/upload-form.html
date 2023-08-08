@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center"> <h2>Todo Add 폼</h2>
+    </div>
+    <h4 class="mb-3">Todo 정보 입력</h4>
+    <form th:action method="post" enctype="multipart/form-data">
+        <ul>
+            <li>Todo title <input type="text" name="title"></li>
+            <li>Todo subtitle <input type="text" name="subtitle"></li>
+            <li>memo <input type="text" name="memo"></li>
+            <li>category_path <input type="text" name="category_path"></li>
+            <li>파일<input type="file" name="file" ></li> </ul>
+        <input type="submit"/>
+    </form>
+</div> <!-- /container -->
+</body>
+</html>
