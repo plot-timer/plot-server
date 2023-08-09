@@ -3,8 +3,6 @@ package com.plot.plotserver.util;
 import com.plot.plotserver.security.auth.CustomUserDetails;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.UUID;
-
 public class SecurityContextHolderUtil {
 
     public static Long getUserId(){

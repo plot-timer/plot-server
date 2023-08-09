@@ -17,6 +17,7 @@ public class Tag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "tag_id")
     private Long id;
 
     @Column(name = "name", nullable = false, columnDefinition = "varchar(36)")

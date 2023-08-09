@@ -20,14 +20,15 @@ public class Todo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "todo_id")
     private Long id;
 
     @Column(name = "title", nullable = false, columnDefinition = "varchar (36)")
     private String title;
 
-    @Comment("속한 하위 카테고리 이름")
-    @Column(name = "category_name", nullable = false, columnDefinition = "varchar (36)")
-    private Long categoryName;
+//    @Comment("속한 하위 카테고리 이름")
+//    @Column(name = "category_name", nullable = false, columnDefinition = "varchar (36)")
+//    private String categoryName;
 
     @Column(name = "subtitle", nullable = true, columnDefinition = "varchar (36)")
     private String subTitle;
@@ -39,16 +40,24 @@ public class Todo {
     @Column(name = "star", nullable = false, columnDefinition = "bit (1)")
     private boolean star;
 
-    @Column(name = "icon_image_path", nullable = true, columnDefinition = "text")
-    private String iconImagePath;
+    @Column(name = "emoji", nullable = true, columnDefinition = "text")
+    private String emoji;
 
     @Column(name = "done",nullable = false,columnDefinition = "bit (1)")
     private boolean done;
 
-    @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
-    private Long userId;
+//    @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
+//    private Long userId;
 
-    @Column(name = "category_id", nullable = false, columnDefinition = "bigint")
-    private Long categoryId;
+    @ManyToOne
+    @JoinColumn(name = "users_id",nullable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id",nullable = false)
+    private Category category;
+
+//    @Column(name = "category_id", nullable = false, columnDefinition = "bigint")
+//    private Long categoryId;
 
 }
