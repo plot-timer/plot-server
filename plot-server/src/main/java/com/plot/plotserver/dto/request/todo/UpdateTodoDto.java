@@ -13,5 +13,10 @@ public class UpdateTodoDto {
 
     private String emoji;
 
+    private boolean star;
+
+    private boolean done;
+
     private String category_path;
+
 }

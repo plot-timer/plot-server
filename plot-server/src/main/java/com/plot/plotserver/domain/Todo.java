@@ -1,16 +1,16 @@
 package com.plot.plotserver.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Time;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -49,9 +49,9 @@ public class Todo {
 //    @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
 //    private Long userId;
 
-    @ManyToOne
-    @JoinColumn(name = "users_id",nullable = false)
-    private User user;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id",nullable = false)
+//    private User user;
 
     @ManyToOne
     @JoinColumn(name = "category_id",nullable = false)

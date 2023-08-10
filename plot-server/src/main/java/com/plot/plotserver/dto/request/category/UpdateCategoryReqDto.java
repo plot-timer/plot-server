@@ -2,8 +2,9 @@ package com.plot.plotserver.dto.request.category;
 
 import lombok.Getter;
 
+
 @Getter
-public class NewCategoryReqDto {
+public class UpdateCategoryReqDto {
 
     private String categoryName;
 
@@ -11,5 +12,8 @@ public class NewCategoryReqDto {
 
     private String category_group;
 
+    private boolean Star;
+
     private String tag; //나중에 tags로 바꿔야 한다.
+
 }

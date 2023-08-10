@@ -4,8 +4,11 @@ import com.plot.plotserver.util.ColorEnum;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -31,6 +34,9 @@ public class CategoryGroup {
     @ManyToOne
     @JoinColumn(name = "users_id",nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "categoryGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Category> categories = new ArrayList<>();
 
 
 }

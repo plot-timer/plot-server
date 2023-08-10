@@ -3,8 +3,11 @@ package com.plot.plotserver.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -33,4 +36,7 @@ public class Category {
     @ManyToOne
     @JoinColumn(name = "category_group_id",nullable = false)
     private CategoryGroup categoryGroup;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL,orphanRemoval = true)
+    private final List<Todo> todos = new ArrayList<>();
 }
