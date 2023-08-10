@@ -3,8 +3,11 @@ package com.plot.plotserver.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -13,6 +16,7 @@ import javax.persistence.*;
 public class Category {
 
     @Id
+    @Column(name = "category_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -22,12 +26,17 @@ public class Category {
     @Column(name = "star", nullable = false, columnDefinition = "bit (1)")
     private boolean star;
 
-    @Column(name = "color", nullable = true, columnDefinition = "int (6)")
-    private int color;
+    @Column(name = "emoji", nullable = true, columnDefinition = "text")
+    private String emoji;
 
-    @Column(name = "icon_image_path", nullable = true, columnDefinition = "text")
-    private String iconImagePath;
 
-    @Column(name = "category_group_id", nullable = false, columnDefinition = "bigint")
-    private Long CategoryGroupId;
+//    @Column(name = "category_group_id", nullable = false, columnDefinition = "bigint")
+//    private Long CategoryGroupId;
+
+    @ManyToOne
+    @JoinColumn(name = "category_group_id",nullable = false)
+    private CategoryGroup categoryGroup;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL,orphanRemoval = true)
+    private final List<Todo> todos = new ArrayList<>();
 }

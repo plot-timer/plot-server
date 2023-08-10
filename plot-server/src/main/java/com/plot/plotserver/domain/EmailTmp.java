@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class EmailTmp {//3분동안 보관하다 삭제됨.
 
     @Id
+    @Column(name = "email_tmp_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

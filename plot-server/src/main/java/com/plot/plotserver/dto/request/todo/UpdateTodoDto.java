@@ -1,5 +1,8 @@
 package com.plot.plotserver.dto.request.todo;
 
+import lombok.Getter;
+
+@Getter
 public class UpdateTodoDto {
 
     private String title;
@@ -10,5 +13,10 @@ public class UpdateTodoDto {
 
     private String emoji;
 
+    private boolean star;
+
+    private boolean done;
+
     private String category_path;
+
 }

@@ -1,12 +1,10 @@
-
 package com.plot.plotserver.controller;
-
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plot.plotserver.domain.Message;
-import com.plot.plotserver.dto.request.todo.NewTodoReqDto;
-import com.plot.plotserver.dto.request.todo.UpdateTodoDto;
-import com.plot.plotserver.service.TodoService;
+import com.plot.plotserver.dto.request.category.NewCategoryReqDto;
+import com.plot.plotserver.dto.request.category.UpdateCategoryReqDto;
+import com.plot.plotserver.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,57 +14,38 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/todos")
-public class TodoController {
+@Slf4j
+@RequestMapping("/categories")
+public class CategoryController {
 
-    private final TodoService todoService;
 
+    private final CategoryService categoryService;
 
-    @PostMapping("")//todo 저장.  저장 로직 효율적으로 수정하기.
-    public void addTodo(HttpServletResponse response, @RequestBody NewTodoReqDto newTodoReqDto) throws IOException {
+    @PostMapping("")
+    public void addCategory(HttpServletResponse response, @RequestBody NewCategoryReqDto newCategoryReqDto) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        todoService.save(newTodoReqDto);
+
+        categoryService.save(newCategoryReqDto);
 
         Message message = Message.builder()
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();
         om.writeValue(response.getOutputStream(), message);
-
-
     }
 
-
-    @PatchMapping("/{todoId}")
-    public void updateTodo(@PathVariable Long todoId, @RequestBody UpdateTodoDto updateTodoDto,HttpServletResponse response) throws IOException {
+    @PatchMapping("/{categoryId}")
+    public void updateCategory(@PathVariable Long categoryId,@RequestBody UpdateCategoryReqDto updateCategoryReqDto, HttpServletResponse response) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        todoService.update(todoId,updateTodoDto);
-        Message message = Message.builder()
-                .status(HttpStatus.OK)
-                .message("success")
-                .build();
-        om.writeValue(response.getOutputStream(), message);
-
-    }
-
-
-
-    @DeleteMapping("/{todoId}")
-    public void deleteTodo(HttpServletResponse response,@PathVariable Long todoId) throws IOException {
-
-        ObjectMapper om = new ObjectMapper();
-        response.setContentType(MediaType.APPLICATION_JSON.toString());
-
-        todoService.delete(todoId);
+        categoryService.update(categoryId,updateCategoryReqDto);
         Message message = Message.builder()
                 .status(HttpStatus.OK)
                 .message("success")
@@ -75,7 +54,17 @@ public class TodoController {
     }
 
 
+    @DeleteMapping("/{categoryId}")
+    public void deleteCategory(HttpServletResponse response,@PathVariable Long categoryId) throws IOException {
 
+        ObjectMapper om = new ObjectMapper();
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-
+        categoryService.delete(categoryId);
+        Message message = Message.builder()
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        om.writeValue(response.getOutputStream(), message);
+    }
 }

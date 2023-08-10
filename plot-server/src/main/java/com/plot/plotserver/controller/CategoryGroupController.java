@@ -1,12 +1,11 @@
-
 package com.plot.plotserver.controller;
-
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plot.plotserver.domain.Message;
-import com.plot.plotserver.dto.request.todo.NewTodoReqDto;
-import com.plot.plotserver.dto.request.todo.UpdateTodoDto;
-import com.plot.plotserver.service.TodoService;
+import com.plot.plotserver.dto.request.categorygroup.NewCategoryGroupReqDto;
+
+import com.plot.plotserver.dto.request.categorygroup.UpdateCategoryGroupReqDto;
+import com.plot.plotserver.service.CategoryGroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,57 +15,25 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/todos")
-public class TodoController {
-
-    private final TodoService todoService;
-
-
-    @PostMapping("")//todo 저장.  저장 로직 효율적으로 수정하기.
-    public void addTodo(HttpServletResponse response, @RequestBody NewTodoReqDto newTodoReqDto) throws IOException {
-
-        ObjectMapper om = new ObjectMapper();
-        response.setContentType(MediaType.APPLICATION_JSON.toString());
-
-        todoService.save(newTodoReqDto);
-
-        Message message = Message.builder()
-                .status(HttpStatus.OK)
-                .message("success")
-                .build();
-        om.writeValue(response.getOutputStream(), message);
+@Slf4j
+@RequestMapping("/category-groups")
+public class CategoryGroupController {
 
 
-    }
+    private final CategoryGroupService categoryGroupService;
 
 
-    @PatchMapping("/{todoId}")
-    public void updateTodo(@PathVariable Long todoId, @RequestBody UpdateTodoDto updateTodoDto,HttpServletResponse response) throws IOException {
+    @PostMapping("")
+    public void addCategoryGroup(HttpServletResponse response, @RequestBody NewCategoryGroupReqDto newCategoryGroupReqDto) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        todoService.update(todoId,updateTodoDto);
-        Message message = Message.builder()
-                .status(HttpStatus.OK)
-                .message("success")
-                .build();
-        om.writeValue(response.getOutputStream(), message);
 
-    }
+        categoryGroupService.saveCategoryGroup(newCategoryGroupReqDto);
 
-
-
-    @DeleteMapping("/{todoId}")
-    public void deleteTodo(HttpServletResponse response,@PathVariable Long todoId) throws IOException {
-
-        ObjectMapper om = new ObjectMapper();
-        response.setContentType(MediaType.APPLICATION_JSON.toString());
-
-        todoService.delete(todoId);
         Message message = Message.builder()
                 .status(HttpStatus.OK)
                 .message("success")
@@ -75,6 +42,35 @@ public class TodoController {
     }
 
 
+    @PatchMapping("/{categoryGroupId}")
+    public void updateCategoryGroup(HttpServletResponse response, @PathVariable Long categoryGroupId, @RequestBody  UpdateCategoryGroupReqDto updateCategoryGroupReqDto) throws IOException {
+
+        ObjectMapper om = new ObjectMapper();
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
+
+        categoryGroupService.update(categoryGroupId,updateCategoryGroupReqDto);
+        Message message = Message.builder()
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        om.writeValue(response.getOutputStream(), message);
+    }
+
+
+
+    @DeleteMapping("/{categoryGroupId}")
+    public void deleteCategoryGroup(HttpServletResponse response,@PathVariable Long categoryGroupId) throws IOException {
+
+        ObjectMapper om = new ObjectMapper();
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
+
+        categoryGroupService.delete(categoryGroupId);
+        Message message = Message.builder()
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        om.writeValue(response.getOutputStream(), message);
+    }
 
 
 

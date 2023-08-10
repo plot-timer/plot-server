@@ -17,6 +17,7 @@ public class TagCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "tag_category_id")
     private Long id;
 
     @Column(name = "category_id", nullable = false, columnDefinition = "bigint")

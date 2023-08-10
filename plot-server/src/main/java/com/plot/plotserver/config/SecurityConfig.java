@@ -4,6 +4,7 @@ import com.plot.plotserver.repository.RefreshTokenRepository;
 import com.plot.plotserver.repository.UserRepository;
 import com.plot.plotserver.security.auth.*;
 import com.plot.plotserver.security.handler.CustomLogoutHandler;
+import com.plot.plotserver.util.SecurityContextHolderUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -101,4 +102,6 @@ public class SecurityConfig {
         JwtAuthorizationFilter authorizationFilter = new JwtAuthorizationFilter(authenticationManager, userRepository, refreshTokenRepository);
         return authorizationFilter;
     }
+
+
 }

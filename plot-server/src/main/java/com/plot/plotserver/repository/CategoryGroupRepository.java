@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface CategoryGroupRepository extends JpaRepository<CategoryGroup, Long> {
 
     public Optional<CategoryGroup> findById(Long id);
+
+    public Optional<CategoryGroup> findByUserIdAndName(Long userId,String name);
 }

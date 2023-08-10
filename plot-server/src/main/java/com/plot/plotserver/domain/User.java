@@ -6,6 +6,8 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -18,6 +20,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "users_id")
     private Long id;
 
     @Column(name = "username", nullable = false, columnDefinition = "varchar(255)")
@@ -51,4 +54,7 @@ public class User {
     //    @Comment("소셜 로그인시 갱신됨 (네이버, 카카오, 구글 중 하나)")
     @Column(name = "provider", nullable = true, columnDefinition = "varchar(36)")
     private String provider;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<CategoryGroup> categoryGroups = new ArrayList<>();
 }
