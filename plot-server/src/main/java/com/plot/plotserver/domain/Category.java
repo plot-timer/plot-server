@@ -1,6 +1,7 @@
 package com.plot.plotserver.domain;
 
 import lombok.*;
+import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,22 +17,19 @@ import java.util.List;
 public class Category {
 
     @Id
-    @Column(name = "category_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name", nullable = false, columnDefinition = "varchar (36)")
     private String name;
 
+    @Comment("즐겨찾기 여부")
     @Column(name = "star", nullable = false, columnDefinition = "bit (1)")
     private boolean star;
 
     @Column(name = "emoji", nullable = true, columnDefinition = "text")
     private String emoji;
-
-
-//    @Column(name = "category_group_id", nullable = false, columnDefinition = "bigint")
-//    private Long CategoryGroupId;
 
     @ManyToOne
     @JoinColumn(name = "category_group_id",nullable = false)
