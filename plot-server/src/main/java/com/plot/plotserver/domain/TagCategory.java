@@ -20,12 +20,20 @@ public class TagCategory {
     @Column(name = "tag_category_id")
     private Long id;
 
-    @Column(name = "category_id", nullable = false, columnDefinition = "bigint")
-    private Long categoryId;
+//    @Column(name = "category_id", nullable = false, columnDefinition = "bigint")
+//    private Long categoryId;
 
-    @Column(name = "tag_id", nullable = false, columnDefinition = "bigint")
-    private Long tagId;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
-    private Long userId;
+//    @Column(name = "tag_id", nullable = false, columnDefinition = "bigint")
+//    private Long tagId;
+    @ManyToOne
+    @JoinColumn(name = "tag_id")
+    private Tag tag;
+
+
+//    @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
+//    private Long userId;
 }

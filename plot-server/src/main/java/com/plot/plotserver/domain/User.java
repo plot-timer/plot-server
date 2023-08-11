@@ -57,4 +57,6 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<CategoryGroup> categoryGroups = new ArrayList<>();
+
+
 }

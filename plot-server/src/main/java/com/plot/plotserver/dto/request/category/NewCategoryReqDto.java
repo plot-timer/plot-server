@@ -2,6 +2,8 @@ package com.plot.plotserver.dto.request.category;
 
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public class NewCategoryReqDto {
 
@@ -11,5 +13,5 @@ public class NewCategoryReqDto {
 
     private String category_group;
 
-    private String tag; //나중에 tags로 바꿔야 한다.
+    private List<String> tags;
 }
