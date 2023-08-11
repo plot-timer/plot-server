@@ -51,7 +51,7 @@ public class User {
     @Column(name = "updated_at", nullable = true, columnDefinition = "datetime")
     private LocalDateTime updatedAt;
 
-    //    @Comment("소셜 로그인시 갱신됨 (네이버, 카카오, 구글 중 하나)")
+    @Comment("소셜 로그인시 갱신됨 (네이버, 카카오, 구글 중 하나)")
     @Column(name = "provider", nullable = true, columnDefinition = "varchar(36)")
     private String provider;
 

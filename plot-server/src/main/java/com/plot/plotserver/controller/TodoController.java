@@ -19,7 +19,7 @@ import java.io.IOException;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/todos")
+@RequestMapping("api/todos")
 public class TodoController {
 
     private final TodoService todoService;

@@ -1,10 +1,9 @@
 package com.plot.plotserver.exception;
 
 import com.plot.plotserver.domain.Message;
-import com.plot.plotserver.exception.Category.CategoryAlreadyExistException;
-import com.plot.plotserver.exception.Category.CategoryDeleteFailException;
-import com.plot.plotserver.exception.Category.CategorySavedFailException;
-import com.plot.plotserver.exception.Category.CategoryUpdateFailException;
+import com.plot.plotserver.exception.category.CategoryAlreadyExistException;
+import com.plot.plotserver.exception.category.CategoryDeleteFailException;
+import com.plot.plotserver.exception.category.CategorySavedFailException;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupAlreadyExistException;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupDeleteFailException;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupSavedFailException;
@@ -21,8 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import javax.naming.AuthenticationException;
 
 @ControllerAdvice
 public class CustomExceptionHandler {

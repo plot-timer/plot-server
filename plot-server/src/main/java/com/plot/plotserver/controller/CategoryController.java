@@ -17,7 +17,7 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/categories")
+@RequestMapping("api/categories")
 public class CategoryController {
 
 

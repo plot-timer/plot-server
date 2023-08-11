@@ -17,15 +17,12 @@ import java.util.List;
 public class CategoryGroup {
 
     @Id
-    @Column(name = "category_group_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name", nullable = false, columnDefinition = "varchar (36)")
     private String name;
-
-//    @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
-//    private Long user_id;
 
     @Column(name = "color", nullable = false)
     @Enumerated
@@ -37,6 +34,5 @@ public class CategoryGroup {
 
     @OneToMany(mappedBy = "categoryGroup", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Category> categories = new ArrayList<>();
-
 
 }
