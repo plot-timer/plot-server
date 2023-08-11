@@ -37,6 +37,9 @@ public class Category {
     @JoinColumn(name = "category_group_id",nullable = false)
     private CategoryGroup categoryGroup;
 
+//    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL,orphanRemoval = true)
+//    private List<TagCategory> tagCategories=new ArrayList<>();
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL,orphanRemoval = true)
     private final List<Todo> todos = new ArrayList<>();
 }

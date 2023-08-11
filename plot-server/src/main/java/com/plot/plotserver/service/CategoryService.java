@@ -11,6 +11,8 @@ import com.plot.plotserver.exception.Category.CategorySavedFailException;
 import com.plot.plotserver.exception.Category.CategoryUpdateFailException;
 import com.plot.plotserver.repository.CategoryGroupRepository;
 import com.plot.plotserver.repository.CategoryRepository;
+import com.plot.plotserver.repository.TagCategoryRepository;
+import com.plot.plotserver.repository.TagRepository;
 import com.plot.plotserver.util.SecurityContextHolderUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,11 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     private final CategoryGroupRepository categoryGroupRepository;
+
+    private final TagCategoryRepository tagCategoryRepository;
+
+
+    private final TagRepository tagRepository;
 
 
     @Transactional

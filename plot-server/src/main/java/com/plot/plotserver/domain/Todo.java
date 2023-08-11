@@ -26,9 +26,9 @@ public class Todo {
     @Column(name = "title", nullable = false, columnDefinition = "varchar (36)")
     private String title;
 
-//    @Comment("속한 하위 카테고리 이름")
-//    @Column(name = "category_name", nullable = false, columnDefinition = "varchar (36)")
-//    private String categoryName;
+    @Comment("속한 하위 카테고리 이름")
+    @Column(name = "category_name", nullable = false, columnDefinition = "varchar (36)")
+    private String categoryName;
 
     @Column(name = "subtitle", nullable = true, columnDefinition = "varchar (36)")
     private String subTitle;
