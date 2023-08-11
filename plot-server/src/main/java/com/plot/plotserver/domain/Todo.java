@@ -20,7 +20,7 @@ public class Todo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "todo_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "title", nullable = false, columnDefinition = "varchar (36)")
@@ -46,18 +46,8 @@ public class Todo {
     @Column(name = "done",nullable = false,columnDefinition = "bit (1)")
     private boolean done;
 
-//    @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
-//    private Long userId;
-
-//    @ManyToOne
-//    @JoinColumn(name = "user_id",nullable = false)
-//    private User user;
-
     @ManyToOne
     @JoinColumn(name = "category_id",nullable = false)
     private Category category;
-
-//    @Column(name = "category_id", nullable = false, columnDefinition = "bigint")
-//    private Long categoryId;
 
 }
