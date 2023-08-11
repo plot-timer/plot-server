@@ -1,28 +1,22 @@
 package com.plot.plotserver.service;
 
 
-import com.plot.plotserver.domain.Category;
 import com.plot.plotserver.domain.CategoryGroup;
 import com.plot.plotserver.domain.User;
 import com.plot.plotserver.dto.request.categorygroup.NewCategoryGroupReqDto;
 import com.plot.plotserver.dto.request.categorygroup.UpdateCategoryGroupReqDto;
-import com.plot.plotserver.exception.Category.CategoryDeleteFailException;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupAlreadyExistException;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupDeleteFailException;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupSavedFailException;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupUpdateFailException;
-import com.plot.plotserver.exception.todo.TodoSavedFailException;
 import com.plot.plotserver.repository.CategoryGroupRepository;
-import com.plot.plotserver.repository.CategoryRepository;
 import com.plot.plotserver.repository.UserRepository;
 import com.plot.plotserver.util.SecurityContextHolderUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @Service
