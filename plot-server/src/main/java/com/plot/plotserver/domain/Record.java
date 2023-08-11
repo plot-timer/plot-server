@@ -4,22 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
 import java.sql.Time;
 import java.time.LocalDateTime;
-
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "history")
-public class History {
+@Table(name = "record")
+public class Record {
 
     @Id
-    @Column(name = "history_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -29,13 +29,16 @@ public class History {
     @Column(name = "end_date", nullable = false, columnDefinition = "datetime")
     private LocalDateTime endDate;
 
-    @Column(name = "time", nullable = true, columnDefinition = "time")
-    private Time time;
+    @Comment("히스토리/스케줄을 결정하는 필드. 1: 히스토리, 0: 스케줄을 의미")
+    @Column(name = "is_history", nullable = false, columnDefinition = "bit(1)")
+    private boolean isHistory;
 
-    @Column(name = "category_name", nullable = false, columnDefinition = "varchar (36)")
-    private String categoryName;
+    @Comment("걸린 시간")
+    @Column(name = "duration", nullable = false, columnDefinition = "time")
+    private Time duration;
 
-    @Column(name = "todo_id", nullable = false, columnDefinition = "bigint")
-    private Long todoId;
+    @ManyToOne
+    @JoinColumn(name = "todo_id",nullable = false)
+    private Todo todo;
 
 }

@@ -2,12 +2,10 @@ package com.plot.plotserver.domain;
 
 import lombok.*;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.sql.Time;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,7 +24,7 @@ public class Todo {
     @Column(name = "title", nullable = false, columnDefinition = "varchar (36)")
     private String title;
 
-    @Comment("속한 하위 카테고리 이름")
+    @Comment("속한 카테고리 이름")
     @Column(name = "category_name", nullable = false, columnDefinition = "varchar (36)")
     private String categoryName;
 
@@ -35,7 +33,6 @@ public class Todo {
 
     @Column(name = "memo", nullable = true, columnDefinition = "varchar (36)")
     private String memo;
-
 
     @Column(name = "star", nullable = false, columnDefinition = "bit (1)")
     private boolean star;
@@ -49,5 +46,8 @@ public class Todo {
     @ManyToOne
     @JoinColumn(name = "category_id",nullable = false)
     private Category category;
+
+    @OneToMany(mappedBy = "todo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Record> records = new ArrayList<>();
 
 }
