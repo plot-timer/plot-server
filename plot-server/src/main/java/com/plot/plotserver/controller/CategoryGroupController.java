@@ -18,7 +18,7 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/category-groups")
+@RequestMapping("api/category-groups")
 public class CategoryGroupController {
 
 
