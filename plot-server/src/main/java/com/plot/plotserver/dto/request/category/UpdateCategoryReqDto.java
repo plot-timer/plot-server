@@ -16,6 +16,6 @@ public class UpdateCategoryReqDto {
 
     private boolean Star;
 
-    private List<String> tags;
+    private String tags;
 
 }

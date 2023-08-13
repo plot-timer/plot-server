@@ -3,6 +3,7 @@ package com.plot.plotserver.exception;
 import com.plot.plotserver.domain.Message;
 import com.plot.plotserver.exception.category.CategoryAlreadyExistException;
 import com.plot.plotserver.exception.category.CategoryDeleteFailException;
+import com.plot.plotserver.exception.category.CategoryNotExistException;
 import com.plot.plotserver.exception.category.CategorySavedFailException;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupAlreadyExistException;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupDeleteFailException;
@@ -153,6 +154,12 @@ public class CustomExceptionHandler {
     @ExceptionHandler(CategoryAlreadyExistException.class)//
     public ResponseEntity<?> handleException(CategoryAlreadyExistException e) {
         Message message = new Message(e.getMessage(), -404,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+    @ExceptionHandler(CategoryNotExistException.class)//
+    public ResponseEntity<?> handleException(CategoryNotExistException e) {
+        Message message = new Message(e.getMessage(), -405,HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(message, message.getStatus());
     }
 
