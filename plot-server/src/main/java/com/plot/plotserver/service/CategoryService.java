@@ -3,6 +3,7 @@ package com.plot.plotserver.service;
 
 import com.plot.plotserver.domain.Category;
 import com.plot.plotserver.domain.CategoryGroup;
+import com.plot.plotserver.domain.Tag;
 import com.plot.plotserver.dto.request.category.NewCategoryReqDto;
 import com.plot.plotserver.dto.request.category.UpdateCategoryReqDto;
 import com.plot.plotserver.exception.category.CategoryAlreadyExistException;
@@ -11,7 +12,6 @@ import com.plot.plotserver.exception.category.CategorySavedFailException;
 import com.plot.plotserver.exception.category.CategoryUpdateFailException;
 import com.plot.plotserver.repository.CategoryGroupRepository;
 import com.plot.plotserver.repository.CategoryRepository;
-import com.plot.plotserver.repository.TagCategoryRepository;
 import com.plot.plotserver.repository.TagRepository;
 import com.plot.plotserver.util.SecurityContextHolderUtil;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +30,6 @@ public class CategoryService {
 
     private final CategoryGroupRepository categoryGroupRepository;
 
-    private final TagCategoryRepository tagCategoryRepository;
-
 
     private final TagRepository tagRepository;
 
@@ -40,10 +38,8 @@ public class CategoryService {
     public void save(NewCategoryReqDto categoryReqDto) {
 
         try {
-
             Long userId = SecurityContextHolderUtil.getUserId();
             Optional<CategoryGroup> categoryGroup = categoryGroupRepository.findByUserIdAndName(userId, categoryReqDto.getCategory_group());
-
 
             //category가 동일한 이름으로 존재하는 경우, 에러 반환 저장 ㄴㄴ
             Optional<Category> categoryOptional = categoryRepository.findByNameAndCategoryGroupId(categoryReqDto.getCategoryName(), categoryGroup.get().getId());
@@ -54,11 +50,14 @@ public class CategoryService {
             Category category=Category.builder()
                    .name(categoryReqDto.getCategoryName())
                    .star(false)
+                    .user_id(userId)
                    .emoji(categoryReqDto.getEmoji())
                    .categoryGroup(categoryGroup.get())
                    .build();
 
             categoryRepository.save(category);
+
+            addTag(categoryReqDto, userId, category);
 
         }catch(CategoryAlreadyExistException e){
             throw e;
@@ -67,11 +66,23 @@ public class CategoryService {
         }
     }
 
+    private void addTag(NewCategoryReqDto categoryReqDto, Long userId, Category category) {
+        String[] tagNames = categoryReqDto.getTags().split("/");
+
+        for (String tagName : tagNames) {
+            Tag tag = Tag.builder()
+                    .tagName(tagName)
+                    .category(category)
+                    .userId(userId)
+                    .build();
+            tagRepository.save(tag);
+        }
+    }
+
     @Transactional
     public void update(Long categoryId, UpdateCategoryReqDto updateCategoryReqDto) {
 
         try {
-
             Long userId = SecurityContextHolderUtil.getUserId();
             Optional<CategoryGroup> categoryGroup = categoryGroupRepository.findByUserIdAndName(userId, updateCategoryReqDto.getCategory_group());//이동할 그룹 찾기.
 
