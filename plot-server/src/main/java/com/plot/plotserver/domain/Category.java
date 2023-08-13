@@ -40,4 +40,16 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL,orphanRemoval = true)
     private final List<Todo> todos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL,orphanRemoval = true)
+    private final List<Tag> tags = new ArrayList<>();
+
+//    public void updateTags(String tags){
+//        String[] tagList = tags.split("/");
+//        List<Tag> updatedTags = new ArrayList<>();
+//
+//        for (String tag : tagList) {
+//            updatedTags.add(tag);
+//        }
+//    }
 }
