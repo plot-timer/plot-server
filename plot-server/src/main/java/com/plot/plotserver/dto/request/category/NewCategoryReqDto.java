@@ -13,5 +13,5 @@ public class NewCategoryReqDto {
 
     private String category_group;
 
-    private List<String> tags;
+    private String tags;
 }

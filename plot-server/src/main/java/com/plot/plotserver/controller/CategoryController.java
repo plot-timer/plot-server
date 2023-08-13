@@ -29,7 +29,6 @@ public class CategoryController {
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-
         categoryService.save(newCategoryReqDto);
 
         Message message = Message.builder()
