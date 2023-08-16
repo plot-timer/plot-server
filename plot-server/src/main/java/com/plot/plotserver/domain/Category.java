@@ -31,9 +31,6 @@ public class Category {
     @Column(name = "emoji", nullable = true, columnDefinition = "text")
     private String emoji;
 
-    @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
-    private Long user_id;
-
     @ManyToOne
     @JoinColumn(name = "category_group_id",nullable = false)
     private CategoryGroup categoryGroup;
@@ -42,14 +39,6 @@ public class Category {
     private final List<Todo> todos = new ArrayList<>();
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL,orphanRemoval = true)
-    private final List<Tag> tags = new ArrayList<>();
+    private final List<TagCategory> tagCategories = new ArrayList<>();
 
-//    public void updateTags(String tags){
-//        String[] tagList = tags.split("/");
-//        List<Tag> updatedTags = new ArrayList<>();
-//
-//        for (String tag : tagList) {
-//            updatedTags.add(tag);
-//        }
-//    }
 }
