@@ -8,4 +8,6 @@ public interface OAuth2UserInfo {
     String getProfileImagePath();
 
     String getProfileBirth();
+
+    String getEmail();
 }

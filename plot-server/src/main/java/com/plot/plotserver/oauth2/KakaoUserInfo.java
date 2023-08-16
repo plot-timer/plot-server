@@ -42,4 +42,9 @@ public class KakaoUserInfo implements OAuth2UserInfo{
     public String getProfileBirth() {
         return null;
     }
+
+    @Override
+    public String getEmail() {
+        return null;
+    }
 }
