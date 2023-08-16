@@ -40,15 +40,16 @@ public class SocialLoginService {
     public LoginResponseDto socialLogin(SocialLoginReqDto req) throws Exception {
 
         ClientRegistration provider = clientRegistrationRepository.findByRegistrationId(req.getProvider());
-
         OauthTokenResponseDto tokenResponse = OauthTokenProvider.getTokenFromAuthServer(req, provider);
+        log.info("access_token={}",tokenResponse.getAccess_token());
         String providerName = req.getProvider();
         Map<String, Object> userAttributes = OauthUserInfoProvider.getUserInfoFromAuthServer(providerName, provider, tokenResponse);
+        log.info("userattributes={}",userAttributes);
 
         OAuth2UserInfo oauth2UserInfo = OauthUserInfoProvider.makeOAuth2UserInfo(providerName, userAttributes);
         providerName = oauth2UserInfo.getProvider();
 
-        String username = providerName +"_"+oauth2UserInfo.getProviderId();
+        String username = oauth2UserInfo.getEmail();
         String password = UUID.randomUUID().toString();
         String encodedPassword = passwordEncoder.encode(password);
 

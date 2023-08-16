@@ -30,6 +30,11 @@ public class NaverUserInfo implements OAuth2UserInfo {
         return (String) attributes.get("profile_image");
     }
 
+    @Override
+    public String getEmail() {
+        return null;
+    }
+
     public String getProfileBirth(){
         String birthYear = (String) attributes.get("birthyear");
         String birthDay = (String) attributes.get("birthday");
