@@ -32,7 +32,7 @@ public class NaverUserInfo implements OAuth2UserInfo {
 
     @Override
     public String getEmail() {
-        return null;
+        return (String) attributes.get("email");
     }
 
     public String getProfileBirth(){
