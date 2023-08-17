@@ -62,7 +62,6 @@ public class TodoService {
                     .emoji(todoReqDto.getEmoji())
                     .done(false)
                     .category(category.get())
-                    .categoryName(category.get().getName())
                     .build();
 
             todoRepository.save(todo);
@@ -97,7 +96,6 @@ public class TodoService {
             todo.setStar(updateTodoDto.isStar());
             todo.setEmoji(updateTodoDto.getEmoji());
             todo.setDone(updateTodoDto.isDone());
-            todo.setCategoryName(category.get().getName());
             todo.setCategory(category.get());
 
             todoRepository.save(todo);

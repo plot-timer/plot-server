@@ -2,12 +2,13 @@ package com.plot.plotserver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plot.plotserver.domain.Message;
-import com.plot.plotserver.dto.request.tag.SearchTagReqDto;
+import com.plot.plotserver.dto.request.tag_category.SearchTagCategoryReqDto;
 import com.plot.plotserver.dto.response.category.CategoryResponseDto;
 import com.plot.plotserver.dto.response.tag.TagResponseDto;
-import com.plot.plotserver.service.TagService;
+import com.plot.plotserver.service.TagCategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Comment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,19 +23,19 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("api/tags")
-public class TagController {
+@RequestMapping("api/tag-categories")
+public class TagCategoryController {
 
-    private final TagService tagService;
+    private final TagCategoryService tagCategoryService;
 
-
-    @GetMapping("/list")
-    public void searchList(HttpServletResponse response, @RequestBody SearchTagReqDto reqDto) throws IOException {
+    @GetMapping("/category/list")
+    @Comment("태그 이름으로 유저가 만든 카테고리를 찾아 반환")
+    public void searchCategoryList(HttpServletResponse response, @RequestBody SearchTagCategoryReqDto reqDto) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        List<CategoryResponseDto> result = tagService.searchByTagName(reqDto);
+        List<CategoryResponseDto> result = tagCategoryService.searchByTagName(reqDto);
 
         Message message = Message.builder()
                 .data(result)
@@ -44,13 +45,14 @@ public class TagController {
         om.writeValue(response.getOutputStream(), message);
     }
 
-    @GetMapping("/user")
-    public void searchUserTags(HttpServletResponse response) throws IOException {
+    @GetMapping("/tag")
+    @Comment("현재 유저가 만든 태그 목록을 반환")
+    public void searchTags(HttpServletResponse response) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        List<TagResponseDto> result = tagService.searchUserTags();
+        List<TagResponseDto> result = tagCategoryService.searchTags();
 
         Message message = Message.builder()
                 .data(result)
@@ -59,5 +61,4 @@ public class TagController {
                 .build();
         om.writeValue(response.getOutputStream(), message);
     }
-
 }
