@@ -12,7 +12,7 @@ public class UpdateCategoryReqDto {
 
     private String emoji;
 
-    private String category_group;
+    private String categoryGroup;
 
     private boolean Star;
 

@@ -5,13 +5,11 @@ import com.plot.plotserver.exception.category.CategoryAlreadyExistException;
 import com.plot.plotserver.exception.category.CategoryDeleteFailException;
 import com.plot.plotserver.exception.category.CategoryNotExistException;
 import com.plot.plotserver.exception.category.CategorySavedFailException;
-import com.plot.plotserver.exception.categorygroup.CategoryGroupAlreadyExistException;
-import com.plot.plotserver.exception.categorygroup.CategoryGroupDeleteFailException;
-import com.plot.plotserver.exception.categorygroup.CategoryGroupSavedFailException;
-import com.plot.plotserver.exception.categorygroup.CategoryGroupUpdateFailException;
+import com.plot.plotserver.exception.categorygroup.*;
 import com.plot.plotserver.exception.email.EmailCodeExpiredException;
 import com.plot.plotserver.exception.email.EmailCodeMismatchException;
 import com.plot.plotserver.exception.email.EmailCodeSendingFailureException;
+import com.plot.plotserver.exception.tag.TagNotFoundException;
 import com.plot.plotserver.exception.todo.TodoDeleteFailException;
 import com.plot.plotserver.exception.todo.TodoSavedFailException;
 import com.plot.plotserver.exception.todo.TodoUpdateFailException;
@@ -138,6 +136,13 @@ public class CustomExceptionHandler {
     }
 
 
+    @ExceptionHandler(CategoryGroupNotFoundException.class)
+    public ResponseEntity<?> handleException(CategoryGroupNotFoundException e) {
+        Message message = new Message(e.getMessage(), -355,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+
 
     @ExceptionHandler(CategorySavedFailException.class)// category 관련 에러 -400~-450
     public ResponseEntity<?> handleException(CategorySavedFailException e) {
@@ -151,15 +156,21 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @ExceptionHandler(CategoryAlreadyExistException.class)//
+    @ExceptionHandler(CategoryAlreadyExistException.class)
     public ResponseEntity<?> handleException(CategoryAlreadyExistException e) {
         Message message = new Message(e.getMessage(), -404,HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @ExceptionHandler(CategoryNotExistException.class)//
+    @ExceptionHandler(CategoryNotExistException.class)
     public ResponseEntity<?> handleException(CategoryNotExistException e) {
         Message message = new Message(e.getMessage(), -405,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+    @ExceptionHandler(TagNotFoundException.class)
+    public ResponseEntity<?> handleException(TagNotFoundException e) {
+        Message message = new Message(e.getMessage(), -500,HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(message, message.getStatus());
     }
 
