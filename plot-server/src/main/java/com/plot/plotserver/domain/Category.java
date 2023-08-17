@@ -2,6 +2,7 @@ package com.plot.plotserver.domain;
 
 import com.plot.plotserver.dto.request.category.UpdateCategoryReqDto;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
