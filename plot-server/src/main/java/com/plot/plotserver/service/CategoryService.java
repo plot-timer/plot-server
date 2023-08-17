@@ -120,41 +120,43 @@ public class CategoryService {
             Category category = categoryRepository.findById(categoryId).get();
             category.updateCategory(reqDto, categoryGroup);
 
-            List<TagCategory> tagCategories = tagCategoryRepository.findByCategoryId(categoryId);
-            if(!tagCategories.isEmpty()){
-                tagCategories.forEach(tagCategory -> tagCategoryRepository.delete(tagCategory));
-            }
-
-            String tags = reqDto.getTags();
-            String[] tagNames = tags.split("/");
-
-            for (String tagName : tagNames) {
-
-                // 해당 태그이름을 갖는 태그가 존재하는가?
-                Optional<Tag> tagOpt = tagRepository.findByTagName(tagName);
-                Tag tag = null;
-
-                if(!tagOpt.isPresent()){
-                    tag = Tag.builder().tagName(tagName).build();
-                    tagRepository.save(tag);
-                }
-                else
-                    tag = tagOpt.get();
-
-                // 태그 카테고리 생성
-                tagCategoryRepository.save(
-                        TagCategory.builder()
-                                .category(category)
-                                .tag(tag)
-                                .build()
-                );
-            }
+            updateTagCategories(categoryId, reqDto, category);
 
         }catch(CategoryAlreadyExistException e){
             e.printStackTrace();
             throw e;
         }catch(Exception e){
             throw new CategoryUpdateFailException("Category 수정에 실패했습니다.");
+        }
+    }
+
+    private void updateTagCategories(Long categoryId, UpdateCategoryReqDto reqDto, Category category) {
+        List<TagCategory> tagCategories = tagCategoryRepository.findByCategoryId(categoryId);
+        if(!tagCategories.isEmpty()){
+            tagCategories.forEach(tagCategory -> tagCategoryRepository.delete(tagCategory));
+        }
+
+        String tags = reqDto.getTags();
+        String[] tagNames = tags.split("/");
+
+        for (String tagName : tagNames) {
+            // 해당 태그이름을 갖는 태그가 존재하는가?
+            Optional<Tag> tagOpt = tagRepository.findByTagName(tagName);
+            Tag tag = null;
+
+            if(!tagOpt.isPresent()){
+                tag = Tag.builder().tagName(tagName).build();
+                tagRepository.save(tag);
+            }
+            else tag = tagOpt.get();
+
+            // 태그 카테고리 생성
+            tagCategoryRepository.save(
+                    TagCategory.builder()
+                            .category(category)
+                            .tag(tag)
+                            .build()
+            );
         }
     }
 
