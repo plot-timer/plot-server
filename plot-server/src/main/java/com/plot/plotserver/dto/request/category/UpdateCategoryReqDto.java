@@ -14,7 +14,7 @@ public class UpdateCategoryReqDto {
 
     private String categoryGroup;
 
-    private boolean Star;
+    private boolean star;
 
     private String tags;
 

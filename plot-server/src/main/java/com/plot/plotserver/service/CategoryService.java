@@ -98,11 +98,6 @@ public class CategoryService {
     @Transactional
     public void update(Long categoryId, UpdateCategoryReqDto reqDto) {
 
-        System.out.println(reqDto.getCategoryName());
-        System.out.println(reqDto.getEmoji());
-        System.out.println(reqDto.getCategoryGroup());
-        System.out.println(reqDto.isStar());
-        System.out.println(reqDto.getTags());
 
         try {
             Long userId = SecurityContextHolderUtil.getUserId();
