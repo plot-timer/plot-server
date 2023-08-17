@@ -106,31 +106,24 @@ public class CategoryService {
 
         try {
             Long userId = SecurityContextHolderUtil.getUserId();
-            System.out.println("userId = " + userId);
 
             Optional<CategoryGroup> categoryGroupOptional = categoryGroupRepository.findByUserIdAndName(userId, reqDto.getCategoryGroup());//이동할 그룹 찾기.
             if(!categoryGroupOptional.isPresent())
                 throw new CategoryGroupNotFoundException("해당하는 카테고리 그룹이 존재하지 않습니다.");
 
             CategoryGroup categoryGroup = categoryGroupOptional.get();
-            System.out.println("categoryGroup Id = " + categoryGroup.getId());
 
             Optional<Category> updateCategoryOptional = categoryRepository.findByNameAndCategoryGroupId(reqDto.getCategoryName(), categoryGroup.getId());//이동할 그룹에 동일한 이름으로 존재하는지 확인.
             if (updateCategoryOptional.isPresent())
                 throw new CategoryAlreadyExistException("이미 존재하는 카테고리 입니다.");
 
             Category category = categoryRepository.findById(categoryId).get();
-            System.out.println("category Id = " + category.getId());
-
             category.updateCategory(reqDto, categoryGroup);
-
-            System.out.println("update category 완료");
 
             List<TagCategory> tagCategories = tagCategoryRepository.findByCategoryId(categoryId);
             if(!tagCategories.isEmpty()){
                 tagCategories.forEach(tagCategory -> tagCategoryRepository.delete(tagCategory));
             }
-            System.out.println("TagCategory delete 완료");
 
             String tags = reqDto.getTags();
             String[] tagNames = tags.split("/");
@@ -165,19 +158,6 @@ public class CategoryService {
         }
     }
 
-
-    @Transactional
-    public void updateCategoryGroup(UpdateCategoryReqDto updateCategoryReqDto, Long userId, Category category) {
-        //category의 category 그룹 바꾸기.
-        Optional<CategoryGroup> categoryGroupOptional = categoryGroupRepository.findByUserIdAndName(userId, updateCategoryReqDto.getCategoryGroup());
-        CategoryGroup updateCategoryGroup = categoryGroupOptional.get();
-
-        category.setName(updateCategoryReqDto.getCategoryName());
-        category.setStar(updateCategoryReqDto.isStar());
-        category.setEmoji(updateCategoryReqDto.getEmoji());
-        category.setCategoryGroup(updateCategoryGroup);//카테고리가 속한 그룹 바꾸기.
-        categoryRepository.save(category);
-    }
 
     @Transactional
     public void delete(Long categoryId) {
