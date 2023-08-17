@@ -1,5 +1,6 @@
 package com.plot.plotserver.domain;
 
+import com.plot.plotserver.dto.request.category.UpdateCategoryReqDto;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 
@@ -41,4 +42,10 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL,orphanRemoval = true)
     private final List<TagCategory> tagCategories = new ArrayList<>();
 
+    public void updateCategory(UpdateCategoryReqDto reqDto, CategoryGroup categoryGroup){
+        this.name = reqDto.getCategoryName();
+        this.emoji = reqDto.getEmoji();
+        this.star = reqDto.isStar();
+        this.categoryGroup = categoryGroup;
+    }
 }

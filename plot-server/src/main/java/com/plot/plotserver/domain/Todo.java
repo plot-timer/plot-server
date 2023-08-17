@@ -1,7 +1,6 @@
 package com.plot.plotserver.domain;
 
 import lombok.*;
-import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,10 +22,6 @@ public class Todo {
 
     @Column(name = "title", nullable = false, columnDefinition = "varchar (36)")
     private String title;
-
-    @Comment("속한 카테고리 이름")
-    @Column(name = "category_name", nullable = false, columnDefinition = "varchar (36)")
-    private String categoryName;
 
     @Column(name = "subtitle", nullable = true, columnDefinition = "varchar (36)")
     private String subTitle;
