@@ -49,4 +49,12 @@ public class Category {
         this.star = reqDto.isStar();
         this.categoryGroup = categoryGroup;
     }
+
+    @Builder
+    public Category(String name,boolean star,String emoji,CategoryGroup categoryGroup){
+        this.name=name;
+        this.star=star;
+        this.emoji=emoji;
+        this.categoryGroup=categoryGroup;
+    }
 }

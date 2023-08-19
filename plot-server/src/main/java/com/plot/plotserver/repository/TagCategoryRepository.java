@@ -7,10 +7,12 @@ import org.hibernate.annotations.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface TagCategoryRepository extends JpaRepository<TagCategory, Long> {
 
     @Comment("tag_category 테이블을 통해 유저가 태그한 이름을 가지는 카테고리 검색")

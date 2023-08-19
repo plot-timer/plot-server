@@ -59,4 +59,10 @@ public class User {
     private final List<CategoryGroup> categoryGroups = new ArrayList<>();
 
 
+    @Builder
+    public User(String username,String password, LocalDateTime createdAt){
+        this.username=username;
+        this.password=password;
+        this.createdAt=createdAt;
+    }
 }

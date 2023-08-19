@@ -35,4 +35,11 @@ public class CategoryGroup {
     @OneToMany(mappedBy = "categoryGroup", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Category> categories = new ArrayList<>();
 
+    @Builder
+    public CategoryGroup(String name,ColorEnum color,User user){
+        this.name=name;
+        this.color=color;
+        this.user=user;
+    }
+
 }
