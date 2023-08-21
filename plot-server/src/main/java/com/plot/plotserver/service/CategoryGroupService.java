@@ -95,6 +95,7 @@ public class CategoryGroupService {
         }catch (Exception e){
             throw new CategoryGroupDeleteFailException("Category Group 삭제에 실패했습니다.");
         }
+
     }
 
 

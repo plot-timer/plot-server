@@ -65,4 +65,12 @@ public class User {
         this.password=password;
         this.createdAt=createdAt;
     }
+
+    public void addCategoryGroup(CategoryGroup categoryGroup) {// 양방향 매핑
+        categoryGroups.add(categoryGroup);
+    }
+
+    public void deleteCategory(CategoryGroup categoryGroup) {
+        categoryGroups.remove(categoryGroup);
+    }
 }

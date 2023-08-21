@@ -1,5 +1,7 @@
 package com.plot.plotserver.domain;
 
+import com.plot.plotserver.dto.request.category.UpdateCategoryReqDto;
+import com.plot.plotserver.dto.request.categorygroup.UpdateCategoryGroupReqDto;
 import com.plot.plotserver.util.ColorEnum;
 import lombok.*;
 
@@ -32,14 +34,27 @@ public class CategoryGroup {
     @JoinColumn(name = "users_id",nullable = false)
     private User user;
 
+    @Builder.Default
     @OneToMany(mappedBy = "categoryGroup", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Category> categories = new ArrayList<>();
+    private  List<Category> categories = new ArrayList<>();
 
     @Builder
     public CategoryGroup(String name,ColorEnum color,User user){
         this.name=name;
         this.color=color;
         this.user=user;
+    }
+
+    public void updateCategoryGroup(UpdateCategoryGroupReqDto reqDto){
+        this.name = reqDto.getGroupName();
+        this.color = reqDto.getColor();
+    }
+    public void addCategory(Category category) {// 양방향 매핑
+        categories.add(category);
+    }
+
+    public void deleteCategory(Category category) {
+        categories.remove(category);
     }
 
 }

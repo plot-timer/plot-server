@@ -27,10 +27,10 @@ public class Category {
     private String name;
 
     @Comment("즐겨찾기 여부")
-    @Column(name = "star", nullable = false, columnDefinition = "bit (1)")
+    @Column(name = "star", nullable = false, columnDefinition = "bit (1)")//    @Column(name = "star", nullable = false)
     private boolean star;
 
-    @Column(name = "emoji", nullable = true, columnDefinition = "text")
+    @Column(name = "emoji", nullable = true, columnDefinition = "text")//    @Column(name = "emoji", nullable = true)
     private String emoji;
 
     @ManyToOne
@@ -47,7 +47,12 @@ public class Category {
         this.name = reqDto.getCategoryName();
         this.emoji = reqDto.getEmoji();
         this.star = reqDto.isStar();
-        this.categoryGroup = categoryGroup;
+
+
+        this.categoryGroup.deleteCategory(this);
+        this.categoryGroup=categoryGroup;
+        categoryGroup.addCategory(this);
+
     }
 
     @Builder
@@ -57,4 +62,6 @@ public class Category {
         this.emoji=emoji;
         this.categoryGroup=categoryGroup;
     }
+
+
 }
