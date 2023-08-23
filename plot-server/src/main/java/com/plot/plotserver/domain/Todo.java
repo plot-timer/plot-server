@@ -35,14 +35,12 @@ public class Todo {
     @Column(name = "emoji", nullable = true, columnDefinition = "text")
     private String emoji;
 
-    @Column(name = "done",nullable = false,columnDefinition = "bit (1)")
-    private boolean done;
 
     @ManyToOne
     @JoinColumn(name = "category_id",nullable = false)
     private Category category;
 
     @OneToMany(mappedBy = "todo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Record> records = new ArrayList<>();
+    private final List<DailyTodo> dailyTodos = new ArrayList<>();
 
 }

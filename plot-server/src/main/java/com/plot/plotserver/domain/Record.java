@@ -38,7 +38,7 @@ public class Record {
     private Time duration;
 
     @ManyToOne
-    @JoinColumn(name = "todo_id",nullable = false)
-    private Todo todo;
+    @JoinColumn(name = "daily_todo_id",nullable = false)
+    private DailyTodo dailyTodo;
 
 }
