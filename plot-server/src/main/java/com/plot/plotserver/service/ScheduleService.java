@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -25,9 +24,6 @@ public class ScheduleService {
     private final DailyTodoRepository dailyTodoRepository;
 
 
-    public void showDailyTodosAndSchedulesForDate(LocalDate localDate) {
-
-    }
 
     @Transactional
     public void save(Long dailyTodoId, HistoryReqDto historyReqDto) {
