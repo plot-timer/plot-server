@@ -44,8 +44,8 @@ public class DailyTodoService {
             User user = userRepository.findById(userId).get();
             Todo todo = todoRepository.findById(todoId).get();
 
-            LocalDateTime dateTime = getLocalDateTime(newDailyTodoReqDto);
-            Optional<DailyTodo> findDailyTodo = dailyTodoRepository.findByTodoIdAndDailyTodoDate(todo.getId(), dateTime);
+            LocalDate date = getLocalDate(newDailyTodoReqDto);
+            Optional<DailyTodo> findDailyTodo = dailyTodoRepository.findByTodoIdAndDailyTodoDate(todo.getId(), date);
 
             if (findDailyTodo.isPresent()) {
                 log.info("dailytodo를 생성할 수 없습니다.");
@@ -53,7 +53,7 @@ public class DailyTodoService {
             }
 
             DailyTodo dailyTodo = DailyTodo.builder()
-                    .dailyTodoDate(dateTime)
+                    .dailyTodoDate(date)
                     .done(false)
                     .todo(todo)
                     .status(DailyTodoStatusEnum.EMPTY)
@@ -96,9 +96,8 @@ public class DailyTodoService {
         }
     }
 
-    private static LocalDateTime getLocalDateTime(NewDailyTodoReqDto newDailyTodoReqDto) {
+    private static LocalDate getLocalDate(NewDailyTodoReqDto newDailyTodoReqDto) {
         LocalDate date = LocalDate.parse(newDailyTodoReqDto.getDailyTodoDate());
-        LocalDateTime dateTime = LocalDateTime.of(date, LocalTime.MIDNIGHT);//Todo의 시간은 년/월/일까지만 의미가 있어서, 시간은 그냥 자정으로 설정해준다.(시간은 이용 안함.)
-        return dateTime;
+        return date;
     }
 }
