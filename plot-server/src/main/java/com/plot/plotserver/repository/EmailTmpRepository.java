@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 
-@Repository
 public interface EmailTmpRepository extends JpaRepository<EmailTmp, Long> {
 
     public void deleteByCreatedAtGreaterThanEqual(LocalDateTime time);

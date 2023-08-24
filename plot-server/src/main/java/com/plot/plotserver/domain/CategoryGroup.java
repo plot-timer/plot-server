@@ -1,5 +1,7 @@
 package com.plot.plotserver.domain;
 
+import com.plot.plotserver.dto.request.category.UpdateCategoryReqDto;
+import com.plot.plotserver.dto.request.categorygroup.UpdateCategoryGroupReqDto;
 import com.plot.plotserver.util.ColorEnum;
 import lombok.*;
 
@@ -34,5 +36,10 @@ public class CategoryGroup {
 
     @OneToMany(mappedBy = "categoryGroup", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Category> categories = new ArrayList<>();
+
+    public void updateCategoryGroup(UpdateCategoryGroupReqDto reqDto){
+        this.name = reqDto.getGroupName();
+        this.color = reqDto.getColor();
+    }
 
 }

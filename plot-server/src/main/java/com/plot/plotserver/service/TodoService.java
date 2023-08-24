@@ -60,7 +60,6 @@ public class TodoService {
                     .memo(todoReqDto.getMemo())
                     .star(false)
                     .emoji(todoReqDto.getEmoji())
-                    .done(false)
                     .category(category.get())
                     .build();
 
@@ -86,19 +85,11 @@ public class TodoService {
 
             Optional<CategoryGroup> categoryGroup = categoryGroupRepository.findByUserIdAndName(user.get().getId(), result[0]);
 
-            Optional<Category> category = categoryRepository.findByNameAndCategoryGroupId(result[1], categoryGroup.get().getId());
+            Category category = categoryRepository.findByNameAndCategoryGroupId(result[1], categoryGroup.get().getId()).get();
 
 
             Todo todo = todoRepository.findById(todoId).get();
-            todo.setTitle(updateTodoDto.getTitle());
-            todo.setSubTitle(updateTodoDto.getSubtitle());
-            todo.setMemo(updateTodoDto.getMemo());
-            todo.setStar(updateTodoDto.isStar());
-            todo.setEmoji(updateTodoDto.getEmoji());
-            todo.setDone(updateTodoDto.isDone());
-            todo.setCategory(category.get());
-
-            todoRepository.save(todo);
+            todo.updateTodo(updateTodoDto, category);
 
         }catch (Exception e){
             throw new TodoUpdateFailException("Todo 수정에 실패했습니다.");

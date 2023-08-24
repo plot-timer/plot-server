@@ -8,6 +8,7 @@ import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
 import java.sql.Time;
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Getter
@@ -33,12 +34,12 @@ public class Record {
     @Column(name = "is_history", nullable = false, columnDefinition = "bit(1)")
     private boolean isHistory;
 
-    @Comment("걸린 시간")
-    @Column(name = "duration", nullable = false, columnDefinition = "time")
-    private Time duration;
+    @Comment("걸린 시간 초단위")
+    @Column(name = "duration", nullable = false)
+    private Long duration;
 
     @ManyToOne
-    @JoinColumn(name = "todo_id",nullable = false)
-    private Todo todo;
+    @JoinColumn(name = "daily_todo_id",nullable = false)
+    private DailyTodo dailyTodo;
 
 }
