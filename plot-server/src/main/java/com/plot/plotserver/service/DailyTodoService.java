@@ -1,15 +1,17 @@
 package com.plot.plotserver.service;
 
-import com.plot.plotserver.domain.DailyTodo;
-import com.plot.plotserver.domain.Todo;
-import com.plot.plotserver.domain.User;
+import com.plot.plotserver.domain.*;
 import com.plot.plotserver.dto.request.DailyTodo.NewDailyTodoReqDto;
+import com.plot.plotserver.dto.request.DailyTodo.SearchDailyTodo;
 import com.plot.plotserver.dto.request.DailyTodo.UpdateDailyTodoReqDto;
+
+import com.plot.plotserver.dto.response.dailyTodo.DailyTodoResponseDto;
 import com.plot.plotserver.exception.dailytodo.DailyTodoAlreadyExistException;
 import com.plot.plotserver.exception.dailytodo.DailyTodoDeleteFailException;
 import com.plot.plotserver.exception.dailytodo.DailyTodoSavedFailException;
 import com.plot.plotserver.exception.dailytodo.DailyTodoUpdateFailException;
 import com.plot.plotserver.repository.DailyTodoRepository;
+import com.plot.plotserver.repository.RecordRepository;
 import com.plot.plotserver.repository.TodoRepository;
 import com.plot.plotserver.repository.UserRepository;
 import com.plot.plotserver.util.DailyTodoStatusEnum;
@@ -20,8 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,6 +36,69 @@ public class DailyTodoService {
     private final UserRepository userRepository;
     private final TodoRepository todoRepository;
 
+    private final RecordRepository recordRepository;
+
+
+    public List<DailyTodoResponseDto> searchByDate(SearchDailyTodo reqDto){
+
+        Long userId = SecurityContextHolderUtil.getUserId();
+
+        List<DailyTodoResponseDto> result = new ArrayList<>();
+        LocalDate date = getLocalDate(reqDto);
+
+        List<DailyTodo> dailyTodos = dailyTodoRepository.findByUserIDAndDate(userId,date);
+
+        for (DailyTodo dailyTodo : dailyTodos) {
+            Todo todo = dailyTodo.getTodo();
+            Category category = todo.getCategory();
+            CategoryGroup categoryGroup = category.getCategoryGroup();
+
+            List<Record> histories= recordRepository.findHistoriesByDailyTodoId(dailyTodo.getId());
+
+            Long total_history=0L;//하루의 dailytotal_history 총 합 구하기.
+            Long total_schedule=0L;
+            for (Record history : histories) {
+                total_history += history.getDuration();
+            }
+
+            List<Record> schedules = recordRepository.findSchedulesByDailyTodoId(dailyTodo.getId());
+            for (Record schedule : schedules) {
+                total_schedule = schedule.getDuration();
+            }
+
+            result.add(DailyTodoResponseDto.of(total_history,total_schedule, dailyTodo, todo, category, categoryGroup));
+        }
+//        dailyTodos.forEach(dailyTodo -> result.add(DailyTodoResponseDto.of(dailyTodo,dailyTodo.getTodo(),dailyTodo.getTodo().getCategory(),dailyTodo.getTodo().getCategory().getCategoryGroup())));
+
+        return result;
+    }
+
+    public DailyTodoResponseDto searchByDailyTodoId(Long dailyToId){
+
+
+        DailyTodo dailyTodo = dailyTodoRepository.findById(dailyToId).get();
+
+        Todo todo = dailyTodo.getTodo();
+        Category category = todo.getCategory();
+        CategoryGroup categoryGroup = category.getCategoryGroup();
+
+        List<Record> histories= recordRepository.findHistoriesByDailyTodoId(dailyToId);
+
+        Long total_history=0L;//하루의 dailytotal_history 총 합 구하기.
+        Long total_schedule=0L;
+        for (Record history : histories) {
+            total_history += history.getDuration();
+        }
+
+        List<Record> schedules = recordRepository.findSchedulesByDailyTodoId(dailyToId);
+        for (Record schedule : schedules) {
+            total_schedule = schedule.getDuration();
+        }
+
+        DailyTodoResponseDto result = DailyTodoResponseDto.of(total_history, total_schedule, dailyTodo, todo, category, categoryGroup);
+
+        return result;
+    }
 
     @Transactional
     public void save(Long todoId,NewDailyTodoReqDto newDailyTodoReqDto) {
@@ -44,8 +109,8 @@ public class DailyTodoService {
             User user = userRepository.findById(userId).get();
             Todo todo = todoRepository.findById(todoId).get();
 
-            LocalDateTime dateTime = getLocalDateTime(newDailyTodoReqDto);
-            Optional<DailyTodo> findDailyTodo = dailyTodoRepository.findByTodoIdAndDailyTodoDate(todo.getId(), dateTime);
+            LocalDate date = getLocalDate(newDailyTodoReqDto);
+            Optional<DailyTodo> findDailyTodo = dailyTodoRepository.findByTodoIdAndDailyTodoDate(todo.getId(), date);
 
             if (findDailyTodo.isPresent()) {
                 log.info("dailytodo를 생성할 수 없습니다.");
@@ -53,7 +118,7 @@ public class DailyTodoService {
             }
 
             DailyTodo dailyTodo = DailyTodo.builder()
-                    .dailyTodoDate(dateTime)
+                    .dailyTodoDate(date)
                     .done(false)
                     .todo(todo)
                     .status(DailyTodoStatusEnum.EMPTY)
@@ -96,9 +161,13 @@ public class DailyTodoService {
         }
     }
 
-    private static LocalDateTime getLocalDateTime(NewDailyTodoReqDto newDailyTodoReqDto) {
+    private static LocalDate getLocalDate(NewDailyTodoReqDto newDailyTodoReqDto) {
         LocalDate date = LocalDate.parse(newDailyTodoReqDto.getDailyTodoDate());
-        LocalDateTime dateTime = LocalDateTime.of(date, LocalTime.MIDNIGHT);//Todo의 시간은 년/월/일까지만 의미가 있어서, 시간은 그냥 자정으로 설정해준다.(시간은 이용 안함.)
-        return dateTime;
+        return date;
+    }
+
+    private static LocalDate getLocalDate(SearchDailyTodo searchDailyTodo) {
+        LocalDate date = LocalDate.parse(searchDailyTodo.getDailyTodoDate());
+        return date;
     }
 }

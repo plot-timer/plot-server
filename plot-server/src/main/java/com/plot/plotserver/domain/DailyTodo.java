@@ -7,6 +7,7 @@ import com.plot.plotserver.util.DailyTodoStatusEnum;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class DailyTodo {
 
 
     @Column(name = "daily_todo_date", nullable = false, columnDefinition = "datetime")
-    private LocalDateTime dailyTodoDate;
+    private LocalDate dailyTodoDate;
 
 
     @Column(name = "done", nullable = false, columnDefinition = "bit (1)")
