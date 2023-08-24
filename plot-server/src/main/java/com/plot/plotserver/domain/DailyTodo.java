@@ -1,5 +1,9 @@
 package com.plot.plotserver.domain;
 
+import com.plot.plotserver.dto.request.DailyTodo.UpdateDailyTodoReqDto;
+import com.plot.plotserver.dto.request.category.UpdateCategoryReqDto;
+import com.plot.plotserver.util.ColorEnum;
+import com.plot.plotserver.util.DailyTodoStatusEnum;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,16 +29,13 @@ public class DailyTodo {
     @Column(name = "daily_todo_date", nullable = false, columnDefinition = "datetime")
     private LocalDateTime dailyTodoDate;
 
-    @Column(name = "daily_history_total", nullable = true, columnDefinition = "datetime")
-    private LocalDateTime dailyHistoryTotal;
-
-    @Column(name = "daily_schedule_total", nullable = true, columnDefinition = "datetime")
-    private LocalDateTime dailyScheduleTotal;
-
-
 
     @Column(name = "done", nullable = false, columnDefinition = "bit (1)")
     private boolean done;
+
+    @Column(name = "status", nullable = false)
+    @Enumerated
+    private DailyTodoStatusEnum status;
 
     @ManyToOne
     @JoinColumn(name = "todo_id",nullable = false)
@@ -46,5 +47,9 @@ public class DailyTodo {
 
     @OneToMany(mappedBy = "dailyTodo", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Record> records = new ArrayList<>();
+
+    public void updateDailyTodo(UpdateDailyTodoReqDto reqDto){
+        this.status = reqDto.getStatus();
+    }
 }
 

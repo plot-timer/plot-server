@@ -70,14 +70,10 @@ public class CategoryGroupService {
             }
 
 
-            Optional<CategoryGroup> categoryGroupOptional = categoryGroupRepository.findById(categoryGroupId);
+            CategoryGroup categoryGroup = categoryGroupRepository.findById(categoryGroupId).get();
+            categoryGroup.updateCategoryGroup(updateCategoryGroupReqDto);
 
-            CategoryGroup categoryGroup=categoryGroupOptional.get();
 
-            categoryGroup.setColor(updateCategoryGroupReqDto.getColor());
-            categoryGroup.setName(updateCategoryGroupReqDto.getGroupName());
-
-            categoryGroupRepository.save(categoryGroup);
         }catch(CategoryGroupAlreadyExistException e){
             throw e;
         }catch (Exception e){

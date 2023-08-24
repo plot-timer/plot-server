@@ -30,8 +30,6 @@ public class CategoryService {
 
     private final CategoryGroupRepository categoryGroupRepository;
 
-    private final TodoRepository todoRepository;
-
     private final TagRepository tagRepository;
 
     private final TagCategoryRepository tagCategoryRepository;
