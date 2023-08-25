@@ -6,8 +6,9 @@ import com.plot.plotserver.domain.Message;
 import com.plot.plotserver.dto.request.DailyTodo.NewDailyTodoReqDto;
 import com.plot.plotserver.dto.request.DailyTodo.SearchDailyTodo;
 import com.plot.plotserver.dto.request.DailyTodo.UpdateDailyTodoReqDto;
-import com.plot.plotserver.dto.response.category.CategoryResponseDto;
+import com.plot.plotserver.dto.request.record.RecordRequestDto;
 import com.plot.plotserver.dto.response.dailyTodo.DailyTodoResponseDto;
+import com.plot.plotserver.dto.response.record.RecordResponseDto;
 import com.plot.plotserver.service.DailyTodoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -106,6 +107,40 @@ public class DailyTodoController {
 
         dailyTodoService.delete(dailyTodoId);
         Message message = Message.builder()
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        om.writeValue(response.getOutputStream(), message);
+    }
+
+
+    @GetMapping("/time-sequence")
+    public void getDailyHistoryAndSchedule(@RequestBody RecordRequestDto reqDto, HttpServletResponse response) throws IOException {
+
+        ObjectMapper om = new ObjectMapper();
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
+
+        List<RecordResponseDto> result = dailyTodoService.getHistoryAndSchedule(reqDto);
+
+        Message message = Message.builder()
+                .data(result)
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        om.writeValue(response.getOutputStream(), message);
+    }
+
+
+    @GetMapping("/grass")
+    public void getHistoryOfMonth(@RequestBody RecordRequestDto.Grass reqDto, HttpServletResponse response) throws IOException {
+
+        ObjectMapper om = new ObjectMapper();
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
+
+        List<RecordResponseDto.Grass> result = dailyTodoService.getHistoryOfMonth(reqDto);
+
+        Message message = Message.builder()
+                .data(result)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();

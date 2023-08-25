@@ -2,10 +2,7 @@ package com.plot.plotserver.dto.response.dailyTodo;
 
 import com.plot.plotserver.domain.*;
 import com.plot.plotserver.dto.response.category.CategoryResponseDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 
 @Getter
@@ -15,6 +12,7 @@ import lombok.Setter;
 public class DailyTodoResponseDto {
 
     private Long daily_todo_id;
+
     private String title;
 
     private String subtitle;
@@ -36,6 +34,17 @@ public class DailyTodoResponseDto {
     private Long history_sum;
 
     private Long schedule_sum;
+
+
+    @Data
+    @Builder
+    public static class InSchedule{
+        private Long daily_todo_id;
+        private String title;
+        private String todo_emoji;
+        private String color;
+
+    }
 
     public static DailyTodoResponseDto of(Long total_history,Long total_schedule,DailyTodo dailyTodo, Todo todo, Category category, CategoryGroup categoryGroup){
         return DailyTodoResponseDto.builder()

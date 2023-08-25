@@ -22,7 +22,7 @@ public interface DailyTodoRepository extends JpaRepository<DailyTodo, Long> {
     public Optional<DailyTodo> findByTodoIdAndDailyTodoDate(Long todoId, LocalDate dailyTodoDate);
 
     @Query("SELECT dt FROM DailyTodo dt WHERE dt.user.id =:userId AND dt.dailyTodoDate = :dailyTodoDate")
-    public List<DailyTodo> findByUserIDAndDate(Long userId,LocalDate dailyTodoDate);
+    public List<DailyTodo> findByUserIDAndDate(Long userId, LocalDate dailyTodoDate);
 
 
 }
