@@ -62,13 +62,13 @@ public class ScheduleController {
 
     }
 
-    @PatchMapping("/{scheduleId}")
-    public void updateSchedule(@PathVariable Long scheduleId, @RequestBody ScheduleReqDto.Update reqDto, HttpServletResponse response) throws IOException {
+    @PatchMapping("")
+    public void updateSchedule(@RequestBody List<ScheduleReqDto.Update> reqDto, HttpServletResponse response) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        scheduleService.updateSchedule(scheduleId, reqDto);
+        scheduleService.updateSchedule(reqDto);
 
         Message message = Message.builder()
                 .status(HttpStatus.OK)

@@ -86,24 +86,26 @@ public class ScheduleService {
 
 
     @Transactional
-    public void updateSchedule(Long scheduleId, ScheduleReqDto.Update reqDto) {
+    public void updateSchedule(List<ScheduleReqDto.Update> reqDtoList) {
 
-        Optional<Record> scheduleOpt = recordRepository.findSchedule(scheduleId);
-        if(!scheduleOpt.isPresent()){
-            throw new ScheduleNotFoundException("scheduleId 확인 요망.");
-        }
+        reqDtoList.forEach(reqDto -> {
+            Optional<Record> scheduleOpt = recordRepository.findSchedule(reqDto.getSchedule_id());
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-        Record schedule = scheduleOpt.get();
-
-        LocalDateTime updatedStartDate = LocalDateTime.parse(reqDto.getStartDate(), formatter);
-        LocalDateTime updatedEndDate = LocalDateTime.parse(reqDto.getEndDate(), formatter);
+            if(!scheduleOpt.isPresent()){
+                throw new ScheduleNotFoundException("Schedule ID 확인 요망");
+            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 
-        schedule.setStartDate(updatedStartDate);
-        schedule.setEndDate(updatedEndDate);
-        schedule.setDuration(Duration.between(updatedStartDate, updatedEndDate).toSeconds());
+            Record schedule = scheduleOpt.get();
+            LocalDateTime updatedStartDate = LocalDateTime.parse(reqDto.getStartDate(), formatter);
+            LocalDateTime updatedEndDate = LocalDateTime.parse(reqDto.getEndDate(), formatter);
+
+            schedule.setStartDate(updatedStartDate);
+            schedule.setEndDate(updatedEndDate);
+            schedule.setDuration(Duration.between(updatedStartDate, updatedEndDate).toSeconds());
+        });
+
     }
 
 

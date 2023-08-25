@@ -23,6 +23,7 @@ public class ScheduleReqDto {
 
     @Data
     public static class Update{
+        private Long schedule_id;
         private String startDate;
         private String endDate;
     }
