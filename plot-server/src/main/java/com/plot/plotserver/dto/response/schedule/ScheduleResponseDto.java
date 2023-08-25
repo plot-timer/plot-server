@@ -1,7 +1,5 @@
 package com.plot.plotserver.dto.response.schedule;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.plot.plotserver.domain.DailyTodo;
 import com.plot.plotserver.domain.Record;
 import com.plot.plotserver.domain.Todo;
@@ -13,8 +11,6 @@ import lombok.Getter;
 
 @Getter
 @Builder
-@JsonSerialize
-@JsonDeserialize
 public class ScheduleResponseDto {
 
     private Long id;

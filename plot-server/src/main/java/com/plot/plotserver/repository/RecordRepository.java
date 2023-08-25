@@ -16,7 +16,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
 
     @Query("SELECT r FROM Record r WHERE r.dailyTodo.id = :dailyTodoId")
-    Optional<Record> findByDailyTodoId(Long dailyTodoId);
+    List<Record> findByDailyTodoId(Long dailyTodoId);
 
     @Query("SELECT r FROM Record r WHERE r.isHistory = false AND r.id = :scheduleId")
     Optional<Record> findSchedule(Long scheduleId);

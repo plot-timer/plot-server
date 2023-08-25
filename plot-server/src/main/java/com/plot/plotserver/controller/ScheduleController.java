@@ -2,10 +2,10 @@ package com.plot.plotserver.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.plot.plotserver.domain.Message;
 import com.plot.plotserver.dto.request.Schedule.ScheduleReqDto;
 import com.plot.plotserver.dto.response.schedule.ScheduleResponseDto;
+import com.plot.plotserver.service.HistoryService;
 import com.plot.plotserver.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +25,8 @@ import java.util.List;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+
+    private final HistoryService historyService;
 
     @PostMapping("")
     public void addSchedule(@RequestBody List<ScheduleReqDto.Create> reqDtoList, HttpServletResponse response) throws IOException {
@@ -62,6 +64,7 @@ public class ScheduleController {
 
     }
 
+
     @PatchMapping("")
     public void updateSchedule(@RequestBody List<ScheduleReqDto.Update> reqDto, HttpServletResponse response) throws IOException {
 
@@ -94,4 +97,6 @@ public class ScheduleController {
 
         om.writeValue(response.getOutputStream(), message);
     }
+
+
 }

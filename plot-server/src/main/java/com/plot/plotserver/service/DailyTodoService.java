@@ -5,7 +5,9 @@ import com.plot.plotserver.dto.request.DailyTodo.NewDailyTodoReqDto;
 import com.plot.plotserver.dto.request.DailyTodo.SearchDailyTodo;
 import com.plot.plotserver.dto.request.DailyTodo.UpdateDailyTodoReqDto;
 
+import com.plot.plotserver.dto.request.record.RecordRequestDto;
 import com.plot.plotserver.dto.response.dailyTodo.DailyTodoResponseDto;
+import com.plot.plotserver.dto.response.record.RecordResponseDto;
 import com.plot.plotserver.exception.dailytodo.DailyTodoAlreadyExistException;
 import com.plot.plotserver.exception.dailytodo.DailyTodoDeleteFailException;
 import com.plot.plotserver.exception.dailytodo.DailyTodoSavedFailException;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -161,6 +164,23 @@ public class DailyTodoService {
         }
     }
 
+
+    public List<RecordResponseDto> getHistoryAndSchedule(RecordRequestDto reqDto) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = LocalDate.parse(reqDto.getDate(), formatter);
+
+        List<DailyTodo> dailyTodos = dailyTodoRepository.findByUserIDAndDate(SecurityContextHolderUtil.getUserId(), date);
+        List<RecordResponseDto> result = new ArrayList<>();
+
+        dailyTodos.forEach(dailyTodo -> {
+            List<Record> records = recordRepository.findByDailyTodoId(dailyTodo.getId());
+            records.forEach(record -> result.add(RecordResponseDto.of(record)));
+        });
+
+        return result;
+    }
+
     private static LocalDate getLocalDate(NewDailyTodoReqDto newDailyTodoReqDto) {
         LocalDate date = LocalDate.parse(newDailyTodoReqDto.getDailyTodoDate());
         return date;
@@ -170,4 +190,5 @@ public class DailyTodoService {
         LocalDate date = LocalDate.parse(searchDailyTodo.getDailyTodoDate());
         return date;
     }
+
 }
