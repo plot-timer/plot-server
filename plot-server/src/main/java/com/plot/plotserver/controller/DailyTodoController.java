@@ -131,4 +131,20 @@ public class DailyTodoController {
     }
 
 
+    @GetMapping("/grass")
+    public void getHistoryOfMonth(@RequestBody RecordRequestDto.Grass reqDto, HttpServletResponse response) throws IOException {
+
+        ObjectMapper om = new ObjectMapper();
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
+
+        List<RecordResponseDto.Grass> result = dailyTodoService.getHistoryOfMonth(reqDto);
+
+        Message message = Message.builder()
+                .data(result)
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        om.writeValue(response.getOutputStream(), message);
+    }
+
 }

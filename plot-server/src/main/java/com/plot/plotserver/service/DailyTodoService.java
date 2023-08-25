@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -181,6 +183,43 @@ public class DailyTodoService {
         return result;
     }
 
+    public List<RecordResponseDto.Grass> getHistoryOfMonth(RecordRequestDto.Grass reqDto) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate startRange = LocalDate.parse(reqDto.getStartDate(), formatter);
+        LocalDate endRange = LocalDate.parse(reqDto.getEndDate(), formatter);
+
+        List<RecordResponseDto.Grass> result = new ArrayList<>();
+
+        LocalDate currentDate = startRange;
+
+        while(!currentDate.isAfter(endRange)){
+
+            List<DailyTodo> dailyTodoList = dailyTodoRepository.findByUserIDAndDate(SecurityContextHolderUtil.getUserId(), currentDate);
+
+            dailyTodoList.forEach(dailyTodo -> {
+                List<Record> histories = recordRepository.findHistoriesByDailyTodoId(dailyTodo.getId());
+
+                histories.forEach(history -> {
+
+                    LocalDate startDate = history.getStartDate().toLocalDate();
+                    LocalDate endDate = history.getEndDate().toLocalDate();
+                    LocalDateTime temp;
+
+                    if(endDate.isAfter(startDate)){
+                        temp = startDate.atTime(LocalTime.of(23,59,59));
+                    }else temp = history.getEndDate();
+
+                    result.add(RecordResponseDto.Grass.of(history, temp));
+
+                });
+            });
+            currentDate = currentDate.plusDays(1);
+        }
+
+        return result;
+    }
+
     private static LocalDate getLocalDate(NewDailyTodoReqDto newDailyTodoReqDto) {
         LocalDate date = LocalDate.parse(newDailyTodoReqDto.getDailyTodoDate());
         return date;
@@ -190,5 +229,6 @@ public class DailyTodoService {
         LocalDate date = LocalDate.parse(searchDailyTodo.getDailyTodoDate());
         return date;
     }
+
 
 }
