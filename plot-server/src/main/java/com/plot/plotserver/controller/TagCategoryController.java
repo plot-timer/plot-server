@@ -32,8 +32,17 @@ public class TagCategoryController {
     @Comment("태그 이름으로 유저가 만든 카테고리를 찾아 반환")
     public void searchCategoryList(HttpServletResponse response, @RequestBody SearchTagCategoryReqDto reqDto) throws IOException {
 
+        ObjectMapper om = new ObjectMapper();
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
 
+        List<CategoryResponseDto> result = tagCategoryService.searchByTagName(reqDto);
 
+        Message message = Message.builder()
+                .data(result)
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        om.writeValue(response.getOutputStream(), message);
     }
 
     @GetMapping("/tag")
