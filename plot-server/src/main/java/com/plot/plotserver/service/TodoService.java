@@ -1,15 +1,15 @@
 package com.plot.plotserver.service;
 
 
-import com.plot.plotserver.domain.Category;
-import com.plot.plotserver.domain.CategoryGroup;
-import com.plot.plotserver.domain.Todo;
-import com.plot.plotserver.domain.User;
+import com.plot.plotserver.domain.*;
 import com.plot.plotserver.dto.request.todo.NewTodoReqDto;
 import com.plot.plotserver.dto.request.todo.UpdateTodoDto;
+import com.plot.plotserver.dto.response.category.CategoryTodosResponseDto;
+import com.plot.plotserver.dto.response.dailyTodo.DailyTodoResponseDto;
 import com.plot.plotserver.dto.response.todo.TodoResponseDto;
 import com.plot.plotserver.exception.todo.TodoDeleteFailException;
 import com.plot.plotserver.exception.todo.TodoSavedFailException;
+import com.plot.plotserver.exception.todo.TodoSearchFailException;
 import com.plot.plotserver.exception.todo.TodoUpdateFailException;
 import com.plot.plotserver.repository.CategoryGroupRepository;
 import com.plot.plotserver.repository.CategoryRepository;
@@ -136,4 +136,5 @@ public class TodoService {
         });
         return result;
     }
+
 }

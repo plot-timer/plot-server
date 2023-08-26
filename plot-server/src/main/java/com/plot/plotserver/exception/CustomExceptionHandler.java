@@ -17,6 +17,7 @@ import com.plot.plotserver.exception.history.HistorySavedFailException;
 import com.plot.plotserver.exception.tag.TagNotFoundException;
 import com.plot.plotserver.exception.todo.TodoDeleteFailException;
 import com.plot.plotserver.exception.todo.TodoSavedFailException;
+import com.plot.plotserver.exception.todo.TodoSearchFailException;
 import com.plot.plotserver.exception.todo.TodoUpdateFailException;
 import com.plot.plotserver.exception.token.TokenExpiredException;
 import com.plot.plotserver.exception.user.*;
@@ -98,16 +99,24 @@ public class CustomExceptionHandler {
     }
 
 
-    @ExceptionHandler(TodoDeleteFailException.class)// todo 관련 에러 -300~-350
+    @ExceptionHandler(TodoDeleteFailException.class)
     public ResponseEntity<?> handleException(TodoDeleteFailException e) {
         Message message = new Message(e.getMessage(), -301,HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(message, message.getStatus());
     }
 
 
-    @ExceptionHandler(TodoUpdateFailException.class)// todo 관련 에러 -300~-350
+
+
+    @ExceptionHandler(TodoUpdateFailException.class)
     public ResponseEntity<?> handleException(TodoUpdateFailException e) {
         Message message = new Message(e.getMessage(), -302,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+    @ExceptionHandler(TodoSearchFailException.class)
+    public ResponseEntity<?> handleException(TodoSearchFailException e) {
+        Message message = new Message(e.getMessage(), -303,HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(message, message.getStatus());
     }
 
