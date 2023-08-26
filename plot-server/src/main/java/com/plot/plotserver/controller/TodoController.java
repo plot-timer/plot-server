@@ -4,7 +4,6 @@ package com.plot.plotserver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plot.plotserver.domain.Message;
-import com.plot.plotserver.domain.Todo;
 import com.plot.plotserver.dto.request.todo.NewTodoReqDto;
 import com.plot.plotserver.dto.request.todo.UpdateTodoDto;
 import com.plot.plotserver.dto.response.todo.TodoResponseDto;
@@ -26,7 +25,6 @@ import java.util.List;
 public class TodoController {
 
     private final TodoService todoService;
-
 
     @PostMapping("")//todo 저장.  저장 로직 효율적으로 수정하기.
     public void addTodo(HttpServletResponse response, @RequestBody NewTodoReqDto newTodoReqDto) throws IOException {

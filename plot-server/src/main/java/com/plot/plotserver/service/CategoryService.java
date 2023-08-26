@@ -4,12 +4,11 @@ package com.plot.plotserver.service;
 import com.plot.plotserver.domain.*;
 import com.plot.plotserver.dto.request.category.NewCategoryReqDto;
 import com.plot.plotserver.dto.request.category.UpdateCategoryReqDto;
-import com.plot.plotserver.exception.category.CategoryAlreadyExistException;
-import com.plot.plotserver.exception.category.CategoryDeleteFailException;
-import com.plot.plotserver.exception.category.CategorySavedFailException;
-import com.plot.plotserver.exception.category.CategoryUpdateFailException;
+import com.plot.plotserver.dto.response.category.CategoryTodosResponseDto;
+import com.plot.plotserver.exception.category.*;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupAlreadyExistException;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupNotFoundException;
+import com.plot.plotserver.exception.todo.TodoSearchFailException;
 import com.plot.plotserver.repository.*;
 import com.plot.plotserver.util.SecurityContextHolderUtil;
 import lombok.RequiredArgsConstructor;
@@ -163,6 +162,18 @@ public class CategoryService {
         }catch (Exception e){
             throw new CategoryDeleteFailException("Category 삭제에 실패했습니다.");
         }
+    }
+
+    public CategoryTodosResponseDto searchByCategoryId(Long categoryId){
+
+        try {
+            Category category = categoryRepository.findById(categoryId).get();
+            CategoryTodosResponseDto result = CategoryTodosResponseDto.of(category);
+            return result;
+        } catch (Exception e) {
+            throw new CategoryNotExistException("Category 를 조회할 수 없습니다.");
+        }
+
     }
 
 }
