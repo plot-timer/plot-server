@@ -7,6 +7,7 @@ import com.plot.plotserver.domain.Todo;
 import com.plot.plotserver.domain.User;
 import com.plot.plotserver.dto.request.todo.NewTodoReqDto;
 import com.plot.plotserver.dto.request.todo.UpdateTodoDto;
+import com.plot.plotserver.dto.response.todo.TodoResponseDto;
 import com.plot.plotserver.exception.todo.TodoDeleteFailException;
 import com.plot.plotserver.exception.todo.TodoSavedFailException;
 import com.plot.plotserver.exception.todo.TodoUpdateFailException;
@@ -20,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -124,4 +127,13 @@ public class TodoService {
     }
 
 
+    public List<TodoResponseDto> getAllTodos() {
+        List<Todo> todoList = todoRepository.findByUserId(SecurityContextHolderUtil.getUserId());
+        List<TodoResponseDto> result = new ArrayList<>();
+
+        todoList.forEach(todo -> {
+            result.add(TodoResponseDto.of(todo));
+        });
+        return result;
+    }
 }

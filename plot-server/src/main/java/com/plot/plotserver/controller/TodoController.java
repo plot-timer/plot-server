@@ -4,8 +4,10 @@ package com.plot.plotserver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plot.plotserver.domain.Message;
+import com.plot.plotserver.domain.Todo;
 import com.plot.plotserver.dto.request.todo.NewTodoReqDto;
 import com.plot.plotserver.dto.request.todo.UpdateTodoDto;
+import com.plot.plotserver.dto.response.todo.TodoResponseDto;
 import com.plot.plotserver.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -76,6 +79,21 @@ public class TodoController {
 
 
 
+    @GetMapping("/all")
+    public void searchAll(HttpServletResponse response) throws IOException {
+
+        ObjectMapper om = new ObjectMapper();
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
+
+        List<TodoResponseDto> result = todoService.getAllTodos();
+
+        Message message = Message.builder()
+                .data(result)
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        om.writeValue(response.getOutputStream(), message);
+    }
 
 
 }
