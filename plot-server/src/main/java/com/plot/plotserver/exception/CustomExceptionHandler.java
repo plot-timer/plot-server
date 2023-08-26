@@ -15,10 +15,7 @@ import com.plot.plotserver.exception.email.EmailCodeMismatchException;
 import com.plot.plotserver.exception.email.EmailCodeSendingFailureException;
 import com.plot.plotserver.exception.history.HistorySavedFailException;
 import com.plot.plotserver.exception.tag.TagNotFoundException;
-import com.plot.plotserver.exception.todo.TodoDeleteFailException;
-import com.plot.plotserver.exception.todo.TodoSavedFailException;
-import com.plot.plotserver.exception.todo.TodoSearchFailException;
-import com.plot.plotserver.exception.todo.TodoUpdateFailException;
+import com.plot.plotserver.exception.todo.*;
 import com.plot.plotserver.exception.token.TokenExpiredException;
 import com.plot.plotserver.exception.user.*;
 import org.springframework.http.HttpStatus;
@@ -119,6 +116,14 @@ public class CustomExceptionHandler {
         Message message = new Message(e.getMessage(), -303,HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(message, message.getStatus());
     }
+
+
+    @ExceptionHandler(TodoNotExistException.class)
+    public ResponseEntity<?> handleException(TodoNotExistException e) {
+        Message message = new Message(e.getMessage(), -304,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
 
 
 
