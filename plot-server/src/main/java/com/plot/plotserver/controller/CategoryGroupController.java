@@ -5,6 +5,7 @@ import com.plot.plotserver.domain.Message;
 import com.plot.plotserver.dto.request.categorygroup.NewCategoryGroupReqDto;
 
 import com.plot.plotserver.dto.request.categorygroup.UpdateCategoryGroupReqDto;
+import com.plot.plotserver.dto.response.category_group.CategoryGroupResponseDto;
 import com.plot.plotserver.service.CategoryGroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -59,7 +61,7 @@ public class CategoryGroupController {
 
 
     @DeleteMapping("/{categoryGroupId}")
-    public void deleteCategoryGroup(HttpServletResponse response,@PathVariable Long categoryGroupId) throws IOException {
+    public void GetCategoryGroupList(HttpServletResponse response,@PathVariable Long categoryGroupId) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
@@ -72,6 +74,21 @@ public class CategoryGroupController {
         om.writeValue(response.getOutputStream(), message);
     }
 
+
+    @GetMapping("/all")
+    public void getAll(HttpServletResponse response) throws IOException {
+
+        ObjectMapper om = new ObjectMapper();
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
+
+        List<CategoryGroupResponseDto> result = categoryGroupService.getAll();
+        Message message = Message.builder()
+                .data(result)
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        om.writeValue(response.getOutputStream(), message);
+    }
 
 
 }

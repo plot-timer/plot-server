@@ -5,6 +5,7 @@ import com.plot.plotserver.domain.CategoryGroup;
 import com.plot.plotserver.domain.User;
 import com.plot.plotserver.dto.request.categorygroup.NewCategoryGroupReqDto;
 import com.plot.plotserver.dto.request.categorygroup.UpdateCategoryGroupReqDto;
+import com.plot.plotserver.dto.response.category_group.CategoryGroupResponseDto;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupAlreadyExistException;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupDeleteFailException;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupSavedFailException;
@@ -17,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -94,5 +97,14 @@ public class CategoryGroupService {
     }
 
 
+    public List<CategoryGroupResponseDto> getAll() {
 
+        List<CategoryGroup> categoryGroupList = categoryGroupRepository.findByUserId(SecurityContextHolderUtil.getUserId());
+        List<CategoryGroupResponseDto> result = new ArrayList<>();
+
+        categoryGroupList.forEach(categoryGroup -> {
+            result.add(CategoryGroupResponseDto.of(categoryGroup));
+        });
+        return result;
+    }
 }
