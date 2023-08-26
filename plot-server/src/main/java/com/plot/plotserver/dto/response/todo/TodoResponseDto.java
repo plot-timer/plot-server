@@ -21,6 +21,8 @@ public class TodoResponseDto {
     private String emoji;
     private Long category_id;
     private String category_name;
+
+    private String category_group_name;
     private String color;
 
     public static TodoResponseDto of(Todo todo){
@@ -36,6 +38,7 @@ public class TodoResponseDto {
                 .emoji(todo.getEmoji())
                 .category_id(category.getId())
                 .category_name(category.getName())
+                .category_group_name(categoryGroup.getName())
                 .color(categoryGroup.getColor().name())
                 .build();
     }
