@@ -8,6 +8,7 @@ import com.plot.plotserver.dto.request.DailyTodo.SearchDailyTodo;
 import com.plot.plotserver.dto.request.DailyTodo.UpdateDailyTodoReqDto;
 import com.plot.plotserver.dto.request.record.RecordRequestDto;
 import com.plot.plotserver.dto.response.dailyTodo.DailyTodoResponseDto;
+import com.plot.plotserver.dto.response.dailyTodo.DailyTodoResponseWithRecordsDto;
 import com.plot.plotserver.dto.response.record.RecordResponseDto;
 import com.plot.plotserver.service.DailyTodoService;
 import lombok.RequiredArgsConstructor;
@@ -37,10 +38,10 @@ public class DailyTodoController {
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        DailyTodoResponseDto dailyTodoResponseDto = dailyTodoService.searchByDailyTodoId(dailyTodoId);
+        DailyTodoResponseWithRecordsDto dailyTodoResponseWithRecordsDto = dailyTodoService.searchByDailyTodoId(dailyTodoId);
 
         Message message = Message.builder()
-                .data(dailyTodoResponseDto)
+                .data(dailyTodoResponseWithRecordsDto)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();

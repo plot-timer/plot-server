@@ -6,6 +6,7 @@ import com.plot.plotserver.domain.Todo;
 import com.plot.plotserver.dto.response.dailyTodo.DailyTodoResponseDto;
 import com.plot.plotserver.util.ColorEnum;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 
 

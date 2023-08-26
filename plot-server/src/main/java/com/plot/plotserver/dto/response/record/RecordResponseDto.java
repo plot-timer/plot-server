@@ -23,7 +23,8 @@ public class RecordResponseDto {
     private String emoji;
     private String color;
 
-    public static RecordResponseDto of(Record record){
+
+    public static RecordResponseDto of(Record record) {
         Todo todo = record.getDailyTodo().getTodo();
         CategoryGroup categoryGroup = todo.getCategory().getCategoryGroup();
 
@@ -37,6 +38,29 @@ public class RecordResponseDto {
                 .emoji(todo.getEmoji())
                 .color(categoryGroup.getColor().name())
                 .build();
+    }
+
+    @Data
+    @Builder
+    public static class InDailyTodo {//dailyTodo 상세 화면에 표시되는 record들
+        private Long id;
+        private String start_date;
+        private String end_date;
+        private Long duration;
+        private boolean is_history;
+
+
+    public static RecordResponseDto.InDailyTodo of(Record record) {
+
+
+        return InDailyTodo.builder()
+                .id(record.getId())
+                .start_date(record.getStartDate().toString())
+                .end_date(record.getEndDate().toString())
+                .duration(record.getDuration())
+                .is_history(record.isHistory())
+                .build();
+        }
     }
 
     @Data

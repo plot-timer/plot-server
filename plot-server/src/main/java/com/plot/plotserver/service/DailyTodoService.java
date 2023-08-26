@@ -7,6 +7,7 @@ import com.plot.plotserver.dto.request.DailyTodo.UpdateDailyTodoReqDto;
 
 import com.plot.plotserver.dto.request.record.RecordRequestDto;
 import com.plot.plotserver.dto.response.dailyTodo.DailyTodoResponseDto;
+import com.plot.plotserver.dto.response.dailyTodo.DailyTodoResponseWithRecordsDto;
 import com.plot.plotserver.dto.response.record.RecordResponseDto;
 import com.plot.plotserver.exception.dailytodo.DailyTodoAlreadyExistException;
 import com.plot.plotserver.exception.dailytodo.DailyTodoDeleteFailException;
@@ -73,12 +74,11 @@ public class DailyTodoService {
 
             result.add(DailyTodoResponseDto.of(total_history,total_schedule, dailyTodo, todo, category, categoryGroup));
         }
-//        dailyTodos.forEach(dailyTodo -> result.add(DailyTodoResponseDto.of(dailyTodo,dailyTodo.getTodo(),dailyTodo.getTodo().getCategory(),dailyTodo.getTodo().getCategory().getCategoryGroup())));
 
         return result;
     }
 
-    public DailyTodoResponseDto searchByDailyTodoId(Long dailyToId){
+    public DailyTodoResponseWithRecordsDto searchByDailyTodoId(Long dailyToId){//record 객체들까지 함꼐 보여줘야 한다. 위에보다 상세정보
 
 
         DailyTodo dailyTodo = dailyTodoRepository.findById(dailyToId).get();
@@ -87,20 +87,26 @@ public class DailyTodoService {
         Category category = todo.getCategory();
         CategoryGroup categoryGroup = category.getCategoryGroup();
 
+
+        Long total_history=0L;
+        Long total_schedule=0L;
+
+        List<RecordResponseDto.InDailyTodo> temp = new ArrayList<>();
         List<Record> histories= recordRepository.findHistoriesByDailyTodoId(dailyToId);
 
-        Long total_history=0L;//하루의 dailytotal_history 총 합 구하기.
-        Long total_schedule=0L;
         for (Record history : histories) {
+            temp.add(RecordResponseDto.InDailyTodo.of(history));
             total_history += history.getDuration();
         }
 
+
         List<Record> schedules = recordRepository.findSchedulesByDailyTodoId(dailyToId);
         for (Record schedule : schedules) {
-            total_schedule = schedule.getDuration();
+            temp.add(RecordResponseDto.InDailyTodo.of(schedule));
+            total_schedule += schedule.getDuration();
         }
 
-        DailyTodoResponseDto result = DailyTodoResponseDto.of(total_history, total_schedule, dailyTodo, todo, category, categoryGroup);
+        DailyTodoResponseWithRecordsDto result = DailyTodoResponseWithRecordsDto.of(total_history, total_schedule, dailyTodo, todo, category, categoryGroup,temp);
 
         return result;
     }
