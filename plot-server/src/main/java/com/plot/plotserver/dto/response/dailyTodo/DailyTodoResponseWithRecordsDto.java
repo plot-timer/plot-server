@@ -1,16 +1,18 @@
 package com.plot.plotserver.dto.response.dailyTodo;
 
 import com.plot.plotserver.domain.*;
+import com.plot.plotserver.dto.response.category.CategoryResponseDto;
+import com.plot.plotserver.dto.response.record.RecordResponseDto;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
-
 
 @Getter
 @Setter
 @AllArgsConstructor
 @Builder
-public class DailyTodoResponseDto {//일별로 조회할때 나타나는 dailyTodos
+public class DailyTodoResponseWithRecordsDto {//DailyTodoResponseDto에 하루의 records들 들어간 responseDto이다. 둘다 필드가 많아서 새로 만들었다.
 
     private Long daily_todo_id;
 
@@ -36,6 +38,8 @@ public class DailyTodoResponseDto {//일별로 조회할때 나타나는 dailyTo
 
     private Long schedule_sum;
 
+    private List<RecordResponseDto.InDailyTodo> record_list;
+
     @Data
     @Builder
     public static class InSchedule{
@@ -46,8 +50,10 @@ public class DailyTodoResponseDto {//일별로 조회할때 나타나는 dailyTo
 
     }
 
-    public static DailyTodoResponseDto of(Long total_history,Long total_schedule,DailyTodo dailyTodo, Todo todo, Category category, CategoryGroup categoryGroup){
-        return DailyTodoResponseDto.builder()
+    public static DailyTodoResponseWithRecordsDto of(Long total_history, Long total_schedule, DailyTodo dailyTodo, Todo todo, Category category, CategoryGroup categoryGroup,List<RecordResponseDto.InDailyTodo> record_list){
+
+
+        return DailyTodoResponseWithRecordsDto.builder()
                 .daily_todo_id(dailyTodo.getId())
                 .title(todo.getTitle())
                 .subtitle(todo.getSubTitle())
@@ -60,6 +66,7 @@ public class DailyTodoResponseDto {//일별로 조회할때 나타나는 dailyTo
                 .status(dailyTodo.getStatus().name())
                 .history_sum(total_history)
                 .schedule_sum(total_schedule)
+                .record_list(record_list)
                 .build();
     }
 

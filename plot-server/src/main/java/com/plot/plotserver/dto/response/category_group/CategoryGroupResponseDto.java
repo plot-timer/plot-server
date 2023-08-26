@@ -18,7 +18,7 @@ public class CategoryGroupResponseDto {
     private Long category_group_id;
     private String category_group_name;
     private String color;
-    List<CategoryResponseDto.Sub> category_list;
+    private List<CategoryResponseDto.Sub> category_list;
 
     public static CategoryGroupResponseDto of(CategoryGroup categoryGroup){
         List<Category> categories = categoryGroup.getCategories();
