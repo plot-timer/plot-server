@@ -14,6 +14,4 @@ public class NewTodoReqDto {
 
     private String emoji;
 
-    private String category_path;
-
 }

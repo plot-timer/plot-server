@@ -25,13 +25,13 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @PostMapping("")
-    public void addCategory(HttpServletResponse response, @RequestBody NewCategoryReqDto newCategoryReqDto) throws IOException {
+    @PostMapping("/add/{categoryGroupId}")
+    public void addCategory(@PathVariable Long categoryGroupId, @RequestBody NewCategoryReqDto newCategoryReqDto,HttpServletResponse response) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        categoryService.save(newCategoryReqDto);
+        categoryService.save(categoryGroupId,newCategoryReqDto);
 
         Message message = Message.builder()
                 .status(HttpStatus.OK)
@@ -40,13 +40,13 @@ public class CategoryController {
         om.writeValue(response.getOutputStream(), message);
     }
 
-    @PatchMapping("/{categoryId}")
-    public void updateCategory(@PathVariable Long categoryId,@RequestBody UpdateCategoryReqDto updateCategoryReqDto, HttpServletResponse response) throws IOException {
+    @PatchMapping("{categoryGroupId}/{categoryId}")
+    public void updateCategory(@PathVariable Long categoryGroupId,@PathVariable Long categoryId,@RequestBody UpdateCategoryReqDto updateCategoryReqDto, HttpServletResponse response) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        categoryService.update(categoryId,updateCategoryReqDto);
+        categoryService.update(categoryGroupId,categoryId,updateCategoryReqDto);
         Message message = Message.builder()
                 .status(HttpStatus.OK)
                 .message("success")

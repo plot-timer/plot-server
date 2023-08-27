@@ -4,15 +4,10 @@ package com.plot.plotserver.service;
 import com.plot.plotserver.domain.*;
 import com.plot.plotserver.dto.request.todo.NewTodoReqDto;
 import com.plot.plotserver.dto.request.todo.UpdateTodoDto;
-import com.plot.plotserver.dto.response.category.CategoryTodosResponseDto;
-import com.plot.plotserver.dto.response.dailyTodo.DailyTodoResponseDto;
 import com.plot.plotserver.dto.response.todo.TodoResponseDto;
-import com.plot.plotserver.exception.category.CategoryNotExistException;
 import com.plot.plotserver.exception.todo.*;
-import com.plot.plotserver.repository.CategoryGroupRepository;
 import com.plot.plotserver.repository.CategoryRepository;
 import com.plot.plotserver.repository.TodoRepository;
-import com.plot.plotserver.repository.UserRepository;
 import com.plot.plotserver.util.SecurityContextHolderUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,32 +23,16 @@ import java.util.Optional;
 @Slf4j
 public class TodoService {
 
-
     private final TodoRepository todoRepository;
-
-    private final UserRepository userRepository;
 
     private final CategoryRepository categoryRepository;
 
-    private final CategoryGroupRepository categoryGroupRepository;
-
     @Transactional
-    public void save(NewTodoReqDto todoReqDto) {
+    public void save(Long categoryId,NewTodoReqDto todoReqDto) {
 
         try {
-            Long userId = SecurityContextHolderUtil.getUserId();
-            Optional<User> user = userRepository.findById(userId);
 
-            //category를 todo의 필드에 저장해야 한다.
-            String category_group_and_category = todoReqDto.getCategory_path();
-
-            String[] result=extractBeforeAndAfterSlash(category_group_and_category);
-            //result[0]=category_group, result[1]=category이다.
-
-            Optional<CategoryGroup> categoryGroup = categoryGroupRepository.findByUserIdAndName(user.get().getId(), result[0]);
-
-            Optional<Category> category = categoryRepository.findByNameAndCategoryGroupId(result[1], categoryGroup.get().getId());
-
+            Category category = categoryRepository.findById(categoryId).get();
 
             Todo todo = Todo.builder()
                     .title(todoReqDto.getTitle())
@@ -61,7 +40,7 @@ public class TodoService {
                     .memo(todoReqDto.getMemo())
                     .star(false)
                     .emoji(todoReqDto.getEmoji())
-                    .category(category.get())
+                    .category(category)
                     .build();
 
             todoRepository.save(todo);
@@ -71,24 +50,11 @@ public class TodoService {
     }
 
     @Transactional
-    public void update(Long todoId, UpdateTodoDto updateTodoDto) {
+    public void update(Long categoryId, Long todoId, UpdateTodoDto updateTodoDto) {
 
         try {
 
-            Long userId = SecurityContextHolderUtil.getUserId();
-            Optional<User> user = userRepository.findById(userId);
-
-            //category를 todo의 필드에 저장해야 한다.
-            String category_group_and_category = updateTodoDto.getCategory_path();
-
-            String[] result=extractBeforeAndAfterSlash(category_group_and_category);
-            //result[0]=category_group, result[1]=category이다.
-
-            Optional<CategoryGroup> categoryGroup = categoryGroupRepository.findByUserIdAndName(user.get().getId(), result[0]);
-
-            Category category = categoryRepository.findByNameAndCategoryGroupId(result[1], categoryGroup.get().getId()).get();
-
-
+            Category category = categoryRepository.findById(categoryId).get();
             Todo todo = todoRepository.findById(todoId).get();
             todo.updateTodo(updateTodoDto, category);
 
