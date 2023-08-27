@@ -35,16 +35,14 @@ public class CategoryService {
 
 
     @Transactional
-    public void save(NewCategoryReqDto reqDto) {
+    public void save(Long categoryGroupId,NewCategoryReqDto reqDto) {
 
-        Long userId = SecurityContextHolderUtil.getUserId();
-
-        Optional<CategoryGroup> categoryGroupOptional = categoryGroupRepository.findByUserIdAndName(userId, reqDto.getCategoryGroup());
+        Optional<CategoryGroup> categoryGroupOptional = categoryGroupRepository.findById(categoryGroupId);
         if (!categoryGroupOptional.isPresent()) {
             throw new CategoryGroupNotFoundException("카테고리 그룹이 존재하지 않습니다.");
         }
 
-        Optional<Category> categoryOptional = categoryRepository.findByNameAndCategoryGroupId(reqDto.getCategoryName(), categoryGroupOptional.get().getId());
+        Optional<Category> categoryOptional = categoryRepository.findByNameAndCategoryGroupId(reqDto.getCategoryName(),categoryGroupId);
         if (categoryOptional.isPresent()) {
             throw new CategoryAlreadyExistException("이미 존재하는 카테고리입니다.");
         }
@@ -93,13 +91,12 @@ public class CategoryService {
 
 
     @Transactional
-    public void update(Long categoryId, UpdateCategoryReqDto reqDto) {
+    public void update(Long categoryGroupId,Long categoryId, UpdateCategoryReqDto reqDto) {
 
 
         try {
-            Long userId = SecurityContextHolderUtil.getUserId();
 
-            Optional<CategoryGroup> categoryGroupOptional = categoryGroupRepository.findByUserIdAndName(userId, reqDto.getCategoryGroup());//이동할 그룹 찾기.
+            Optional<CategoryGroup> categoryGroupOptional = categoryGroupRepository.findById(categoryGroupId);
             if(!categoryGroupOptional.isPresent())
                 throw new CategoryGroupNotFoundException("해당하는 카테고리 그룹이 존재하지 않습니다.");
 
