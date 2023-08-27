@@ -89,6 +89,21 @@ public class CategoryGroupController {
         om.writeValue(response.getOutputStream(), message);
     }
 
+    @GetMapping("/all-category-group")
+    public void getAllCategoryGroup(HttpServletResponse response) throws IOException {
+
+        ObjectMapper om = new ObjectMapper();
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
+
+        List<CategoryGroupResponseDto.InCategoryAdd> result = categoryGroupService.getAllCategoryGroup();
+        Message message = Message.builder()
+                .data(result)
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        om.writeValue(response.getOutputStream(), message);
+    }
+
     @GetMapping("/all")
     public void getAll(HttpServletResponse response) throws IOException {
 

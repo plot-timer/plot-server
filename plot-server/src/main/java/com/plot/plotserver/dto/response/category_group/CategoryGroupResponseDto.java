@@ -64,6 +64,22 @@ public class CategoryGroupResponseDto {
     }
 
 
+    @Data
+    @Builder
+    public static class InCategoryAdd {
+
+        private Long category_group_id;
+        private String category_group_name;
+
+        public static CategoryGroupResponseDto.InCategoryAdd of(CategoryGroup categoryGroup) {
+
+            return InCategoryAdd.builder()
+                    .category_group_id(categoryGroup.getId())
+                    .category_group_name(categoryGroup.getName())
+                    .build();
+        }
+    }
+
 
 
 
