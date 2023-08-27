@@ -2,6 +2,7 @@ package com.plot.plotserver.dto.response.category;
 
 import com.plot.plotserver.domain.Category;
 import com.plot.plotserver.domain.TagCategory;
+import com.plot.plotserver.dto.response.category_group.CategoryGroupResponseDto;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -58,6 +59,23 @@ public class CategoryResponseDto {
                     .tagName(tagNameList)
                     .build();
         }
+    }
+
+    @Data
+    @Builder
+    public static class CategoryInfo{//todo add할때 카테고리 정보
+
+        private Long category_id;
+        private String category_name;
+
+        public static CategoryResponseDto.CategoryInfo of(Category category) {
+
+            return CategoryInfo.builder()
+                    .category_id(category.getId())
+                    .category_name(category.getName())
+                    .build();
+        }
+
     }
 
 }

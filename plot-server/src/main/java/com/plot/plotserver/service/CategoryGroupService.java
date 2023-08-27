@@ -107,4 +107,15 @@ public class CategoryGroupService {
         });
         return result;
     }
+
+    public List<CategoryGroupResponseDto.InTodoAdd> getAllCategoryPath() {
+
+        List<CategoryGroup> categoryGroupList = categoryGroupRepository.findByUserId(SecurityContextHolderUtil.getUserId());
+        List<CategoryGroupResponseDto.InTodoAdd> result = new ArrayList<>();
+
+        categoryGroupList.forEach(categoryGroup -> {
+            result.add(CategoryGroupResponseDto.InTodoAdd.of(categoryGroup));
+        });
+        return result;
+    }
 }

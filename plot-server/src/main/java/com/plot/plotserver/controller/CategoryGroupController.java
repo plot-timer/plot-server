@@ -74,6 +74,20 @@ public class CategoryGroupController {
         om.writeValue(response.getOutputStream(), message);
     }
 
+    @GetMapping("/all-category-path")
+    public void getAllCategoryPath(HttpServletResponse response) throws IOException {
+
+        ObjectMapper om = new ObjectMapper();
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
+
+        List<CategoryGroupResponseDto.InTodoAdd> result = categoryGroupService.getAllCategoryPath();
+        Message message = Message.builder()
+                .data(result)
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        om.writeValue(response.getOutputStream(), message);
+    }
 
     @GetMapping("/all")
     public void getAll(HttpServletResponse response) throws IOException {
