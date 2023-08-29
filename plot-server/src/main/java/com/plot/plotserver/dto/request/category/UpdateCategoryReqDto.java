@@ -14,8 +14,6 @@ public class UpdateCategoryReqDto {
 
     private String emoji;
 
-    private String categoryGroup;
-
     private boolean star;
 
     private String tags;

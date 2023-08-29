@@ -6,13 +6,16 @@ import com.plot.plotserver.exception.category.CategoryDeleteFailException;
 import com.plot.plotserver.exception.category.CategoryNotExistException;
 import com.plot.plotserver.exception.category.CategorySavedFailException;
 import com.plot.plotserver.exception.categorygroup.*;
+import com.plot.plotserver.exception.dailytodo.DailyTodoAlreadyExistException;
+import com.plot.plotserver.exception.dailytodo.DailyTodoDeleteFailException;
+import com.plot.plotserver.exception.dailytodo.DailyTodoSavedFailException;
+import com.plot.plotserver.exception.dailytodo.DailyTodoUpdateFailException;
 import com.plot.plotserver.exception.email.EmailCodeExpiredException;
 import com.plot.plotserver.exception.email.EmailCodeMismatchException;
 import com.plot.plotserver.exception.email.EmailCodeSendingFailureException;
+import com.plot.plotserver.exception.history.HistorySavedFailException;
 import com.plot.plotserver.exception.tag.TagNotFoundException;
-import com.plot.plotserver.exception.todo.TodoDeleteFailException;
-import com.plot.plotserver.exception.todo.TodoSavedFailException;
-import com.plot.plotserver.exception.todo.TodoUpdateFailException;
+import com.plot.plotserver.exception.todo.*;
 import com.plot.plotserver.exception.token.TokenExpiredException;
 import com.plot.plotserver.exception.user.*;
 import org.springframework.http.HttpStatus;
@@ -93,18 +96,34 @@ public class CustomExceptionHandler {
     }
 
 
-    @ExceptionHandler(TodoDeleteFailException.class)// todo 관련 에러 -300~-350
+    @ExceptionHandler(TodoDeleteFailException.class)
     public ResponseEntity<?> handleException(TodoDeleteFailException e) {
         Message message = new Message(e.getMessage(), -301,HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(message, message.getStatus());
     }
 
 
-    @ExceptionHandler(TodoUpdateFailException.class)// todo 관련 에러 -300~-350
+
+
+    @ExceptionHandler(TodoUpdateFailException.class)
     public ResponseEntity<?> handleException(TodoUpdateFailException e) {
         Message message = new Message(e.getMessage(), -302,HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(message, message.getStatus());
     }
+
+    @ExceptionHandler(TodoSearchFailException.class)
+    public ResponseEntity<?> handleException(TodoSearchFailException e) {
+        Message message = new Message(e.getMessage(), -303,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+
+    @ExceptionHandler(TodoNotExistException.class)
+    public ResponseEntity<?> handleException(TodoNotExistException e) {
+        Message message = new Message(e.getMessage(), -304,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
 
 
 
@@ -168,6 +187,39 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
+    @ExceptionHandler(DailyTodoSavedFailException.class)// Daily todo 관련 에러 -450~-470
+    public ResponseEntity<?> handleException(DailyTodoSavedFailException e) {
+        Message message = new Message(e.getMessage(), -451,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+    @ExceptionHandler(DailyTodoDeleteFailException.class)
+    public ResponseEntity<?> handleException(DailyTodoDeleteFailException e) {
+        Message message = new Message(e.getMessage(), -452,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+
+    @ExceptionHandler(DailyTodoAlreadyExistException.class)
+    public ResponseEntity<?> handleException(DailyTodoAlreadyExistException e) {
+        Message message = new Message(e.getMessage(), -453,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+
+    @ExceptionHandler(DailyTodoUpdateFailException.class)
+    public ResponseEntity<?> handleException(DailyTodoUpdateFailException e) {
+        Message message = new Message(e.getMessage(), -454,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+
+
+    @ExceptionHandler(HistorySavedFailException.class)//history 관련 에러 ~470~-480
+    public ResponseEntity<?> handleException(HistorySavedFailException e) {
+        Message message = new Message(e.getMessage(), -470,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, message.getStatus());
+    }
     @ExceptionHandler(TagNotFoundException.class)
     public ResponseEntity<?> handleException(TagNotFoundException e) {
         Message message = new Message(e.getMessage(), -500,HttpStatus.BAD_REQUEST);

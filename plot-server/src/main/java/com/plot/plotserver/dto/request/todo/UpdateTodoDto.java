@@ -15,8 +15,4 @@ public class UpdateTodoDto {
 
     private boolean star;
 
-    private boolean done;
-
-    private String category_path;
-
 }

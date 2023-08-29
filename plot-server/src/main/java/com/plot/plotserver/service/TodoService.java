@@ -1,25 +1,21 @@
 package com.plot.plotserver.service;
 
 
-import com.plot.plotserver.domain.Category;
-import com.plot.plotserver.domain.CategoryGroup;
-import com.plot.plotserver.domain.Todo;
-import com.plot.plotserver.domain.User;
+import com.plot.plotserver.domain.*;
 import com.plot.plotserver.dto.request.todo.NewTodoReqDto;
 import com.plot.plotserver.dto.request.todo.UpdateTodoDto;
-import com.plot.plotserver.exception.todo.TodoDeleteFailException;
-import com.plot.plotserver.exception.todo.TodoSavedFailException;
-import com.plot.plotserver.exception.todo.TodoUpdateFailException;
-import com.plot.plotserver.repository.CategoryGroupRepository;
+import com.plot.plotserver.dto.response.todo.TodoResponseDto;
+import com.plot.plotserver.exception.todo.*;
 import com.plot.plotserver.repository.CategoryRepository;
 import com.plot.plotserver.repository.TodoRepository;
-import com.plot.plotserver.repository.UserRepository;
 import com.plot.plotserver.util.SecurityContextHolderUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,32 +23,16 @@ import java.util.Optional;
 @Slf4j
 public class TodoService {
 
-
     private final TodoRepository todoRepository;
-
-    private final UserRepository userRepository;
 
     private final CategoryRepository categoryRepository;
 
-    private final CategoryGroupRepository categoryGroupRepository;
-
     @Transactional
-    public void save(NewTodoReqDto todoReqDto) {
+    public void save(Long categoryId,NewTodoReqDto todoReqDto) {
 
         try {
-            Long userId = SecurityContextHolderUtil.getUserId();
-            Optional<User> user = userRepository.findById(userId);
 
-            //category를 todo의 필드에 저장해야 한다.
-            String category_group_and_category = todoReqDto.getCategory_path();
-
-            String[] result=extractBeforeAndAfterSlash(category_group_and_category);
-            //result[0]=category_group, result[1]=category이다.
-
-            Optional<CategoryGroup> categoryGroup = categoryGroupRepository.findByUserIdAndName(user.get().getId(), result[0]);
-
-            Optional<Category> category = categoryRepository.findByNameAndCategoryGroupId(result[1], categoryGroup.get().getId());
-
+            Category category = categoryRepository.findById(categoryId).get();
 
             Todo todo = Todo.builder()
                     .title(todoReqDto.getTitle())
@@ -60,8 +40,7 @@ public class TodoService {
                     .memo(todoReqDto.getMemo())
                     .star(false)
                     .emoji(todoReqDto.getEmoji())
-                    .done(false)
-                    .category(category.get())
+                    .category(category)
                     .build();
 
             todoRepository.save(todo);
@@ -71,34 +50,13 @@ public class TodoService {
     }
 
     @Transactional
-    public void update(Long todoId, UpdateTodoDto updateTodoDto) {
+    public void update(Long categoryId, Long todoId, UpdateTodoDto updateTodoDto) {
 
         try {
 
-            Long userId = SecurityContextHolderUtil.getUserId();
-            Optional<User> user = userRepository.findById(userId);
-
-            //category를 todo의 필드에 저장해야 한다.
-            String category_group_and_category = updateTodoDto.getCategory_path();
-
-            String[] result=extractBeforeAndAfterSlash(category_group_and_category);
-            //result[0]=category_group, result[1]=category이다.
-
-            Optional<CategoryGroup> categoryGroup = categoryGroupRepository.findByUserIdAndName(user.get().getId(), result[0]);
-
-            Optional<Category> category = categoryRepository.findByNameAndCategoryGroupId(result[1], categoryGroup.get().getId());
-
-
+            Category category = categoryRepository.findById(categoryId).get();
             Todo todo = todoRepository.findById(todoId).get();
-            todo.setTitle(updateTodoDto.getTitle());
-            todo.setSubTitle(updateTodoDto.getSubtitle());
-            todo.setMemo(updateTodoDto.getMemo());
-            todo.setStar(updateTodoDto.isStar());
-            todo.setEmoji(updateTodoDto.getEmoji());
-            todo.setDone(updateTodoDto.isDone());
-            todo.setCategory(category.get());
-
-            todoRepository.save(todo);
+            todo.updateTodo(updateTodoDto, category);
 
         }catch (Exception e){
             throw new TodoUpdateFailException("Todo 수정에 실패했습니다.");
@@ -132,5 +90,27 @@ public class TodoService {
         return result;
     }
 
+
+    public List<TodoResponseDto> getAllTodos() {
+        List<Todo> todoList = todoRepository.findByUserId(SecurityContextHolderUtil.getUserId());
+        List<TodoResponseDto> result = new ArrayList<>();
+
+        todoList.forEach(todo -> {
+            result.add(TodoResponseDto.of(todo));
+        });
+        return result;
+    }
+
+    public TodoResponseDto searchByTodoId(Long todoId){
+
+        try {
+            Todo todo = todoRepository.findById(todoId).get();
+            TodoResponseDto result = TodoResponseDto.of(todo);
+            return result;
+        } catch (Exception e) {
+            throw new TodoNotExistException("Todo를 조회할 수 없습니다.");
+        }
+
+    }
 
 }

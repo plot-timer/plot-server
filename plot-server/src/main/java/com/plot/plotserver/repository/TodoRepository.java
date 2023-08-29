@@ -16,6 +16,9 @@ public interface TodoRepository extends JpaRepository<Todo,Long> {
     @Query("SELECT t FROM Todo t WHERE t.category.id = :categoryId")
     public List<Todo> findByCategory(Long categoryId);
 
+    @Query("SELECT t FROM Todo t WHERE t.category.categoryGroup.user.id =:userId")
+    public List<Todo> findByUserId(Long userId);
+
 }
 
 

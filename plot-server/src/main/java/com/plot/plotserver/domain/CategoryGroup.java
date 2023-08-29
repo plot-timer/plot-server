@@ -57,4 +57,9 @@ public class CategoryGroup {
         categories.remove(category);
     }
 
+    public void updateCategoryGroup(UpdateCategoryGroupReqDto reqDto){
+        this.name = reqDto.getGroupName();
+        this.color = reqDto.getColor();
+    }
+
 }

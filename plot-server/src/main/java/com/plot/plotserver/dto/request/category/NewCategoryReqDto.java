@@ -13,7 +13,5 @@ public class NewCategoryReqDto {
 
     private String emoji;
 
-    private String categoryGroup;
-
     private String tags;
 }
