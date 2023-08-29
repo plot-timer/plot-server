@@ -33,7 +33,7 @@ public class DailyTodoController {
 
     @GetMapping("/{dailyTodoId}") //상세 화면 보여주기.
     @Comment("DailyTodo 상세 화면 보여주기(재생화면)")
-    public void showDailyTodo(@PathVariable Long dailyTodoId,HttpServletResponse response) throws IOException {
+    public void showDailyTodo(@PathVariable("dailyTodoId") Long dailyTodoId,HttpServletResponse response) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
@@ -49,14 +49,14 @@ public class DailyTodoController {
 
     }
 
-    @GetMapping("/date/list")
+    @GetMapping("/date/{date}")
     @Comment("날짜로 DailyTodo 조회하기")
-    public void showDailyTodo(@RequestBody SearchDailyTodo searchDailyTodo, HttpServletResponse response) throws IOException {
+    public void showDailyTodo(@PathVariable("date") String date, HttpServletResponse response) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        List<DailyTodoResponseDto> result = dailyTodoService.searchByDate(searchDailyTodo);
+        List<DailyTodoResponseDto> result = dailyTodoService.searchByDate(date);
 
         Message message = Message.builder()
                 .data(result)
@@ -69,7 +69,7 @@ public class DailyTodoController {
 
 
     @PostMapping("/{todoId}")//todo 저장.  저장 로직 효율적으로 수정하기.
-    public void addDailyTodo(@PathVariable Long todoId, @RequestBody NewDailyTodoReqDto newDailyTodoReqDto,HttpServletResponse response) throws IOException {
+    public void addDailyTodo(@PathVariable("todoId") Long todoId, @RequestBody NewDailyTodoReqDto newDailyTodoReqDto,HttpServletResponse response) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
@@ -87,7 +87,7 @@ public class DailyTodoController {
     }
 
     @PatchMapping("/{dailyTodoId}")
-    public void updateDailyTodo(@PathVariable Long dailyTodoId, @RequestBody UpdateDailyTodoReqDto updateDailyTodoReqDto, HttpServletResponse response) throws IOException {
+    public void updateDailyTodo(@PathVariable("dailyTodoId") Long dailyTodoId, @RequestBody UpdateDailyTodoReqDto updateDailyTodoReqDto, HttpServletResponse response) throws IOException {
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
@@ -101,7 +101,7 @@ public class DailyTodoController {
     }
 
     @DeleteMapping("/{dailyTodoId}")
-    public void deleteDailyTodo(HttpServletResponse response,@PathVariable Long dailyTodoId) throws IOException {
+    public void deleteDailyTodo(HttpServletResponse response,@PathVariable("dailyTodoId") Long dailyTodoId) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
@@ -115,13 +115,13 @@ public class DailyTodoController {
     }
 
 
-    @GetMapping("/time-sequence")
-    public void getDailyHistoryAndSchedule(@RequestBody RecordRequestDto reqDto, HttpServletResponse response) throws IOException {
+    @GetMapping("/time-sequence/{date}")
+    public void getDailyHistoryAndSchedule(@PathVariable("date") String date, HttpServletResponse response) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        List<RecordResponseDto> result = dailyTodoService.getHistoryAndSchedule(reqDto);
+        List<RecordResponseDto> result = dailyTodoService.getHistoryAndSchedule(date);
 
         Message message = Message.builder()
                 .data(result)
@@ -132,13 +132,13 @@ public class DailyTodoController {
     }
 
 
-    @GetMapping("/grass")
-    public void getHistoryOfMonth(@RequestBody RecordRequestDto.Grass reqDto, HttpServletResponse response) throws IOException {
+    @GetMapping("/grass/{startDate}/{endDate}")
+    public void getHistoryOfMonth(@PathVariable("startDate") String startDate, @PathVariable("endDate") String endDate, HttpServletResponse response) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        List<RecordResponseDto.Grass> result = dailyTodoService.getHistoryOfMonth(reqDto);
+        List<RecordResponseDto.Grass> result = dailyTodoService.getHistoryOfMonth(startDate, endDate);
 
         Message message = Message.builder()
                 .data(result)

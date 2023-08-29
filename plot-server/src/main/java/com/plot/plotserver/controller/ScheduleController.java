@@ -45,14 +45,14 @@ public class ScheduleController {
 
     }
 
-    @GetMapping("")
+    @GetMapping("/{date}")
     @Comment("해당 날짜의 스케줄 목록 반환")
-    public void showSchedule(@RequestBody ScheduleReqDto.GetScheduleList reqDto, HttpServletResponse response) throws IOException {
+    public void showSchedule(@PathVariable String date, HttpServletResponse response) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        List<ScheduleResponseDto> result = scheduleService.searchByDate(reqDto);
+        List<ScheduleResponseDto> result = scheduleService.searchByDate(date);
 
         Message message = Message.builder()
                 .data(result)

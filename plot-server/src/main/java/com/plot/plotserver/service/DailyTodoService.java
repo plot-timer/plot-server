@@ -45,12 +45,13 @@ public class DailyTodoService {
     private final RecordRepository recordRepository;
 
 
-    public List<DailyTodoResponseDto> searchByDate(SearchDailyTodo reqDto){
+    public List<DailyTodoResponseDto> searchByDate(String sDate){
 
         Long userId = SecurityContextHolderUtil.getUserId();
 
         List<DailyTodoResponseDto> result = new ArrayList<>();
-        LocalDate date = getLocalDate(reqDto);
+
+        LocalDate date = LocalDate.parse(sDate);
 
         List<DailyTodo> dailyTodos = dailyTodoRepository.findByUserIDAndDate(userId,date);
 
@@ -173,10 +174,10 @@ public class DailyTodoService {
     }
 
 
-    public List<RecordResponseDto> getHistoryAndSchedule(RecordRequestDto reqDto) {
+    public List<RecordResponseDto> getHistoryAndSchedule(String dateParam) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate date = LocalDate.parse(reqDto.getDate(), formatter);
+        LocalDate date = LocalDate.parse(dateParam);
 
         List<DailyTodo> dailyTodos = dailyTodoRepository.findByUserIDAndDate(SecurityContextHolderUtil.getUserId(), date);
         List<RecordResponseDto> result = new ArrayList<>();
@@ -189,11 +190,11 @@ public class DailyTodoService {
         return result;
     }
 
-    public List<RecordResponseDto.Grass> getHistoryOfMonth(RecordRequestDto.Grass reqDto) {
+    public List<RecordResponseDto.Grass> getHistoryOfMonth(String startOfDate, String endOfDate) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate startRange = LocalDate.parse(reqDto.getStartDate(), formatter);
-        LocalDate endRange = LocalDate.parse(reqDto.getEndDate(), formatter);
+        LocalDate startRange = LocalDate.parse(startOfDate, formatter);
+        LocalDate endRange = LocalDate.parse(endOfDate, formatter);
 
         List<RecordResponseDto.Grass> result = new ArrayList<>();
 

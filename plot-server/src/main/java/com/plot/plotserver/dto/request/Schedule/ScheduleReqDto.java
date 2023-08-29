@@ -17,16 +17,6 @@ public class ScheduleReqDto {
 
 
     @Data
-    public static class GetScheduleList{
-        private String date;
-    }
-
-    @Data
-    public static class GetScheduleAndHistory{
-        private String date;
-    }
-
-    @Data
     public static class Update{
         private Long schedule_id;
         private String startDate;

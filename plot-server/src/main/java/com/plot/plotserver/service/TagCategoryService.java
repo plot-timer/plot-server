@@ -22,11 +22,11 @@ public class TagCategoryService {
     private final TagCategoryRepository tagCategoryRepository;
 
 
-    public List<CategoryResponseDto> searchByTagName(SearchTagCategoryReqDto reqDto){
+    public List<CategoryResponseDto> searchByTagName(String tagNameParam){
 
         Long userId = SecurityContextHolderUtil.getUserId();
 
-        String[] tagNames = reqDto.getTagName().split("/");
+        String[] tagNames = tagNameParam.split("&");
         List<Category> tempList= new ArrayList<>();
         List<CategoryResponseDto> result = new ArrayList<>();
 

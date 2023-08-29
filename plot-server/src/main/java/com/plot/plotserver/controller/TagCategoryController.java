@@ -2,7 +2,6 @@ package com.plot.plotserver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plot.plotserver.domain.Message;
-import com.plot.plotserver.dto.request.tag_category.SearchTagCategoryReqDto;
 import com.plot.plotserver.dto.response.category.CategoryResponseDto;
 import com.plot.plotserver.dto.response.tag.TagResponseDto;
 import com.plot.plotserver.service.TagCategoryService;
@@ -11,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Comment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -28,14 +24,14 @@ public class TagCategoryController {
 
     private final TagCategoryService tagCategoryService;
 
-    @GetMapping("/category/list")
+    @GetMapping("tag/{tagName}")
     @Comment("태그 이름으로 유저가 만든 카테고리를 찾아 반환")
-    public void searchCategoryList(HttpServletResponse response, @RequestBody SearchTagCategoryReqDto reqDto) throws IOException {
+    public void searchCategoryList(HttpServletResponse response, @PathVariable String tagName) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        List<CategoryResponseDto> result = tagCategoryService.searchByTagName(reqDto);
+        List<CategoryResponseDto> result = tagCategoryService.searchByTagName(tagName);
 
         Message message = Message.builder()
                 .data(result)

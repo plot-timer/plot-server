@@ -64,12 +64,12 @@ public class ScheduleService {
     }
 
     @Comment("해당 날짜에 따른 스케줄 목록 검색")
-    public List<ScheduleResponseDto> searchByDate(ScheduleReqDto.GetScheduleList reqDto) {
+    public List<ScheduleResponseDto> searchByDate(String dateParam) {
 
         Long userId = SecurityContextHolderUtil.getUserId();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate date = LocalDate.parse(reqDto.getDate(), formatter);
+        LocalDate date = LocalDate.parse(dateParam, formatter);
 
         List<ScheduleResponseDto> result = new ArrayList<>();
 
