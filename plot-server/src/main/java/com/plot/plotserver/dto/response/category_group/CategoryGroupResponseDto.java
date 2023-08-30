@@ -2,9 +2,7 @@ package com.plot.plotserver.dto.response.category_group;
 
 import com.plot.plotserver.domain.Category;
 import com.plot.plotserver.domain.CategoryGroup;
-import com.plot.plotserver.domain.Record;
 import com.plot.plotserver.dto.response.category.CategoryResponseDto;
-import com.plot.plotserver.dto.response.record.RecordResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
