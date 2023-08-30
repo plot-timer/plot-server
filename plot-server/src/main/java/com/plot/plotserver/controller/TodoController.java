@@ -51,9 +51,10 @@ public class TodoController {
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        todoService.save(categoryId,newTodoReqDto);
+        TodoResponseDto result = todoService.save(categoryId, newTodoReqDto);
 
         Message message = Message.builder()
+                .data(result)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();
