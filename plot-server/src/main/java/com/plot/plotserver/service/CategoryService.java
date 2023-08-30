@@ -4,6 +4,7 @@ package com.plot.plotserver.service;
 import com.plot.plotserver.domain.*;
 import com.plot.plotserver.dto.request.category.NewCategoryReqDto;
 import com.plot.plotserver.dto.request.category.UpdateCategoryReqDto;
+import com.plot.plotserver.dto.response.category.CategoryResponseDto;
 import com.plot.plotserver.dto.response.category.CategoryTodosResponseDto;
 import com.plot.plotserver.exception.category.*;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupAlreadyExistException;
@@ -35,7 +36,7 @@ public class CategoryService {
 
 
     @Transactional
-    public void save(Long categoryGroupId,NewCategoryReqDto reqDto) {
+    public CategoryResponseDto save(Long categoryGroupId,NewCategoryReqDto reqDto) {
 
         Optional<CategoryGroup> categoryGroupOptional = categoryGroupRepository.findById(categoryGroupId);
         if (!categoryGroupOptional.isPresent()) {
@@ -60,6 +61,8 @@ public class CategoryService {
 
         if(!tagList.isEmpty())
             addTag(tagList, category);
+
+        return CategoryResponseDto.of(category, tagList);
     }
 
     @Transactional

@@ -46,6 +46,19 @@ public class DailyTodoResponseDto {//일별로 조회할때 나타나는 dailyTo
 
     }
 
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class Out{
+        private Long daily_todo_id;
+
+        public static DailyTodoResponseDto.Out of(DailyTodo dailyTodo){
+            return DailyTodoResponseDto.Out.builder()
+                    .daily_todo_id(dailyTodo.getId())
+                    .build();
+        }
+    }
+
     public static DailyTodoResponseDto of(Long total_history,Long total_schedule,DailyTodo dailyTodo, Todo todo, Category category, CategoryGroup categoryGroup){
         return DailyTodoResponseDto.builder()
                 .daily_todo_id(dailyTodo.getId())

@@ -4,6 +4,7 @@ package com.plot.plotserver.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plot.plotserver.domain.Message;
 import com.plot.plotserver.dto.request.Schedule.ScheduleReqDto;
+import com.plot.plotserver.dto.response.record.RecordResponseDto;
 import com.plot.plotserver.dto.response.schedule.ScheduleResponseDto;
 import com.plot.plotserver.service.HistoryService;
 import com.plot.plotserver.service.ScheduleService;
@@ -34,9 +35,10 @@ public class ScheduleController {
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        scheduleService.save(reqDtoList);
+        List<RecordResponseDto> result = scheduleService.save(reqDtoList);
 
         Message message = Message.builder()
+                .data(result)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();

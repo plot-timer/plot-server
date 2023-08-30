@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plot.plotserver.domain.Message;
 import com.plot.plotserver.dto.request.category.NewCategoryReqDto;
 import com.plot.plotserver.dto.request.category.UpdateCategoryReqDto;
+import com.plot.plotserver.dto.response.category.CategoryResponseDto;
 import com.plot.plotserver.dto.response.category.CategoryTodosResponseDto;
 import com.plot.plotserver.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +27,15 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping("/add/{categoryGroupId}")
-    public void addCategory(@PathVariable Long categoryGroupId, @RequestBody NewCategoryReqDto newCategoryReqDto,HttpServletResponse response) throws IOException {
+    public void addCategory(@PathVariable Long categoryGroupId, @RequestBody NewCategoryReqDto newCategoryReqDto, HttpServletResponse response) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        categoryService.save(categoryGroupId,newCategoryReqDto);
+        CategoryResponseDto result = categoryService.save(categoryGroupId, newCategoryReqDto);
 
         Message message = Message.builder()
+                .data(result)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();

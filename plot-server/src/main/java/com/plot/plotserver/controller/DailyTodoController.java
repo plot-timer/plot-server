@@ -75,9 +75,10 @@ public class DailyTodoController {
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
 
-        dailyTodoService.save(todoId,newDailyTodoReqDto);
+        DailyTodoResponseDto.Out result = dailyTodoService.save(todoId, newDailyTodoReqDto);
 
         Message message = Message.builder()
+                .data(result)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();

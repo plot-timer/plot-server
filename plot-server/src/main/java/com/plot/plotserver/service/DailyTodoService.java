@@ -113,7 +113,7 @@ public class DailyTodoService {
     }
 
     @Transactional
-    public void save(Long todoId,NewDailyTodoReqDto newDailyTodoReqDto) {
+    public DailyTodoResponseDto.Out save(Long todoId,NewDailyTodoReqDto newDailyTodoReqDto) {
 
         try {
 
@@ -137,7 +137,8 @@ public class DailyTodoService {
                     .user(user)
                     .build();
 
-            dailyTodoRepository.save(dailyTodo);
+            DailyTodo save = dailyTodoRepository.save(dailyTodo);
+            return DailyTodoResponseDto.Out.of(save);
 
         }catch(DailyTodoAlreadyExistException e){
             throw e;

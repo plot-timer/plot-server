@@ -32,7 +32,7 @@ public class CategoryGroupService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void saveCategoryGroup(NewCategoryGroupReqDto newCategoryGroupReqDto) {
+    public CategoryGroupResponseDto saveCategoryGroup(NewCategoryGroupReqDto newCategoryGroupReqDto) {
 
         try {
             Long userId = SecurityContextHolderUtil.getUserId();
@@ -49,7 +49,8 @@ public class CategoryGroupService {
                     .user(user.get())
                     .build();
 
-            categoryGroupRepository.save(categoryGroup);
+            CategoryGroup save = categoryGroupRepository.save(categoryGroup);
+            return CategoryGroupResponseDto.of(save);
 
         }catch(CategoryGroupAlreadyExistException e){
             throw e;

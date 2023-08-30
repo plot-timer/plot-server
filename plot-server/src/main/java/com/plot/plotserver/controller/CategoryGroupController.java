@@ -34,9 +34,10 @@ public class CategoryGroupController {
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
 
-        categoryGroupService.saveCategoryGroup(newCategoryGroupReqDto);
+        CategoryGroupResponseDto result = categoryGroupService.saveCategoryGroup(newCategoryGroupReqDto);
 
         Message message = Message.builder()
+                .data(result)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();

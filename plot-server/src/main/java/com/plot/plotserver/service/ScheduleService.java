@@ -4,6 +4,7 @@ package com.plot.plotserver.service;
 import com.plot.plotserver.domain.DailyTodo;
 import com.plot.plotserver.domain.Record;
 import com.plot.plotserver.dto.request.Schedule.ScheduleReqDto;
+import com.plot.plotserver.dto.response.record.RecordResponseDto;
 import com.plot.plotserver.dto.response.schedule.ScheduleResponseDto;
 import com.plot.plotserver.exception.history.HistorySavedFailException;
 import com.plot.plotserver.exception.schedule.ScheduleNotFoundException;
@@ -34,7 +35,9 @@ public class ScheduleService {
 
 
     @Transactional
-    public void save(List<ScheduleReqDto.Create> reqDtoList) {
+    public List<RecordResponseDto> save(List<ScheduleReqDto.Create> reqDtoList) {
+
+        List<RecordResponseDto> result = new ArrayList<>();
 
         reqDtoList.forEach(reqDto -> {
 
@@ -55,12 +58,15 @@ public class ScheduleService {
                         .dailyTodo(dailyTodo)
                         .build();
 
-                recordRepository.save(record);
+                Record save = recordRepository.save(record);
+                result.add(RecordResponseDto.of(save));
 
             }catch(Exception e){
                 throw new HistorySavedFailException("Schedule 생성에 실패하였습니다.");
             }
         });
+
+        return result;
     }
 
     @Comment("해당 날짜에 따른 스케줄 목록 검색")
