@@ -28,7 +28,7 @@ public class TodoService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public void save(Long categoryId,NewTodoReqDto todoReqDto) {
+    public TodoResponseDto save(Long categoryId,NewTodoReqDto todoReqDto) {
 
         try {
 
@@ -43,7 +43,8 @@ public class TodoService {
                     .category(category)
                     .build();
 
-            todoRepository.save(todo);
+            Todo savedTodo = todoRepository.save(todo);
+            return TodoResponseDto.of(savedTodo);
         }catch(Exception e){
             throw new TodoSavedFailException("Todo 생성에 실패하였습니다.");
         }
