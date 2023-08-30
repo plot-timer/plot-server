@@ -30,7 +30,7 @@ public class CategoryGroup {
     @Enumerated
     private ColorEnum color;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id",nullable = false)
     private User user;
 
@@ -45,12 +45,11 @@ public class CategoryGroup {
         this.user=user;
     }
 
-    public void updateCategoryGroup(UpdateCategoryGroupReqDto reqDto){
-        this.name = reqDto.getGroupName();
-        this.color = reqDto.getColor();
-    }
     public void addCategory(Category category) {// 양방향 매핑
+
         categories.add(category);
+        category.setCategoryGroup(this);
+
     }
 
     public void deleteCategory(Category category) {

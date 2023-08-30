@@ -3,20 +3,14 @@ package com.plot.plotserver.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.plot.plotserver.domain.EmailTmp;
 import com.plot.plotserver.domain.Message;
 import com.plot.plotserver.dto.request.email.EmailCodeReqDto;
 import com.plot.plotserver.dto.request.email.EmailRequestDto;
-import com.plot.plotserver.exception.email.EmailCodeExpiredException;
-import com.plot.plotserver.exception.email.EmailCodeMismatchException;
-import com.plot.plotserver.exception.email.EmailCodeSendingFailureException;
-import com.plot.plotserver.service.EmailSendingService;
 import com.plot.plotserver.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,8 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor

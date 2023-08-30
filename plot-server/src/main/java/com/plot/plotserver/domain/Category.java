@@ -27,13 +27,13 @@ public class Category {
     private String name;
 
     @Comment("즐겨찾기 여부")
-    @Column(name = "star", nullable = false, columnDefinition = "bit (1)")//    @Column(name = "star", nullable = false)
+    @Column(name = "star", nullable = false)//    @Column(name = "star", nullable = false, columnDefinition = "bit (1)")//
     private boolean star;
 
-    @Column(name = "emoji", nullable = true, columnDefinition = "text")//    @Column(name = "emoji", nullable = true)
+    @Column(name = "emoji", nullable = true)//@Column(name = "emoji", nullable = true, columnDefinition = "text")
     private String emoji;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_group_id",nullable = false)
     private CategoryGroup categoryGroup;
 

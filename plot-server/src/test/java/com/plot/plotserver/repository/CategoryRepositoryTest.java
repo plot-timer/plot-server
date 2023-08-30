@@ -147,10 +147,9 @@ class CategoryRepositoryTest {
         UpdateCategoryReqDto req= UpdateCategoryReqDto.builder()
                 .categoryName("카테고리 1번 이름 수정함")
                 .star(false)
-                .categoryGroup("카테고리 그룹 2번")
                 .build();// 카테고리 그룹 1번에 속한 카테고리(카테고리 1번)을 카테고리 그룹2번으로 이동.
 
-        Optional<CategoryGroup> changeCategoryGroup = categoryGroupRepository.findByUserIdAndName(savedCategoryGroup1.getUser().getId(), req.getCategoryGroup());
+        Optional<CategoryGroup> changeCategoryGroup = categoryGroupRepository.findByUserIdAndName(savedCategoryGroup2.getUser().getId(), "카테고리 그룹 2번");//바뀔 카테고리 그룹.
         savedCategory1.updateCategory(req, changeCategoryGroup.get());//실제로 업데이트 됨.
 
 
