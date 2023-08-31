@@ -37,3 +37,4 @@ out/
 .vscode/
 /src/main/resources/application.yaml
 /src/main/java/TestDataInit
+/src/test/resources/application.yaml

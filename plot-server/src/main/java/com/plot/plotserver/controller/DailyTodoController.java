@@ -11,6 +11,7 @@ import com.plot.plotserver.dto.response.dailyTodo.DailyTodoResponseDto;
 import com.plot.plotserver.dto.response.dailyTodo.DailyTodoResponseWithRecordsDto;
 import com.plot.plotserver.dto.response.record.RecordResponseDto;
 import com.plot.plotserver.service.DailyTodoService;
+import com.plot.plotserver.util.SecurityContextHolderUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Comment;
@@ -56,7 +57,8 @@ public class DailyTodoController {
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        List<DailyTodoResponseDto> result = dailyTodoService.searchByDate(date);
+        Long userId = SecurityContextHolderUtil.getUserId();
+        List<DailyTodoResponseDto> result = dailyTodoService.searchByDate(userId,date);
 
         Message message = Message.builder()
                 .data(result)
@@ -73,7 +75,6 @@ public class DailyTodoController {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
-
 
         DailyTodoResponseDto.Out result = dailyTodoService.save(todoId, newDailyTodoReqDto);
 

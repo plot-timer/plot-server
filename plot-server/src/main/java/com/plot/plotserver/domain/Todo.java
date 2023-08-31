@@ -31,13 +31,13 @@ public class Todo {
     @Column(name = "memo", nullable = true, columnDefinition = "varchar (36)")
     private String memo;
 
-    @Column(name = "star", nullable = false, columnDefinition = "bit (1)")
+    @Column(name = "star", nullable = false)//@Column(name = "star", nullable = false, columnDefinition = "bit (1)")
     private boolean star;
 
-    @Column(name = "emoji", nullable = true, columnDefinition = "text")
+    @Column(name = "emoji", nullable = true)//@Column(name = "emoji", nullable = true, columnDefinition = "text")
     private String emoji;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "category_id",nullable = false)
     private Category category;
 

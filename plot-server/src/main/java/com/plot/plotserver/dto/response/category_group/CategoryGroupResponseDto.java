@@ -58,6 +58,7 @@ public class CategoryGroupResponseDto {
                     .category_group_name(categoryGroup.getName())
                     .categoryList(temp)
                     .build();
+
         }
     }
 

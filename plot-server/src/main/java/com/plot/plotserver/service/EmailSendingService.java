@@ -8,7 +8,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
@@ -24,8 +23,6 @@ public class EmailSendingService {
     private final JavaMailSender emailSender;
 
     private final SpringTemplateEngine templateEngine;
-
-    private final MimeMessageHelper mimeMessageHelper;
 
     private final EmailTmpRepository emailTmpRepository;
 

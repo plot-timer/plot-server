@@ -7,6 +7,7 @@ import com.plot.plotserver.dto.request.categorygroup.NewCategoryGroupReqDto;
 import com.plot.plotserver.dto.request.categorygroup.UpdateCategoryGroupReqDto;
 import com.plot.plotserver.dto.response.category_group.CategoryGroupResponseDto;
 import com.plot.plotserver.service.CategoryGroupService;
+import com.plot.plotserver.util.SecurityContextHolderUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -33,8 +34,8 @@ public class CategoryGroupController {
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-
         CategoryGroupResponseDto result = categoryGroupService.saveCategoryGroup(newCategoryGroupReqDto);
+
 
         Message message = Message.builder()
                 .data(result)
@@ -76,12 +77,14 @@ public class CategoryGroupController {
     }
 
     @GetMapping("/all-category-path")
-    public void getAllCategoryPath(HttpServletResponse response) throws IOException {
+    public void getAllCategoryPath(HttpServletResponse response) throws IOException {//완료
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        List<CategoryGroupResponseDto.InTodoAdd> result = categoryGroupService.getAllCategoryPath();
+        Long userId = SecurityContextHolderUtil.getUserId();
+
+        List<CategoryGroupResponseDto.InTodoAdd> result = categoryGroupService.getAllCategoryPath(userId);
         Message message = Message.builder()
                 .data(result)
                 .status(HttpStatus.OK)
@@ -91,12 +94,13 @@ public class CategoryGroupController {
     }
 
     @GetMapping("/all-category-group")
-    public void getAllCategoryGroup(HttpServletResponse response) throws IOException {
+    public void getAllCategoryGroup(HttpServletResponse response) throws IOException {//완료
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        List<CategoryGroupResponseDto.InCategoryAdd> result = categoryGroupService.getAllCategoryGroup();
+        Long userId = SecurityContextHolderUtil.getUserId();
+        List<CategoryGroupResponseDto.InCategoryAdd> result = categoryGroupService.getAllCategoryGroup(userId);
         Message message = Message.builder()
                 .data(result)
                 .status(HttpStatus.OK)
@@ -111,7 +115,8 @@ public class CategoryGroupController {
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        List<CategoryGroupResponseDto> result = categoryGroupService.getAll();
+        Long userId = SecurityContextHolderUtil.getUserId();
+        List<CategoryGroupResponseDto> result = categoryGroupService.getAll(userId);
         Message message = Message.builder()
                 .data(result)
                 .status(HttpStatus.OK)

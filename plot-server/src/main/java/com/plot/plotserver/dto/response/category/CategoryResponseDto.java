@@ -2,7 +2,6 @@ package com.plot.plotserver.dto.response.category;
 
 import com.plot.plotserver.domain.Category;
 import com.plot.plotserver.domain.TagCategory;
-import com.plot.plotserver.dto.response.category_group.CategoryGroupResponseDto;
 import lombok.*;
 
 import java.util.ArrayList;

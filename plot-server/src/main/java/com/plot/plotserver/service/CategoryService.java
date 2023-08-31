@@ -56,6 +56,7 @@ public class CategoryService {
                 .build();
 
         categoryRepository.save(category);
+        categoryGroupOptional.get().addCategory(category);//양방향 연관관계 매핑.
 
         String tagList = reqDto.getTags().trim();
 
@@ -159,12 +160,15 @@ public class CategoryService {
         try {
             Optional<Category> category = categoryRepository.findById(categoryId);
             categoryRepository.delete(category.get());
+            CategoryGroup categoryGroup = category.get().getCategoryGroup();
+            categoryGroup.deleteCategory(category.get());
+
         }catch (Exception e){
             throw new CategoryDeleteFailException("Category 삭제에 실패했습니다.");
         }
     }
 
-    public CategoryTodosResponseDto searchByCategoryId(Long categoryId){
+    public CategoryTodosResponseDto searchByCategoryId(Long categoryId){//최적화 어려움.
 
         try {
             Category category = categoryRepository.findById(categoryId).get();

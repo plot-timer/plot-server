@@ -31,18 +31,18 @@ public class DailyTodo {
     private LocalDate dailyTodoDate;
 
 
-    @Column(name = "done", nullable = false, columnDefinition = "bit (1)")
+    @Column(name = "done", nullable = false)// @Column(name = "done", nullable = false, columnDefinition = "bit (1)")
     private boolean done;
 
     @Column(name = "status", nullable = false)
     @Enumerated
     private DailyTodoStatusEnum status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "todo_id",nullable = false)
     private Todo todo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 

@@ -29,14 +29,14 @@ public class Record {
     private LocalDateTime endDate;
 
     @Comment("히스토리/스케줄을 결정하는 필드. 1: 히스토리, 0: 스케줄을 의미")
-    @Column(name = "is_history", nullable = false, columnDefinition = "bit(1)")
+    @Column(name = "is_history", nullable = false)//@Column(name = "is_history", nullable = false, columnDefinition = "bit(1)")
     private boolean isHistory;
 
     @Comment("걸린 시간 초단위")
     @Column(name = "duration", nullable = false)
     private Long duration;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "daily_todo_id",nullable = false)
     private DailyTodo dailyTodo;
 

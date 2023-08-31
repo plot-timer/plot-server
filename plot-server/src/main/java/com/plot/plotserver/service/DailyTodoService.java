@@ -45,15 +45,14 @@ public class DailyTodoService {
     private final RecordRepository recordRepository;
 
 
-    public List<DailyTodoResponseDto> searchByDate(String sDate){
+    public List<DailyTodoResponseDto> searchByDate(Long userId,String sDate){//최적화 완료
 
-        Long userId = SecurityContextHolderUtil.getUserId();
 
         List<DailyTodoResponseDto> result = new ArrayList<>();
 
         LocalDate date = LocalDate.parse(sDate);
 
-        List<DailyTodo> dailyTodos = dailyTodoRepository.findByUserIDAndDate(userId,date);
+        List<DailyTodo> dailyTodos = dailyTodoRepository.findByUserIDAndDateWithTodoAndCategoryAndCategoryGroup(userId,date);//todo,category,categorygroup까지 한꺼번에 fetch join해야 할듯
 
         for (DailyTodo dailyTodo : dailyTodos) {
             Todo todo = dailyTodo.getTodo();
@@ -79,10 +78,10 @@ public class DailyTodoService {
         return result;
     }
 
-    public DailyTodoResponseWithRecordsDto searchByDailyTodoId(Long dailyToId){//record 객체들까지 함꼐 보여줘야 한다. 위에보다 상세정보
+    public DailyTodoResponseWithRecordsDto searchByDailyTodoId(Long dailyToId){//최적화 완료
 
 
-        DailyTodo dailyTodo = dailyTodoRepository.findById(dailyToId).get();
+        DailyTodo dailyTodo = dailyTodoRepository.findByIdWithTodoAndCategoryAndCategoryGroup(dailyToId).get();
 
         Todo todo = dailyTodo.getTodo();
         Category category = todo.getCategory();
