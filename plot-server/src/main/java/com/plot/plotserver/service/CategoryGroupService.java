@@ -13,7 +13,6 @@ import com.plot.plotserver.exception.categorygroup.CategoryGroupUpdateFailExcept
 import com.plot.plotserver.repository.CategoryGroupRepository;
 import com.plot.plotserver.repository.UserRepository;
 import com.plot.plotserver.util.SecurityContextHolderUtil;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,11 +33,11 @@ public class CategoryGroupService {
 
 
     @Transactional
-    public void saveCategoryGroup(Long userId,NewCategoryGroupReqDto newCategoryGroupReqDto) {
+    public CategoryGroupResponseDto saveCategoryGroup(NewCategoryGroupReqDto newCategoryGroupReqDto) {
 
         try {
+            Long userId = SecurityContextHolderUtil.getUserId();
             Optional<User> user = userRepository.findById(userId);
-
             //해당이름의 CategoryGroup이 존재하면, 에러
             Optional<CategoryGroup> optionalCategoryGroup = categoryGroupRepository.findByUserIdAndName(userId, newCategoryGroupReqDto.getGroupName());
             if (optionalCategoryGroup.isPresent()) {//이미 존재하는 카테고리 그룹이다.
@@ -50,7 +49,8 @@ public class CategoryGroupService {
                     .user(user.get())
                     .build();
 
-            categoryGroupRepository.save(categoryGroup);
+            CategoryGroup save = categoryGroupRepository.save(categoryGroup);
+            return CategoryGroupResponseDto.of(save);
 
         }catch(CategoryGroupAlreadyExistException e){
             throw e;
@@ -99,7 +99,7 @@ public class CategoryGroupService {
     }
 
 
-    public List<CategoryGroupResponseDto> getAll(Long userId) {//카테고리 그룹, 카테고리, 카테고리 안의 태그 정보들도 가져옴
+    public List<CategoryGroupResponseDto> getAll(Long userId) {//카테고리 그룹, 카테고리, 카테고리 안의 태그 정보들도 가져옴, 이 부분 최적화 못하겠음.
 
         List<CategoryGroup> categoryGroupList = categoryGroupRepository.findByUserIdWithCategories(userId);
         List<CategoryGroupResponseDto> result = new ArrayList<>();
@@ -110,7 +110,7 @@ public class CategoryGroupService {
         return result;
     }
 
-    public List<CategoryGroupResponseDto.InCategoryAdd> getAllCategoryGroup(Long userId) {
+    public List<CategoryGroupResponseDto.InCategoryAdd> getAllCategoryGroup(Long userId) {//완료
 
         List<CategoryGroup> categoryGroupList = categoryGroupRepository.findByUserId(userId);
         List<CategoryGroupResponseDto.InCategoryAdd> result = new ArrayList<>();
@@ -121,7 +121,7 @@ public class CategoryGroupService {
         return result;
     }
 
-    public List<CategoryGroupResponseDto.InTodoAdd> getAllCategoryPath(Long userId) {
+    public List<CategoryGroupResponseDto.InTodoAdd> getAllCategoryPath(Long userId) {//완료
 
         List<CategoryGroup> categoryGroupList = categoryGroupRepository.findByUserIdWithCategories(userId);
         List<CategoryGroupResponseDto.InTodoAdd> result = new ArrayList<>();

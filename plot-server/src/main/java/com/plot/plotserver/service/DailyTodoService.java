@@ -45,14 +45,14 @@ public class DailyTodoService {
     private final RecordRepository recordRepository;
 
 
-    public List<DailyTodoResponseDto> searchByDate(SearchDailyTodo reqDto){
+    public List<DailyTodoResponseDto> searchByDate(Long userId,String sDate){//최적화 완료
 
-        Long userId = SecurityContextHolderUtil.getUserId();
 
         List<DailyTodoResponseDto> result = new ArrayList<>();
-        LocalDate date = getLocalDate(reqDto);
 
-        List<DailyTodo> dailyTodos = dailyTodoRepository.findByUserIDAndDate(userId,date);
+        LocalDate date = LocalDate.parse(sDate);
+
+        List<DailyTodo> dailyTodos = dailyTodoRepository.findByUserIDAndDateWithTodoAndCategoryAndCategoryGroup(userId,date);//todo,category,categorygroup까지 한꺼번에 fetch join해야 할듯
 
         for (DailyTodo dailyTodo : dailyTodos) {
             Todo todo = dailyTodo.getTodo();
@@ -78,10 +78,10 @@ public class DailyTodoService {
         return result;
     }
 
-    public DailyTodoResponseWithRecordsDto searchByDailyTodoId(Long dailyToId){//record 객체들까지 함꼐 보여줘야 한다. 위에보다 상세정보
+    public DailyTodoResponseWithRecordsDto searchByDailyTodoId(Long dailyToId){//최적화 완료
 
 
-        DailyTodo dailyTodo = dailyTodoRepository.findById(dailyToId).get();
+        DailyTodo dailyTodo = dailyTodoRepository.findByIdWithTodoAndCategoryAndCategoryGroup(dailyToId).get();
 
         Todo todo = dailyTodo.getTodo();
         Category category = todo.getCategory();
@@ -112,7 +112,7 @@ public class DailyTodoService {
     }
 
     @Transactional
-    public void save(Long todoId,NewDailyTodoReqDto newDailyTodoReqDto) {
+    public DailyTodoResponseDto.Out save(Long todoId,NewDailyTodoReqDto newDailyTodoReqDto) {
 
         try {
 
@@ -136,7 +136,8 @@ public class DailyTodoService {
                     .user(user)
                     .build();
 
-            dailyTodoRepository.save(dailyTodo);
+            DailyTodo save = dailyTodoRepository.save(dailyTodo);
+            return DailyTodoResponseDto.Out.of(save);
 
         }catch(DailyTodoAlreadyExistException e){
             throw e;
@@ -173,10 +174,10 @@ public class DailyTodoService {
     }
 
 
-    public List<RecordResponseDto> getHistoryAndSchedule(RecordRequestDto reqDto) {
+    public List<RecordResponseDto> getHistoryAndSchedule(String dateParam) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate date = LocalDate.parse(reqDto.getDate(), formatter);
+        LocalDate date = LocalDate.parse(dateParam);
 
         List<DailyTodo> dailyTodos = dailyTodoRepository.findByUserIDAndDate(SecurityContextHolderUtil.getUserId(), date);
         List<RecordResponseDto> result = new ArrayList<>();
@@ -189,11 +190,11 @@ public class DailyTodoService {
         return result;
     }
 
-    public List<RecordResponseDto.Grass> getHistoryOfMonth(RecordRequestDto.Grass reqDto) {
+    public List<RecordResponseDto.Grass> getHistoryOfMonth(String startOfDate, String endOfDate) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate startRange = LocalDate.parse(reqDto.getStartDate(), formatter);
-        LocalDate endRange = LocalDate.parse(reqDto.getEndDate(), formatter);
+        LocalDate startRange = LocalDate.parse(startOfDate, formatter);
+        LocalDate endRange = LocalDate.parse(endOfDate, formatter);
 
         List<RecordResponseDto.Grass> result = new ArrayList<>();
 

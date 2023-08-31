@@ -2,7 +2,6 @@ package com.plot.plotserver.dto.response.category;
 
 import com.plot.plotserver.domain.Category;
 import com.plot.plotserver.domain.TagCategory;
-import com.plot.plotserver.dto.response.category_group.CategoryGroupResponseDto;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -39,6 +38,7 @@ public class CategoryResponseDto {
         private Long category_id;
         private String category_name;
         private String category_group_name;
+        private String emoji;
         private List<String> tagName;
         private boolean star;
 
@@ -52,10 +52,11 @@ public class CategoryResponseDto {
             tagCategories.forEach(tagCategory -> tagNameSet.add(tagCategory.getTag().getTagName()));
             tagNameSet.forEach(tagName -> tagNameList.add(tagName));
 
-            return CategoryResponseDto.Sub.builder()
+            return Sub.builder()
                     .category_id(category.getId())
                     .category_name(category.getName())
                     .category_group_name(category.getCategoryGroup().getName())
+                    .emoji(category.getEmoji())
                     .tagName(tagNameList)
                     .build();
         }

@@ -28,7 +28,7 @@ public class TodoService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public void save(Long categoryId,NewTodoReqDto todoReqDto) {
+    public TodoResponseDto save(Long categoryId,NewTodoReqDto todoReqDto) {
 
         try {
 
@@ -43,7 +43,8 @@ public class TodoService {
                     .category(category)
                     .build();
 
-            todoRepository.save(todo);
+            Todo savedTodo = todoRepository.save(todo);
+            return TodoResponseDto.of(savedTodo);
         }catch(Exception e){
             throw new TodoSavedFailException("Todo 생성에 실패하였습니다.");
         }
@@ -91,7 +92,7 @@ public class TodoService {
     }
 
 
-    public List<TodoResponseDto> getAllTodos() {
+    public List<TodoResponseDto> getAllTodos() {//최적화 해야함.
         List<Todo> todoList = todoRepository.findByUserId(SecurityContextHolderUtil.getUserId());
         List<TodoResponseDto> result = new ArrayList<>();
 
@@ -101,10 +102,10 @@ public class TodoService {
         return result;
     }
 
-    public TodoResponseDto searchByTodoId(Long todoId){
+    public TodoResponseDto searchByTodoId(Long todoId){//최적화 완료.
 
         try {
-            Todo todo = todoRepository.findById(todoId).get();
+            Todo todo = todoRepository.findByIdWithCategoryAndCategoryGroup(todoId).get();
             TodoResponseDto result = TodoResponseDto.of(todo);
             return result;
         } catch (Exception e) {

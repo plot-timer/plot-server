@@ -1,7 +1,6 @@
 package com.plot.plotserver.repository;
 
 import com.plot.plotserver.domain.Category;
-import com.plot.plotserver.domain.CategoryGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

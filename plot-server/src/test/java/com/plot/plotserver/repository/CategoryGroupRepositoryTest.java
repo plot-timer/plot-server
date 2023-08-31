@@ -25,29 +25,31 @@ import java.util.Optional;
 @Slf4j
 class CategoryGroupRepositoryTest {
 
-    @Autowired  UserRepository userRepository;
+    @Autowired
+    UserRepository userRepository;
 
-    @Autowired CategoryGroupRepository categoryGroupRepository;
+    @Autowired
+    CategoryGroupRepository categoryGroupRepository;
 
-    @Autowired CategoryRepository categoryRepository;
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @PersistenceContext
     EntityManager em;
 
 
-
     @BeforeEach
-    void beforeEach(){
-
+    void beforeEach() {
 
 
     }
+
     @Test
-    public void saveCategoryGroup(){
+    public void saveCategoryGroup() {
 
         //given
 
-        User user=User.builder()
+        User user = User.builder()
                 .username("gntjd135@naver.com")
                 .password("password")
                 .createdAt(LocalDateTime.now())
@@ -56,7 +58,7 @@ class CategoryGroupRepositoryTest {
 
         //when
 
-        CategoryGroup categoryGroup=CategoryGroup.builder()
+        CategoryGroup categoryGroup = CategoryGroup.builder()
                 .name("카테고리 1번")
                 .color(ColorEnum.BROWN)
                 .user(savedUser)
@@ -77,22 +79,22 @@ class CategoryGroupRepositoryTest {
         User finduser = findCategoryGroup.get().getUser();
         List<CategoryGroup> categoryGroups = finduser.getCategoryGroups();
         for (CategoryGroup group : categoryGroups) {
-            log.info("categorygroups={}",group.getName());
+            log.info("categorygroups={}", group.getName());
         }
     }
 
     @Test
-    public void updateCategoryGroup(){
+    public void updateCategoryGroup() {
 
         //given
-        User user=User.builder()
+        User user = User.builder()
                 .username("gntjd135@naver.com")
                 .password("dsfs")
                 .createdAt(LocalDateTime.now())
                 .build();
         User savedUser = userRepository.save(user);//user먼저 생성
 
-        CategoryGroup categoryGroup=CategoryGroup.builder()
+        CategoryGroup categoryGroup = CategoryGroup.builder()
                 .name("카테고리 그룹 1번")
                 .color(ColorEnum.BROWN)
                 .user(savedUser)
@@ -102,7 +104,7 @@ class CategoryGroupRepositoryTest {
         log.info("categoryGroup.name={}", savedCategoryGroup.getName());
 
         //when
-        UpdateCategoryGroupReqDto reqDto =UpdateCategoryGroupReqDto.builder()
+        UpdateCategoryGroupReqDto reqDto = UpdateCategoryGroupReqDto.builder()
                 .groupName("카테고리 그룹 변경")
                 .color(ColorEnum.GREEN)
                 .build();
@@ -120,16 +122,16 @@ class CategoryGroupRepositoryTest {
 
 
     @Test
-    public void deleteCategoryGroup(){
+    public void deleteCategoryGroup() {
         //given
-        User user=User.builder()
+        User user = User.builder()
                 .username("gntjd135@naver.com")
                 .password("dsfs")
                 .createdAt(LocalDateTime.now())
                 .build();
         User savedUser = userRepository.save(user);//user먼저 생성
 
-        CategoryGroup categoryGroup=CategoryGroup.builder()
+        CategoryGroup categoryGroup = CategoryGroup.builder()
                 .name("카테고리 그룹 1번")
                 .color(ColorEnum.BROWN)
                 .user(savedUser)
@@ -146,24 +148,24 @@ class CategoryGroupRepositoryTest {
     }
 
     @Test
-    public void findByUserIdWithCategories(){
+    public void findByUserIdWithCategories() {
 
         //given
 
-        User user=User.builder()
+        User user = User.builder()
                 .username("gntjd135@naver.com")
                 .password("password")
                 .createdAt(LocalDateTime.now())
                 .build();
         User savedUser = userRepository.save(user);//user부터 저장.
 
-        CategoryGroup categoryGroup1=CategoryGroup.builder()
+        CategoryGroup categoryGroup1 = CategoryGroup.builder()
                 .name("카테고리그룹 1번")
                 .color(ColorEnum.BROWN)
                 .user(savedUser)
                 .build();
 
-        CategoryGroup categoryGroup2=CategoryGroup.builder()
+        CategoryGroup categoryGroup2 = CategoryGroup.builder()
                 .name("카테고리그룹 2번")
                 .color(ColorEnum.YELLOW)
                 .user(savedUser)
@@ -172,14 +174,14 @@ class CategoryGroupRepositoryTest {
         CategoryGroup savedCategoryGroup1 = categoryGroupRepository.save(categoryGroup1);//
         CategoryGroup savedCategoryGroup2 = categoryGroupRepository.save(categoryGroup2);//카테고리 그룹 2개 저장.
 
-        Category category1=Category.builder()
+        Category category1 = Category.builder()
                 .name("카테고리 1번")
                 .star(false)
                 .emoji("🇮🇷")
                 .categoryGroup(savedCategoryGroup1)
                 .build();
 
-        Category category2=Category.builder()
+        Category category2 = Category.builder()
                 .name("카테고리 2번")
                 .star(true)
                 .emoji("♄")
@@ -205,24 +207,24 @@ class CategoryGroupRepositoryTest {
     }
 
     @Test
-    public void findByUserId(){//카테고리 그룹만 조회.
+    public void findByUserId() {//카테고리 그룹만 조회.
 
         //given
 
-        User user=User.builder()
+        User user = User.builder()
                 .username("gntjd135@naver.com")
                 .password("password")
                 .createdAt(LocalDateTime.now())
                 .build();
         User savedUser = userRepository.save(user);//user부터 저장.
 
-        CategoryGroup categoryGroup1=CategoryGroup.builder()
+        CategoryGroup categoryGroup1 = CategoryGroup.builder()
                 .name("카테고리그룹 1번")
                 .color(ColorEnum.BROWN)
                 .user(savedUser)
                 .build();
 
-        CategoryGroup categoryGroup2=CategoryGroup.builder()
+        CategoryGroup categoryGroup2 = CategoryGroup.builder()
                 .name("카테고리그룹 2번")
                 .color(ColorEnum.YELLOW)
                 .user(savedUser)
@@ -231,14 +233,14 @@ class CategoryGroupRepositoryTest {
         CategoryGroup savedCategoryGroup1 = categoryGroupRepository.save(categoryGroup1);//
         CategoryGroup savedCategoryGroup2 = categoryGroupRepository.save(categoryGroup2);//카테고리 그룹 2개 저장.
 
-        Category category1=Category.builder()
+        Category category1 = Category.builder()
                 .name("카테고리 1번")
                 .star(false)
                 .emoji("🇮🇷")
                 .categoryGroup(savedCategoryGroup1)
                 .build();
 
-        Category category2=Category.builder()
+        Category category2 = Category.builder()
                 .name("카테고리 2번")
                 .star(true)
                 .emoji("♄")
@@ -262,6 +264,7 @@ class CategoryGroupRepositoryTest {
         Assertions.assertThat(findGroups.get(1).getCategories().get(0)).isEqualTo(find_category2);
 
     }
+
 
 
 }

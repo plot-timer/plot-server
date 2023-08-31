@@ -34,11 +34,11 @@ public class CategoryGroupController {
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        Long userId = SecurityContextHolderUtil.getUserId();
+        CategoryGroupResponseDto result = categoryGroupService.saveCategoryGroup(newCategoryGroupReqDto);
 
-        categoryGroupService.saveCategoryGroup(userId,newCategoryGroupReqDto);
 
         Message message = Message.builder()
+                .data(result)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();
@@ -77,7 +77,7 @@ public class CategoryGroupController {
     }
 
     @GetMapping("/all-category-path")
-    public void getAllCategoryPath(HttpServletResponse response) throws IOException {
+    public void getAllCategoryPath(HttpServletResponse response) throws IOException {//완료
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
@@ -94,7 +94,7 @@ public class CategoryGroupController {
     }
 
     @GetMapping("/all-category-group")
-    public void getAllCategoryGroup(HttpServletResponse response) throws IOException {
+    public void getAllCategoryGroup(HttpServletResponse response) throws IOException {//완료
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
