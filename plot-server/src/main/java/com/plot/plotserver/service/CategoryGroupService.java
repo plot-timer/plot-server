@@ -1,16 +1,19 @@
 package com.plot.plotserver.service;
 
 
+import com.plot.plotserver.domain.Category;
 import com.plot.plotserver.domain.CategoryGroup;
 import com.plot.plotserver.domain.User;
 import com.plot.plotserver.dto.request.categorygroup.NewCategoryGroupReqDto;
 import com.plot.plotserver.dto.request.categorygroup.UpdateCategoryGroupReqDto;
+import com.plot.plotserver.dto.response.category.CategoryResponseDto;
 import com.plot.plotserver.dto.response.category_group.CategoryGroupResponseDto;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupAlreadyExistException;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupDeleteFailException;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupSavedFailException;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupUpdateFailException;
 import com.plot.plotserver.repository.CategoryGroupRepository;
+import com.plot.plotserver.repository.CategoryRepository;
 import com.plot.plotserver.repository.UserRepository;
 import com.plot.plotserver.util.SecurityContextHolderUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,8 @@ import java.util.Optional;
 public class CategoryGroupService {
 
     private final CategoryGroupRepository categoryGroupRepository;
+
+    private final CategoryRepository categoryRepository;
 
     private final UserRepository userRepository;
 
@@ -88,8 +93,8 @@ public class CategoryGroupService {
 
     @Transactional
     public void delete(Long categoryGroupId) {
-
         try {
+
             Optional<CategoryGroup> categoryGroup = categoryGroupRepository.findById(categoryGroupId);
             categoryGroupRepository.delete(categoryGroup.get());
         }catch (Exception e){
@@ -99,16 +104,45 @@ public class CategoryGroupService {
     }
 
 
-    public List<CategoryGroupResponseDto> getAll(Long userId) {//카테고리 그룹, 카테고리, 카테고리 안의 태그 정보들도 가져옴, 이 부분 최적화 못하겠음.
+//    public List<CategoryGroupResponseDto> getAll(Long userId) {//카테고리 그룹, 카테고리, 카테고리 안의 태그 정보들도 가져옴, 이 부분 최적화 못하겠음.
+//
+//        List<CategoryGroup> categoryGroupList = categoryGroupRepository.findByUserIdWithCategories(userId);//카테고리 그룹과 그 카테고리들을 가져온다.
+//        List<CategoryGroupResponseDto> result = new ArrayList<>();
+//
+//        categoryGroupList.forEach(categoryGroup -> {
+//            result.add(CategoryGroupResponseDto.of(categoryGroup));
+//        });
+//        return result;
+//    }
 
+    public List<CategoryGroupResponseDto> getAll(Long userId) {
         List<CategoryGroup> categoryGroupList = categoryGroupRepository.findByUserIdWithCategories(userId);
         List<CategoryGroupResponseDto> result = new ArrayList<>();
 
-        categoryGroupList.forEach(categoryGroup -> {
-            result.add(CategoryGroupResponseDto.of(categoryGroup));
-        });
+        for (CategoryGroup categoryGroup : categoryGroupList) {
+            List<CategoryResponseDto.Sub> categoryResponseList = new ArrayList<>();
+
+            for (Category category : categoryGroup.getCategories()) {
+
+                //category마다, 태그까지 join해서 가져오기
+                categoryRepository.findByIdWithTags(category.getId());
+                CategoryResponseDto.Sub categoryResponse = CategoryResponseDto.Sub.of(category);
+                categoryResponseList.add(categoryResponse);
+            }
+
+            CategoryGroupResponseDto categoryGroupResponse = CategoryGroupResponseDto.builder()
+                    .category_group_id(categoryGroup.getId())
+                    .category_group_name(categoryGroup.getName())
+                    .color(categoryGroup.getColor().name())
+                    .category_list(categoryResponseList)
+                    .build();
+
+            result.add(categoryGroupResponse);
+        }
+
         return result;
     }
+
 
     public List<CategoryGroupResponseDto.InCategoryAdd> getAllCategoryGroup(Long userId) {//완료
 
