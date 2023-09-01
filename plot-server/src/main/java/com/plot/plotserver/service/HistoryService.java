@@ -64,6 +64,7 @@ public class HistoryService {
                     endDateWithTime = startDate.atTime(LocalTime.of(23,59,59));//23:59:59로 설정.
                 }
 
+
                 // 해당 날짜에 이미 같은 투두의, daily-todo가 존재하는지 확인
                 Optional<DailyTodo> dailyTodoOpt = dailyTodoRepository.findByTodoIdAndDailyTodoDate(todo.getId(), startDate);
 
@@ -111,6 +112,7 @@ public class HistoryService {
         //시작 날짜, 끝날짜 까지 쭉.
 
         try {
+
 
             Long userId = SecurityContextHolderUtil.getUserId();
             User user = userRepository.findById(userId).get();

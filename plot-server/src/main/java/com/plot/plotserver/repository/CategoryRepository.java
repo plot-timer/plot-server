@@ -1,6 +1,7 @@
 package com.plot.plotserver.repository;
 
 import com.plot.plotserver.domain.Category;
+import org.hibernate.annotations.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -12,8 +13,18 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     public Optional<Category> findById(Long id);
 
+
+    @Comment("카테고리와, 그 카테고리가 가지는 태그들까지 다 가져온다.")
+    @Query("SELECT DISTINCT c FROM Category c " +
+            "JOIN FETCH c.tagCategories tc "+
+            "JOIN FETCH tc.tag t " +
+            "WHERE c.id = :id")
+    public Optional<Category> findByIdWithTags(Long id);
+
     @Query("SELECT c FROM Category c WHERE c.categoryGroup.id = :categoryGroupId AND c.name = :name")
     public Optional<Category> findByNameAndCategoryGroupId(String name, Long categoryGroupId);
 
     public Optional<Category> findByName(String categoryName);
+
+
 }

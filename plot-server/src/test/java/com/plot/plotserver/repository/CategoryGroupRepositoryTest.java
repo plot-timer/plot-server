@@ -1,8 +1,6 @@
 package com.plot.plotserver.repository;
 
-import com.plot.plotserver.domain.Category;
-import com.plot.plotserver.domain.CategoryGroup;
-import com.plot.plotserver.domain.User;
+import com.plot.plotserver.domain.*;
 import com.plot.plotserver.dto.request.categorygroup.UpdateCategoryGroupReqDto;
 import com.plot.plotserver.util.ColorEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +31,13 @@ class CategoryGroupRepositoryTest {
 
     @Autowired
     CategoryRepository categoryRepository;
+
+
+    @Autowired
+    TagRepository tagRepository;
+
+    @Autowired
+    TagCategoryRepository tagCategoryRepository;
 
     @PersistenceContext
     EntityManager em;
@@ -262,6 +267,94 @@ class CategoryGroupRepositoryTest {
         //then
         Assertions.assertThat(findGroups.get(0).getCategories().get(0)).isEqualTo(find_category1);
         Assertions.assertThat(findGroups.get(1).getCategories().get(0)).isEqualTo(find_category2);
+    }
+
+
+    @Test
+    public void getAll() {
+
+        //given
+
+        User user = User.builder()
+                .username("gntjd135@naver.com")
+                .password("password")
+                .createdAt(LocalDateTime.now())
+                .build();
+        User savedUser = userRepository.save(user);//user부터 저장.
+
+        CategoryGroup categoryGroup1 = CategoryGroup.builder()
+                .name("카테고리그룹 1번")
+                .color(ColorEnum.BROWN)
+                .user(savedUser)
+                .build();
+
+        CategoryGroup categoryGroup2 = CategoryGroup.builder()
+                .name("카테고리그룹 2번")
+                .color(ColorEnum.YELLOW)
+                .user(savedUser)
+                .build();
+
+        CategoryGroup savedCategoryGroup1 = categoryGroupRepository.save(categoryGroup1);//
+        CategoryGroup savedCategoryGroup2 = categoryGroupRepository.save(categoryGroup2);//카테고리 그룹 2개 저장.
+
+        Category category1 = Category.builder()
+                .name("카테고리 1번")
+                .star(false)
+                .emoji("🇮🇷")
+                .categoryGroup(savedCategoryGroup1)
+                .build();
+
+        Category category2 = Category.builder()
+                .name("카테고리 2번")
+                .star(true)
+                .emoji("♄")
+                .categoryGroup(savedCategoryGroup2)
+                .build();
+
+        categoryRepository.save(category1);
+        categoryRepository.save(category2);
+
+        //태그 저장.
+        Tag tag1= Tag.builder()
+                .tagName("1번 태그")
+                .build();
+
+        Tag tag2= Tag.builder()
+                .tagName("2번 태그")
+                .build();
+
+        tagRepository.save(tag1);
+        tagRepository.save(tag2);
+
+        TagCategory tagCategory1=TagCategory.builder()
+                .tag(tag1)
+                .category(category1)
+                .build();
+
+        TagCategory tagCategory2=TagCategory.builder()
+                .tag(tag2)
+                .category(category2)
+                .build();
+
+        tagCategoryRepository.save(tagCategory1);
+        tagCategoryRepository.save(tagCategory2);
+
+
+        //when
+        em.flush();
+        em.clear();
+
+        Category savedCategory1 = categoryRepository.findByIdWithTags(1l).get();
+        Category savedCategory2 = categoryRepository.findByIdWithTags(2l).get();
+
+        //then
+        log.info("category1.tags={}", savedCategory1.getTagCategories().get(0).getTag().getTagName());
+        log.info("category2.tags={}", savedCategory2.getTagCategories().get(0).getTag().getTagName());
+    }
+
+    @Test
+    public void getAllV2() {
+
 
     }
 
