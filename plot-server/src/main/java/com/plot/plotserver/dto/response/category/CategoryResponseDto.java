@@ -69,11 +69,14 @@ public class CategoryResponseDto {
         private Long category_id;
         private String category_name;
 
+        private boolean star;
+
         public static CategoryResponseDto.CategoryInfo of(Category category) {
 
             return CategoryInfo.builder()
                     .category_id(category.getId())
                     .category_name(category.getName())
+                    .star(category.isStar())
                     .build();
         }
 
