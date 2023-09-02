@@ -3,15 +3,16 @@ package com.plot.plotserver.dto.response.todo;
 import com.plot.plotserver.domain.Category;
 import com.plot.plotserver.domain.CategoryGroup;
 import com.plot.plotserver.domain.Todo;
+import com.plot.plotserver.dto.response.dailyTodo.DailyTodoResponseWithRecordsDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
 
 @Data
 @AllArgsConstructor
 @Builder
-public class TodoResponseDto {
+public class TodoResponseWithDailyTodoDto {
 
     private Long id;
     private String title;
@@ -25,11 +26,13 @@ public class TodoResponseDto {
     private String category_group_name;
     private String color;
 
-    public static TodoResponseDto of(Todo todo){
+    private DailyTodoResponseWithRecordsDto.Sub dailyTodo;
+
+    public static TodoResponseWithDailyTodoDto of(Todo todo,DailyTodoResponseWithRecordsDto.Sub temp){
         Category category = todo.getCategory();
         CategoryGroup categoryGroup = category.getCategoryGroup();
 
-        return TodoResponseDto.builder()
+        return TodoResponseWithDailyTodoDto.builder()
                 .id(todo.getId())
                 .title(todo.getTitle())
                 .subtitle(todo.getSubTitle())
@@ -40,9 +43,9 @@ public class TodoResponseDto {
                 .category_name(category.getName())
                 .category_group_name(categoryGroup.getName())
                 .color(categoryGroup.getColor().name())
+                .dailyTodo(temp)
                 .build();
     }
-
-
-
 }
+
+
