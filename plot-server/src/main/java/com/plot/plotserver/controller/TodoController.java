@@ -33,9 +33,10 @@ public class TodoController {
     private final DailyTodoService dailyTodoService;
 
 
-    @GetMapping("/{todoId}/date/{date}") //상세 화면 보여주기.
+    @GetMapping("/{todoId}") //상세 화면 보여주기.
     @Comment("Todo 상세 화면 보여주기(재생화면)")
-    public void showTodo(@PathVariable Long todoId,@PathVariable("date") String date,HttpServletResponse response) throws IOException {
+    public void showTodo(@PathVariable Long todoId,@RequestParam("date") String date,HttpServletResponse response) throws IOException {
+
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
