@@ -6,7 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plot.plotserver.domain.Message;
 import com.plot.plotserver.dto.request.todo.NewTodoReqDto;
 import com.plot.plotserver.dto.request.todo.UpdateTodoDto;
+import com.plot.plotserver.dto.response.dailyTodo.DailyTodoResponseWithRecordsDto;
 import com.plot.plotserver.dto.response.todo.TodoResponseDto;
+import com.plot.plotserver.dto.response.todo.TodoResponseWithDailyTodoDto;
+import com.plot.plotserver.service.DailyTodoService;
 import com.plot.plotserver.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,17 +30,22 @@ public class TodoController {
 
     private final TodoService todoService;
 
-    @GetMapping("/{todoId}") //상세 화면 보여주기.
+    private final DailyTodoService dailyTodoService;
+
+
+    @GetMapping("/{todoId}/date/{date}") //상세 화면 보여주기.
     @Comment("Todo 상세 화면 보여주기(재생화면)")
-    public void showTodo(@PathVariable Long todoId,HttpServletResponse response) throws IOException {
+    public void showTodo(@PathVariable Long todoId,@PathVariable("date") String date,HttpServletResponse response) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        TodoResponseDto todoResponseDto = todoService.searchByTodoId(todoId);
+
+        DailyTodoResponseWithRecordsDto.Sub sub = dailyTodoService.searchByTodoAndDate(todoId, date);
+        TodoResponseWithDailyTodoDto todoResponseWithDailyTodoDto = todoService.searchByTodoIdJoinHistories(todoId,date,sub);
 
         Message message = Message.builder()
-                .data(todoResponseDto)
+                .data(todoResponseWithDailyTodoDto)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();

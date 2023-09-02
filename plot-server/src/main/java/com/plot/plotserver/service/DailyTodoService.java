@@ -13,6 +13,7 @@ import com.plot.plotserver.exception.dailytodo.DailyTodoAlreadyExistException;
 import com.plot.plotserver.exception.dailytodo.DailyTodoDeleteFailException;
 import com.plot.plotserver.exception.dailytodo.DailyTodoSavedFailException;
 import com.plot.plotserver.exception.dailytodo.DailyTodoUpdateFailException;
+import com.plot.plotserver.exception.todo.TodoNotHasRecordsOnDateException;
 import com.plot.plotserver.repository.DailyTodoRepository;
 import com.plot.plotserver.repository.RecordRepository;
 import com.plot.plotserver.repository.TodoRepository;
@@ -76,6 +77,42 @@ public class DailyTodoService {
         }
 
         return result;
+    }
+
+    public DailyTodoResponseWithRecordsDto.Sub searchByTodoAndDate(Long todoId,String sDate){//카테고리가 특정 날짜에 가지는  schedule, history기록 줌.  -->Todo 재생화면에서 사용.
+
+
+
+        LocalDate date = LocalDate.parse(sDate);
+
+        Optional<DailyTodo> dailyTodo = dailyTodoRepository.findByTodoIdAndDailyTodoDate(todoId, date);
+
+        if (dailyTodo.isEmpty()) {//그 날에 해당 투두로 생성한 기록이 없을때,
+            throw new TodoNotHasRecordsOnDateException("해당되는 날짜에 기록이 없습니다.");
+        }
+
+        Long total_history=0L;
+        Long total_schedule=0L;
+
+        List<RecordResponseDto.InDailyTodo> temp = new ArrayList<>();
+        List<Record> histories= recordRepository.findHistoriesByDailyTodoId(dailyTodo.get().getId());
+
+        for (Record history : histories) {
+            temp.add(RecordResponseDto.InDailyTodo.of(history));
+            total_history += history.getDuration();
+        }
+
+
+        List<Record> schedules = recordRepository.findSchedulesByDailyTodoId(dailyTodo.get().getId());
+        for (Record schedule : schedules) {
+            temp.add(RecordResponseDto.InDailyTodo.of(schedule));
+            total_schedule += schedule.getDuration();
+        }
+
+        DailyTodoResponseWithRecordsDto.Sub result = DailyTodoResponseWithRecordsDto.Sub.of(total_history, total_schedule, dailyTodo.get(),temp);
+
+        return result;
+
     }
 
     public DailyTodoResponseWithRecordsDto searchByDailyTodoId(Long dailyToId){//최적화 완료

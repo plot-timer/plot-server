@@ -124,6 +124,12 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
+    @ExceptionHandler(TodoNotHasRecordsOnDateException.class)
+    public ResponseEntity<?> handleException(TodoNotHasRecordsOnDateException e) {
+        Message message = new Message(e.getMessage(), -305,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
 
 
 

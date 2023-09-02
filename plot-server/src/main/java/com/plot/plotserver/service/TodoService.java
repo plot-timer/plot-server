@@ -4,7 +4,9 @@ package com.plot.plotserver.service;
 import com.plot.plotserver.domain.*;
 import com.plot.plotserver.dto.request.todo.NewTodoReqDto;
 import com.plot.plotserver.dto.request.todo.UpdateTodoDto;
+import com.plot.plotserver.dto.response.dailyTodo.DailyTodoResponseWithRecordsDto;
 import com.plot.plotserver.dto.response.todo.TodoResponseDto;
+import com.plot.plotserver.dto.response.todo.TodoResponseWithDailyTodoDto;
 import com.plot.plotserver.exception.todo.*;
 import com.plot.plotserver.repository.CategoryRepository;
 import com.plot.plotserver.repository.TodoRepository;
@@ -102,11 +104,11 @@ public class TodoService {
         return result;
     }
 
-    public TodoResponseDto searchByTodoId(Long todoId){//최적화 완료.
+    public TodoResponseWithDailyTodoDto searchByTodoIdJoinHistories(Long todoId, String sDate, DailyTodoResponseWithRecordsDto.Sub temp){//최적화 완료.
 
         try {
             Todo todo = todoRepository.findByIdWithCategoryAndCategoryGroup(todoId).get();
-            TodoResponseDto result = TodoResponseDto.of(todo);
+            TodoResponseWithDailyTodoDto result = TodoResponseWithDailyTodoDto.of(todo,temp);
             return result;
         } catch (Exception e) {
             throw new TodoNotExistException("Todo를 조회할 수 없습니다.");

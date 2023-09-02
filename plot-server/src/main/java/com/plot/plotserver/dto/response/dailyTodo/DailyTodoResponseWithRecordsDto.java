@@ -6,13 +6,15 @@ import com.plot.plotserver.dto.response.record.RecordResponseDto;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @Builder
-public class DailyTodoResponseWithRecordsDto {//DailyTodoResponseDto에 하루의 records들 들어간 responseDto이다. 둘다 필드가 많아서 새로 만들었다.
+public class DailyTodoResponseWithRecordsDto {
 
     private Long daily_todo_id;
 
@@ -68,6 +70,32 @@ public class DailyTodoResponseWithRecordsDto {//DailyTodoResponseDto에 하루�
                 .schedule_sum(total_schedule)
                 .record_list(record_list)
                 .build();
+    }
+
+    @Data
+    @AllArgsConstructor
+    @Builder
+    public static class Sub {
+
+        private Long daily_todo_id;
+
+        private Long history_sum;
+
+        private Long schedule_sum;
+
+        private List<RecordResponseDto.InDailyTodo> record_list;
+
+        public static DailyTodoResponseWithRecordsDto.Sub of(Long total_history, Long total_schedule, DailyTodo dailyTodo,List<RecordResponseDto.InDailyTodo> record_list){
+
+
+            return DailyTodoResponseWithRecordsDto.Sub.builder()
+                    .daily_todo_id(dailyTodo.getId())
+                    .history_sum(total_history)
+                    .schedule_sum(total_schedule)
+                    .record_list(record_list)
+                    .build();
+        }
+
     }
 
 
