@@ -94,15 +94,15 @@ public class TodoService {
     }
 
 
-    public List<TodoResponseDto> getAllTodos() {
-        List<Todo> todoList = todoRepository.findByUserIdJoinCategoryAndCategoryGroup(SecurityContextHolderUtil.getUserId());
-        List<TodoResponseDto> result = new ArrayList<>();
-
-        todoList.forEach(todo -> {
-            result.add(TodoResponseDto.of(todo));
-        });
-        return result;
-    }
+//    public List<TodoResponseDto> getAllTodos() {
+//        List<Todo> todoList = todoRepository.findByUserIdJoinCategoryAndCategoryGroup(SecurityContextHolderUtil.getUserId());
+//        List<TodoResponseDto> result = new ArrayList<>();
+//
+//        todoList.forEach(todo -> {
+//            result.add(TodoResponseDto.of(todo));
+//        });
+//        return result;
+//    }
 
     public TodoResponseWithDailyTodoDto searchByTodoIdJoinHistories(Long todoId, String sDate, DailyTodoResponseWithRecordsDto.Sub temp){//최적화 완료.
 

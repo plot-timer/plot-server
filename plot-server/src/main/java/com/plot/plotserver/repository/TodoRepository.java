@@ -31,7 +31,7 @@ public interface TodoRepository extends JpaRepository<Todo,Long> {
     public List<Todo> findByUserId(Long userId);
 
 
-    @Comment("바로 위의 함수와 동일, fetch join 한 버전.")
+    @Comment("이 부분 안쓰는게 좋을듯, user의 todos를 가져오는 기능은, categorygroupcontroller.getAllTodo로 만듬")
     @Query("SELECT t FROM Todo t " +
             "JOIN FETCH t.category c " +
             "JOIN FETCH c.categoryGroup cg " +

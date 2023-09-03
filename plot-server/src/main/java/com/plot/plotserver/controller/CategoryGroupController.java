@@ -109,7 +109,23 @@ public class CategoryGroupController {
         om.writeValue(response.getOutputStream(), message);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/all-todo")//카테고리 그룹, 카테고리들, 그 안의 투두 경로들(dailytodo 생성할때 필요)
+    public void getAllTodos(HttpServletResponse response) throws IOException {//완료
+
+        ObjectMapper om = new ObjectMapper();
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
+
+        Long userId = SecurityContextHolderUtil.getUserId();
+        List<CategoryGroupResponseDto.InDailyTodoAdd> result = categoryGroupService.getAllTodos(userId);
+        Message message = Message.builder()
+                .data(result)
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        om.writeValue(response.getOutputStream(), message);
+    }
+
+    @GetMapping("/all")//카테고리 그룹, 그 안의 카테고리들, 그 안의 태그들
     public void getAll(HttpServletResponse response) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
