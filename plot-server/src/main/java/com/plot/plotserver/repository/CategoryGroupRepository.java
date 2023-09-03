@@ -29,7 +29,7 @@ public interface CategoryGroupRepository extends JpaRepository<CategoryGroup, Lo
     @Query("SELECT DISTINCT cg FROM CategoryGroup cg " +
             "JOIN FETCH cg.categories c " +
             "WHERE cg.user.id = :userId ")
-    public List<CategoryGroup> findByUserIdWithCategories(@Param("userId") Long userId);
+    public List<CategoryGroup> findByUserIdJoinCategories(@Param("userId") Long userId);
 
 //    @Comment("userId로 카테고리 그룹, 카테고리, 태그 정보 조회")
 //    @Query("SELECT DISTINCT cg FROM CategoryGroup cg " +

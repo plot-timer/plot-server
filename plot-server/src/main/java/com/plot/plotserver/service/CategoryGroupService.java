@@ -116,7 +116,7 @@ public class CategoryGroupService {
 //    }
 
     public List<CategoryGroupResponseDto> getAll(Long userId) {
-        List<CategoryGroup> categoryGroupList = categoryGroupRepository.findByUserIdWithCategories(userId);
+        List<CategoryGroup> categoryGroupList = categoryGroupRepository.findByUserIdJoinCategories(userId);
         List<CategoryGroupResponseDto> result = new ArrayList<>();
 
         for (CategoryGroup categoryGroup : categoryGroupList) {
@@ -125,7 +125,7 @@ public class CategoryGroupService {
             for (Category category : categoryGroup.getCategories()) {
 
                 //category마다, 태그까지 join해서 가져오기
-                categoryRepository.findByIdWithTags(category.getId());
+                categoryRepository.findByIdJoinTags(category.getId());
                 CategoryResponseDto.Sub categoryResponse = CategoryResponseDto.Sub.of(category);
                 categoryResponseList.add(categoryResponse);
             }
@@ -157,7 +157,7 @@ public class CategoryGroupService {
 
     public List<CategoryGroupResponseDto.InTodoAdd> getAllCategoryPath(Long userId) {//완료
 
-        List<CategoryGroup> categoryGroupList = categoryGroupRepository.findByUserIdWithCategories(userId);
+        List<CategoryGroup> categoryGroupList = categoryGroupRepository.findByUserIdJoinCategories(userId);
         List<CategoryGroupResponseDto.InTodoAdd> result = new ArrayList<>();
 
         categoryGroupList.forEach(categoryGroup -> {

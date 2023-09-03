@@ -19,7 +19,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             "JOIN FETCH c.tagCategories tc "+
             "JOIN FETCH tc.tag t " +
             "WHERE c.id = :id")
-    public Optional<Category> findByIdWithTags(Long id);
+    public Optional<Category> findByIdJoinTags(Long id);
 
     @Query("SELECT c FROM Category c WHERE c.categoryGroup.id = :categoryGroupId AND c.name = :name")
     public Optional<Category> findByNameAndCategoryGroupId(String name, Long categoryGroupId);

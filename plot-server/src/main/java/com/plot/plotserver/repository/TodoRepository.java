@@ -21,7 +21,7 @@ public interface TodoRepository extends JpaRepository<Todo,Long> {
             "JOIN FETCH t.category c " +
             "JOIN FETCH c.categoryGroup cg " +
             "WHERE t.id = :id")
-    public Optional<Todo> findByIdWithCategoryAndCategoryGroup(@Param("id") Long id);
+    public Optional<Todo> findByIdJoinCategoryAndCategoryGroup(@Param("id") Long id);
 
 
     @Query("SELECT t FROM Todo t WHERE t.category.id = :categoryId")
@@ -30,13 +30,13 @@ public interface TodoRepository extends JpaRepository<Todo,Long> {
     @Query("SELECT t FROM Todo t WHERE t.category.categoryGroup.user.id =:userId")
     public List<Todo> findByUserId(Long userId);
 
-    //이 부분은 최적화가 아닌거 같다.
-//    @Comment("Todo의 Category, CategoryGroup 까지 모두 join해서 가져오기, DailyTodo Add 할 때 사용")
-//    @Query("SELECT t FROM Todo t" +
-//            "FETCH JOIN t.category c" +
-//            "FETCH JOIN c.categoryGroup cg" +
-//            "WHERE t.category.categoryGroup.user.id =:userId")
-//    public List<Todo> findByUserIdByIdWithCategoryAndCategoryGroup(Long userId);
+
+    @Comment("바로 위의 함수와 동일, fetch join 한 버전.")
+    @Query("SELECT t FROM Todo t " +
+            "JOIN FETCH t.category c " +
+            "JOIN FETCH c.categoryGroup cg " +
+            "WHERE t.category.categoryGroup.user.id =:userId")
+    public List<Todo> findByUserIdJoinCategoryAndCategoryGroup(Long userId);
 
 }
 

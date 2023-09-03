@@ -94,8 +94,8 @@ public class TodoService {
     }
 
 
-    public List<TodoResponseDto> getAllTodos() {//최적화 해야함.
-        List<Todo> todoList = todoRepository.findByUserId(SecurityContextHolderUtil.getUserId());
+    public List<TodoResponseDto> getAllTodos() {
+        List<Todo> todoList = todoRepository.findByUserIdJoinCategoryAndCategoryGroup(SecurityContextHolderUtil.getUserId());
         List<TodoResponseDto> result = new ArrayList<>();
 
         todoList.forEach(todo -> {
@@ -107,7 +107,7 @@ public class TodoService {
     public TodoResponseWithDailyTodoDto searchByTodoIdJoinHistories(Long todoId, String sDate, DailyTodoResponseWithRecordsDto.Sub temp){//최적화 완료.
 
         try {
-            Todo todo = todoRepository.findByIdWithCategoryAndCategoryGroup(todoId).get();
+            Todo todo = todoRepository.findByIdJoinCategoryAndCategoryGroup(todoId).get();
             TodoResponseWithDailyTodoDto result = TodoResponseWithDailyTodoDto.of(todo,temp);
             return result;
         } catch (Exception e) {
