@@ -53,7 +53,7 @@ public class DailyTodoService {
 
         LocalDate date = LocalDate.parse(sDate);
 
-        List<DailyTodo> dailyTodos = dailyTodoRepository.findByUserIDAndDateWithTodoAndCategoryAndCategoryGroup(userId,date);//todo,category,categorygroup까지 한꺼번에 fetch join해야 할듯
+        List<DailyTodo> dailyTodos = dailyTodoRepository.findByUserIDAndDateJoinTodoAndCategoryAndCategoryGroup(userId,date);//todo,category,categorygroup까지 한꺼번에 fetch join해야 할듯
 
         for (DailyTodo dailyTodo : dailyTodos) {
             Todo todo = dailyTodo.getTodo();
@@ -118,7 +118,7 @@ public class DailyTodoService {
     public DailyTodoResponseWithRecordsDto searchByDailyTodoId(Long dailyToId){//최적화 완료
 
 
-        DailyTodo dailyTodo = dailyTodoRepository.findByIdWithTodoAndCategoryAndCategoryGroup(dailyToId).get();
+        DailyTodo dailyTodo = dailyTodoRepository.findByIdJoinTodoAndCategoryAndCategoryGroup(dailyToId).get();
 
         Todo todo = dailyTodo.getTodo();
         Category category = todo.getCategory();

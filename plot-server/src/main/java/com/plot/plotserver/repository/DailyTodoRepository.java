@@ -27,7 +27,7 @@ public interface DailyTodoRepository extends JpaRepository<DailyTodo, Long> {
             "JOIN FETCH t.category c " +
             "JOIN FETCH c.categoryGroup cg " +
             "WHERE dt.id = :id")
-    Optional<DailyTodo> findByIdWithTodoAndCategoryAndCategoryGroup(@Param("id") Long id);
+    Optional<DailyTodo> findByIdJoinTodoAndCategoryAndCategoryGroup(@Param("id") Long id);
 
     @Comment("DailyTodo 만 가져오기")
     @Query("SELECT dt FROM DailyTodo dt WHERE dt.todo.id = :todoId AND dt.dailyTodoDate = :dailyTodoDate")
@@ -43,8 +43,8 @@ public interface DailyTodoRepository extends JpaRepository<DailyTodo, Long> {
             "JOIN FETCH dt.todo t " +
             "JOIN FETCH t.category c " +
             "JOIN FETCH c.categoryGroup cg " +
-            "WHERE dt.user.id = :userId AND dt.dailyTodoDate = :dailyTodoDate")
-    public List<DailyTodo> findByUserIDAndDateWithTodoAndCategoryAndCategoryGroup(@Param("userId") Long userId, @Param("dailyTodoDate") LocalDate dailyTodoDate);
+            "WHERE cg.user.id = :userId AND dt.dailyTodoDate = :dailyTodoDate")
+    public List<DailyTodo> findByUserIDAndDateJoinTodoAndCategoryAndCategoryGroup(@Param("userId") Long userId, @Param("dailyTodoDate") LocalDate dailyTodoDate);
 
 
 

@@ -200,7 +200,7 @@ class CategoryGroupRepositoryTest {
         em.flush();//db에 쿼리 날리기.
         em.clear();//영속성 컨텍스트 비우기.
 
-        List<CategoryGroup> findGroups = categoryGroupRepository.findByUserIdWithCategories(1L);
+        List<CategoryGroup> findGroups = categoryGroupRepository.findByUserIdJoinCategories(1L);
 
         Category find_category1 = categoryRepository.findById(1L).get();
         Category find_category2 = categoryRepository.findById(2L).get();
