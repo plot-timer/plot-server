@@ -106,21 +106,21 @@ public class TodoController {
 
 
 
-    @GetMapping("/all")
-    public void searchAll(HttpServletResponse response) throws IOException {
-
-        ObjectMapper om = new ObjectMapper();
-        response.setContentType(MediaType.APPLICATION_JSON.toString());
-
-        List<TodoResponseDto> result = todoService.getAllTodos();
-
-        Message message = Message.builder()
-                .data(result)
-                .status(HttpStatus.OK)
-                .message("success")
-                .build();
-        om.writeValue(response.getOutputStream(), message);
-    }
+//    @GetMapping("/all")
+//    public void searchAll(HttpServletResponse response) throws IOException {
+//
+//        ObjectMapper om = new ObjectMapper();
+//        response.setContentType(MediaType.APPLICATION_JSON.toString());
+//
+//        List<TodoResponseDto> result = todoService.getAllTodos();
+//
+//        Message message = Message.builder()
+//                .data(result)
+//                .status(HttpStatus.OK)
+//                .message("success")
+//                .build();
+//        om.writeValue(response.getOutputStream(), message);
+//    }
 
 
 }

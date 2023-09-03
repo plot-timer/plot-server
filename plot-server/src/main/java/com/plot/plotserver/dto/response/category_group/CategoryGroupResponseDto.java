@@ -3,6 +3,7 @@ package com.plot.plotserver.dto.response.category_group;
 import com.plot.plotserver.domain.Category;
 import com.plot.plotserver.domain.CategoryGroup;
 import com.plot.plotserver.dto.response.category.CategoryResponseDto;
+import com.plot.plotserver.dto.response.category.CategoryTodosResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -54,6 +55,32 @@ public class CategoryGroupResponseDto {
             categories.forEach(category -> temp.add(CategoryResponseDto.CategoryInfo.of(category)));
 
             return InTodoAdd.builder()
+                    .category_group_id(categoryGroup.getId())
+                    .category_group_name(categoryGroup.getName())
+                    .categoryList(temp)
+                    .build();
+
+        }
+    }
+
+    @Data
+    @Builder
+    public static class InDailyTodoAdd {//가지고 있는 카테고리 그룹, 카테고리들, todo들 보여줘야 한다.
+
+        private Long category_group_id;
+        private String category_group_name;
+
+        private List<CategoryTodosResponseDto> categoryList;
+
+
+        public static CategoryGroupResponseDto.InDailyTodoAdd of(CategoryGroup categoryGroup) {
+
+            List<Category> categories = categoryGroup.getCategories();
+            List<CategoryTodosResponseDto> temp = new ArrayList<>();
+
+            categories.forEach(category -> temp.add(CategoryTodosResponseDto.of(category)));
+
+            return InDailyTodoAdd.builder()
                     .category_group_id(categoryGroup.getId())
                     .category_group_name(categoryGroup.getName())
                     .categoryList(temp)

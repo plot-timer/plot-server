@@ -7,6 +7,7 @@ import com.plot.plotserver.domain.User;
 import com.plot.plotserver.dto.request.categorygroup.NewCategoryGroupReqDto;
 import com.plot.plotserver.dto.request.categorygroup.UpdateCategoryGroupReqDto;
 import com.plot.plotserver.dto.response.category.CategoryResponseDto;
+import com.plot.plotserver.dto.response.category.CategoryTodosResponseDto;
 import com.plot.plotserver.dto.response.category_group.CategoryGroupResponseDto;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupAlreadyExistException;
 import com.plot.plotserver.exception.categorygroup.CategoryGroupDeleteFailException;
@@ -115,7 +116,8 @@ public class CategoryGroupService {
 //        return result;
 //    }
 
-    public List<CategoryGroupResponseDto> getAll(Long userId) {
+    @Transactional
+    public List<CategoryGroupResponseDto> getAll(Long userId) {//카테고리 그룹, 카테고리, 태그들까지.
         List<CategoryGroup> categoryGroupList = categoryGroupRepository.findByUserIdJoinCategories(userId);
         List<CategoryGroupResponseDto> result = new ArrayList<>();
 
@@ -143,7 +145,36 @@ public class CategoryGroupService {
         return result;
     }
 
+    @Transactional
+    public List<CategoryGroupResponseDto.InDailyTodoAdd> getAllTodos(Long userId) {//카테고리 그룹, 카테고리, 투드들까지.
+        List<CategoryGroup> categoryGroupList = categoryGroupRepository.findByUserIdJoinCategories(userId);
+        List<CategoryGroupResponseDto.InDailyTodoAdd> result = new ArrayList<>();
 
+        for (CategoryGroup categoryGroup : categoryGroupList) {
+            List<CategoryTodosResponseDto> categoryTodosResponseList = new ArrayList<>();
+
+            for (Category category : categoryGroup.getCategories()) {
+
+                //category마다, 투드들까지.
+                categoryRepository.findByIdJoinTodos(category.getId());
+                CategoryTodosResponseDto categoryTodosResponse = CategoryTodosResponseDto.of(category);
+                categoryTodosResponseList.add(categoryTodosResponse);
+            }
+
+            CategoryGroupResponseDto.InDailyTodoAdd categoryGroupResponse = CategoryGroupResponseDto.InDailyTodoAdd.builder()
+                    .category_group_id(categoryGroup.getId())
+                    .category_group_name(categoryGroup.getName())
+                    .categoryList(categoryTodosResponseList)
+                    .build();
+
+            result.add(categoryGroupResponse);
+        }
+
+        return result;
+    }
+
+
+    @Transactional
     public List<CategoryGroupResponseDto.InCategoryAdd> getAllCategoryGroup(Long userId) {//완료
 
         List<CategoryGroup> categoryGroupList = categoryGroupRepository.findByUserId(userId);

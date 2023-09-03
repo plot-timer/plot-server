@@ -27,7 +27,7 @@ public interface CategoryGroupRepository extends JpaRepository<CategoryGroup, Lo
 
     @Comment("userId로 카테고리의 그룹, 그룹에 속한 카테고리들 조회, todoAdd 할때 쓰임, 카테고리를 그룹별로 태그까지 같이 보여주는 페이지에서 사용")
     @Query("SELECT DISTINCT cg FROM CategoryGroup cg " +
-            "JOIN FETCH cg.categories c " +
+            "LEFT JOIN FETCH cg.categories c " +
             "WHERE cg.user.id = :userId ")
     public List<CategoryGroup> findByUserIdJoinCategories(@Param("userId") Long userId);
 
