@@ -71,16 +71,18 @@ public class CategoryGroupService {
         try {
 
             Long userId = SecurityContextHolderUtil.getUserId();
-            Optional<User> user = userRepository.findById(userId);
-
-            //해당이름의 CategoryGroup이 존재하면, 에러
-            Optional<CategoryGroup> optionalCategoryGroup = categoryGroupRepository.findByUserIdAndName(userId, updateCategoryGroupReqDto.getGroupName());
-            if (optionalCategoryGroup.isPresent()) {//이미 존재하는 카테고리 그룹이다.
-                throw new CategoryGroupAlreadyExistException("이미 존재하는 CategoryGroup 입니다.");
-            }
-
 
             CategoryGroup categoryGroup = categoryGroupRepository.findById(categoryGroupId).get();
+
+            //이름을 변경하려 하는 경우, 변경 하려는 이름이 존재하는지 확인해야함.
+            if (!categoryGroup.getName().equals(updateCategoryGroupReqDto.getGroupName())) {
+
+                Optional<CategoryGroup> optionalCategoryGroup = categoryGroupRepository.findByUserIdAndName(userId, updateCategoryGroupReqDto.getGroupName());
+                if (optionalCategoryGroup.isPresent()) {//이미 존재하는 카테고리 그룹이다.
+                    throw new CategoryGroupAlreadyExistException("이미 존재하는 CategoryGroup 입니다.");
+                }
+            }
+
             categoryGroup.updateCategoryGroup(updateCategoryGroupReqDto);
 
 

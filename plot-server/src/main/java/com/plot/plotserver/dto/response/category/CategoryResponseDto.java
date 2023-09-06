@@ -58,6 +58,7 @@ public class CategoryResponseDto {
                     .category_group_name(category.getCategoryGroup().getName())
                     .emoji(category.getEmoji())
                     .tagName(tagNameList)
+                    .star(category.isStar())
                     .build();
         }
     }

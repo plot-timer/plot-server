@@ -95,7 +95,7 @@ public class CategoryService {
 
 
     @Transactional
-    public void update(Long categoryGroupId,Long categoryId, UpdateCategoryReqDto reqDto) {
+    public void update(Long categoryGroupId,Long categoryId, UpdateCategoryReqDto reqDto) {//이동할 카테고리 그룹, update하는 현재 카테고리 id이다.
 
 
         try {
@@ -104,15 +104,19 @@ public class CategoryService {
             if(!categoryGroupOptional.isPresent())
                 throw new CategoryGroupNotFoundException("해당하는 카테고리 그룹이 존재하지 않습니다.");
 
-            CategoryGroup categoryGroup = categoryGroupOptional.get();
+            CategoryGroup categoryGroup = categoryGroupOptional.get();//변경 될 카테고리 그룹(그대로 일 수 도 있음)
+            Category category = categoryRepository.findById(categoryId).get();//변경할 카테고리
 
-            Optional<Category> updateCategoryOptional = categoryRepository.findByNameAndCategoryGroupId(reqDto.getCategoryName(), categoryGroup.getId());//이동할 그룹에 동일한 이름으로 존재하는지 확인.
-            if (updateCategoryOptional.isPresent())
-                throw new CategoryAlreadyExistException("이미 존재하는 카테고리 입니다.");
+            log.info("category.getCategoryGroup={}", category.getCategoryGroup());
+            log.info("categoryGroup={}",categoryGroup);
 
-            Category category = categoryRepository.findById(categoryId).get();
+            if (!category.getCategoryGroup().equals(categoryGroup)) {//카테고리 변경에서, 그룹이 변경 된 경우,
+                Optional<Category> updateCategoryOptional = categoryRepository.findByNameAndCategoryGroupId(reqDto.getCategoryName(), categoryGroup.getId());//이동할 그룹에 동일한 이름으로 존재하는지 확인.
+                if (updateCategoryOptional.isPresent())
+                    throw new CategoryAlreadyExistException("이미 존재하는 카테고리 입니다.");
+            }
+
             category.updateCategory(reqDto, categoryGroup);
-
             updateTagCategories(categoryId, reqDto, category);
 
         }catch(CategoryAlreadyExistException e){
