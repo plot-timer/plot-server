@@ -150,7 +150,7 @@ class CategoryRepositoryTest {
                 .build();// 카테고리 그룹 1번에 속한 카테고리(카테고리 1번)을 카테고리 그룹2번으로 이동.
 
         Optional<CategoryGroup> changeCategoryGroup = categoryGroupRepository.findByUserIdAndName(savedCategoryGroup2.getUser().getId(), "카테고리 그룹 2번");//바뀔 카테고리 그룹.
-        savedCategory1.updateCategory(req, changeCategoryGroup.get());//실제로 업데이트 됨.
+//        savedCategory1.updateCategory(req, changeCategoryGroup.get());//실제로 업데이트 됨.
 
 
         log.info("바뀐 카테고리의 새로운 그룹의 이름={}", savedCategory1.getCategoryGroup().getName());

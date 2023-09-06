@@ -100,24 +100,34 @@ public class CategoryService {
 
         try {
 
-            Optional<CategoryGroup> categoryGroupOptional = categoryGroupRepository.findById(categoryGroupId);
-            if(!categoryGroupOptional.isPresent())
-                throw new CategoryGroupNotFoundException("해당하는 카테고리 그룹이 존재하지 않습니다.");
+            CategoryGroup newCategoryGroup = categoryGroupRepository.findById(categoryGroupId).orElseThrow(() -> new CategoryGroupNotFoundException("새로운 카테고리 그룹을 찾을 수 없습니다."));
+            Category currentCategory = categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotExistException("해당 카테고리를 찾을 수 없습니다."));
+            CategoryGroup currentCategoryGroup = currentCategory.getCategoryGroup();
 
-            CategoryGroup categoryGroup = categoryGroupOptional.get();//변경 될 카테고리 그룹(그대로 일 수 도 있음)
-            Category category = categoryRepository.findById(categoryId).get();//변경할 카테고리
 
-            log.info("category.getCategoryGroup={}", category.getCategoryGroup());
-            log.info("categoryGroup={}",categoryGroup);
+            log.info("category.getCategoryGroup={}", currentCategoryGroup);
+            log.info("categoryGroup={}",newCategoryGroup);
 
-            if (!category.getCategoryGroup().equals(categoryGroup)) {//카테고리 변경에서, 그룹이 변경 된 경우,
-                Optional<Category> updateCategoryOptional = categoryRepository.findByNameAndCategoryGroupId(reqDto.getCategoryName(), categoryGroup.getId());//이동할 그룹에 동일한 이름으로 존재하는지 확인.
-                if (updateCategoryOptional.isPresent())
-                    throw new CategoryAlreadyExistException("이미 존재하는 카테고리 입니다.");
+            if (!newCategoryGroup.equals(currentCategoryGroup)) {//카테고리 변경에서, 그룹이 변경 된 경우,
+                categoryRepository
+                        .findByNameAndCategoryGroupId(reqDto.getCategoryName(),categoryGroupId)
+                        .ifPresent(category -> {
+                            throw new CategoryAlreadyExistException("이미 존재하는 카테고리 입니다.");
+                        });
+
+//                그룹이 바뀐경우
+//                currentCategoryGroup.getCategories().remove(currentCategory); // 현재 그룹에서 카테고리 제거
+                currentCategory.setCategoryGroup(newCategoryGroup); // 카테고리 그룹 변경
+//                newCategoryGroup.getCategories().add(currentCategory); // 새 그룹에 카테고리 추가
+
+                currentCategory.updateCategory(reqDto);
             }
 
-            category.updateCategory(reqDto, categoryGroup);
-            updateTagCategories(categoryId, reqDto, category);
+            else{//그룹이 변경 안된 경우.
+                currentCategory.updateCategory(reqDto);
+            }
+
+            updateTagCategories(categoryId, reqDto, currentCategory);
 
         }catch(CategoryAlreadyExistException e){
             e.printStackTrace();
@@ -127,6 +137,7 @@ public class CategoryService {
         }
     }
 
+    @Transactional
     private void updateTagCategories(Long categoryId, UpdateCategoryReqDto reqDto, Category category) {
         List<TagCategory> tagCategories = tagCategoryRepository.findByCategoryId(categoryId);
         if(!tagCategories.isEmpty()){

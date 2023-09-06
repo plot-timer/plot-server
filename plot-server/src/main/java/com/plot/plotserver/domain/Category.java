@@ -3,6 +3,7 @@ package com.plot.plotserver.domain;
 import com.plot.plotserver.dto.request.category.UpdateCategoryReqDto;
 import lombok.*;
 import org.hibernate.annotations.Comment;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -42,17 +43,31 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL,orphanRemoval = true)
     private final List<TagCategory> tagCategories = new ArrayList<>();
 
-    public void updateCategory(UpdateCategoryReqDto reqDto, CategoryGroup categoryGroup){
-        this.name = reqDto.getCategoryName();
+    @Transactional
+    public void updateCategoryWithNewGroup(UpdateCategoryReqDto reqDto, CategoryGroup newCategoryGroup) {
+
+
+        //기존 팀과 관계를 제거.
+        if (this.categoryGroup != null) {
+            this.categoryGroup.getCategories().remove(this);
+        }
+
+        this.categoryGroup = newCategoryGroup; // 카테고리 그룹 변경
+        this.star = reqDto.isStar();//속성 변경.
         this.emoji = reqDto.getEmoji();
-        this.star = reqDto.isStar();
+        this.name = reqDto.getCategoryName();
 
-
-        this.categoryGroup.deleteCategory(this);
-        this.categoryGroup=categoryGroup;
-        categoryGroup.addCategory(this);
+        newCategoryGroup.getCategories().add(this); // 새 그룹에 카테고리 추가
 
     }
+
+    public void updateCategory(UpdateCategoryReqDto reqDto) {//그룹 그대로
+
+        this.star = reqDto.isStar();
+        this.emoji = reqDto.getEmoji();
+        this.name = reqDto.getCategoryName();
+    }
+
 
     @Builder
     public Category(String name,boolean star,String emoji,CategoryGroup categoryGroup){
