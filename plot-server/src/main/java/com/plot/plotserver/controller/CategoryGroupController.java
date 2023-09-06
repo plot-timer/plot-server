@@ -63,7 +63,7 @@ public class CategoryGroupController {
 
 
     @DeleteMapping("/{categoryGroupId}")
-    public void GetCategoryGroupList(HttpServletResponse response,@PathVariable Long categoryGroupId) throws IOException {
+    public void deleteCategoryGroup(HttpServletResponse response,@PathVariable Long categoryGroupId) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
@@ -77,7 +77,7 @@ public class CategoryGroupController {
     }
 
     @GetMapping("/all-category-path")
-    public void getAllCategoryPath(HttpServletResponse response) throws IOException {//완료
+    public void getAllCategoryPath(HttpServletResponse response) throws IOException {//안 쓰임.
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
