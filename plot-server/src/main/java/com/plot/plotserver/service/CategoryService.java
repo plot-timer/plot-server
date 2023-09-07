@@ -114,13 +114,18 @@ public class CategoryService {
                         .ifPresent(category -> {
                             throw new CategoryAlreadyExistException("이미 존재하는 카테고리 입니다.");
                         });
+                System.out.println("========================");
+                System.out.println("========================");
+
 
 //                그룹이 바뀐경우
-//                currentCategoryGroup.getCategories().remove(currentCategory); // 현재 그룹에서 카테고리 제거
                 currentCategory.setCategoryGroup(newCategoryGroup); // 카테고리 그룹 변경
-//                newCategoryGroup.getCategories().add(currentCategory); // 새 그룹에 카테고리 추가
 
                 currentCategory.updateCategory(reqDto);
+
+                System.out.println("========================");
+                System.out.println("========================");
+
             }
 
             else{//그룹이 변경 안된 경우.
@@ -138,7 +143,7 @@ public class CategoryService {
     }
 
     @Transactional
-    private void updateTagCategories(Long categoryId, UpdateCategoryReqDto reqDto, Category category) {
+    public void updateTagCategories(Long categoryId, UpdateCategoryReqDto reqDto, Category category) {
         List<TagCategory> tagCategories = tagCategoryRepository.findByCategoryId(categoryId);
         if(!tagCategories.isEmpty()){
             tagCategories.forEach(tagCategory -> tagCategoryRepository.delete(tagCategory));
