@@ -1,6 +1,7 @@
 package com.plot.plotserver.dto.response.record;
 
 import com.plot.plotserver.domain.CategoryGroup;
+import com.plot.plotserver.domain.DailyTodo;
 import com.plot.plotserver.domain.Record;
 import com.plot.plotserver.domain.Todo;
 import lombok.Builder;
@@ -14,7 +15,8 @@ import java.time.LocalDateTime;
 @Builder
 public class RecordResponseDto {
 
-    private Long id;
+    private Long record_id;
+    private Long daily_todo_id;
     private boolean is_history;
     private String start_date;
     private String end_date;
@@ -25,11 +27,13 @@ public class RecordResponseDto {
 
 
     public static RecordResponseDto of(Record record) {
-        Todo todo = record.getDailyTodo().getTodo();
+        DailyTodo dailyTodo = record.getDailyTodo();
+        Todo todo = dailyTodo.getTodo();
         CategoryGroup categoryGroup = todo.getCategory().getCategoryGroup();
 
         return RecordResponseDto.builder()
-                .id(record.getId())
+                .record_id(record.getId())
+                .daily_todo_id(dailyTodo.getId())
                 .is_history(record.isHistory())
                 .start_date(record.getStartDate().toString())
                 .end_date(record.getEndDate().toString())

@@ -33,9 +33,16 @@ public class ScheduleService {
     private final DailyTodoRepository dailyTodoRepository;
 
 
-
     @Transactional
-    public List<RecordResponseDto> save(List<ScheduleReqDto.Create> reqDtoList) {
+    public List<RecordResponseDto> save(String sDate, List<ScheduleReqDto.Create> reqDtoList) {
+
+        LocalDate date = LocalDate.parse(sDate);
+
+        // 해당 유저가 만든 date 의 모든 스케줄 반환
+        List<Record> schedulesByDateAndUser = recordRepository.findSchedulesByDateAndUser(SecurityContextHolderUtil.getUserId(), date);
+        for (Record record : schedulesByDateAndUser) {
+            recordRepository.delete(record);
+        }
 
         List<RecordResponseDto> result = new ArrayList<>();
 
@@ -55,6 +62,7 @@ public class ScheduleService {
                         .startDate(startDateTime)
                         .endDate(endDateTime)
                         .duration(duration.getSeconds())
+                        .scheduledDate(date)
                         .dailyTodo(dailyTodo)
                         .build();
 
