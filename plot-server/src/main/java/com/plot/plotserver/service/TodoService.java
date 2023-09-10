@@ -8,16 +8,17 @@ import com.plot.plotserver.dto.response.dailyTodo.DailyTodoResponseWithRecordsDt
 import com.plot.plotserver.dto.response.todo.TodoResponseDto;
 import com.plot.plotserver.dto.response.todo.TodoResponseWithDailyTodoDto;
 import com.plot.plotserver.exception.todo.*;
+import com.plot.plotserver.repository.CategoryGroupRepository;
 import com.plot.plotserver.repository.CategoryRepository;
 import com.plot.plotserver.repository.TodoRepository;
+import com.plot.plotserver.repository.UserRepository;
+import com.plot.plotserver.util.ColorEnum;
 import com.plot.plotserver.util.SecurityContextHolderUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,6 +29,10 @@ public class TodoService {
     private final TodoRepository todoRepository;
 
     private final CategoryRepository categoryRepository;
+
+    private final CategoryGroupRepository categoryGroupRepository;
+
+    private final UserRepository userRepository;
 
     @Transactional
     public TodoResponseDto save(Long categoryId,NewTodoReqDto todoReqDto) {
@@ -51,6 +56,56 @@ public class TodoService {
             throw new TodoSavedFailException("Todo 생성에 실패하였습니다.");
         }
     }
+
+    @Transactional
+    public TodoResponseDto saveWithOutCategory(NewTodoReqDto todoReqDto) {
+
+        try {
+            Long userId = SecurityContextHolderUtil.getUserId();
+            User user = userRepository.findById(userId).get();
+
+            Optional<CategoryGroup> categoryGroupOpt = categoryGroupRepository.findByUserIdAndName(userId, "이름없는 그룹");
+            CategoryGroup categoryGroup = null;
+            Category category = null;
+
+            if(!categoryGroupOpt.isPresent()){
+                categoryGroup = CategoryGroup.builder()
+                        .name("이름없는 그룹")
+                        .user(user)
+                        .color(ColorEnum.RED)
+                        .build();
+
+                category = Category.builder()
+                        .name("이름없는 카테고리")
+                        .star(false)
+                        .categoryGroup(categoryGroup)
+                        .build();
+
+                categoryGroupRepository.save(categoryGroup);
+                categoryRepository.save(category);
+            }
+            else{
+                categoryGroup = categoryGroupOpt.get();
+                Optional<Category> categoryOpt = categoryRepository.findByNameAndCategoryGroupId("이름없는 카테고리", categoryGroup.getId());
+                category = categoryOpt.get();
+            }
+
+            Todo todo = Todo.builder()
+                    .title(todoReqDto.getTitle())
+                    .subTitle(todoReqDto.getSubtitle())
+                    .memo(todoReqDto.getMemo())
+                    .star(false)
+                    .emoji(todoReqDto.getEmoji())
+                    .category(category)
+                    .build();
+
+            Todo savedTodo = todoRepository.save(todo);
+            return TodoResponseDto.of(savedTodo);
+        }catch(Exception e){
+            throw new TodoSavedFailException("Todo 생성에 실패하였습니다.");
+        }
+    }
+
 
     @Transactional
     public void update(Long categoryId, Long todoId, UpdateTodoDto updateTodoDto) {

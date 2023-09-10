@@ -30,12 +30,12 @@ public class ScheduleController {
     private final HistoryService historyService;
 
     @PostMapping("")
-    public void addSchedule(@RequestBody List<ScheduleReqDto.Create> reqDtoList, HttpServletResponse response) throws IOException {
+    public void addSchedule(@RequestParam("date") String date, @RequestBody List<ScheduleReqDto.Create> reqDtoList, HttpServletResponse response) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 
-        List<RecordResponseDto> result = scheduleService.save(reqDtoList);
+        List<RecordResponseDto> result = scheduleService.save(date, reqDtoList);
 
         Message message = Message.builder()
                 .data(result)
@@ -67,26 +67,9 @@ public class ScheduleController {
     }
 
 
-    @PatchMapping("")
-    public void updateSchedule(@RequestBody List<ScheduleReqDto.Update> reqDto, HttpServletResponse response) throws IOException {
-
-        ObjectMapper om = new ObjectMapper();
-        response.setContentType(MediaType.APPLICATION_JSON.toString());
-
-        scheduleService.updateSchedule(reqDto);
-
-        Message message = Message.builder()
-                .status(HttpStatus.OK)
-                .message("success")
-                .build();
-
-        om.writeValue(response.getOutputStream(), message);
-
-    }
-
-
     @DeleteMapping("/{scheduleId}")
     public void deleteOne(@PathVariable Long scheduleId, HttpServletResponse response) throws IOException {
+
         ObjectMapper om = new ObjectMapper();
         response.setContentType(MediaType.APPLICATION_JSON.toString());
 

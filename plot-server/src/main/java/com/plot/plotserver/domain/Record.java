@@ -6,6 +6,7 @@ import org.hibernate.annotations.Comment;
 import javax.persistence.*;
 import java.sql.Time;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -35,6 +36,10 @@ public class Record {
     @Comment("걸린 시간 초단위")
     @Column(name = "duration", nullable = false)
     private Long duration;
+
+    @Comment("스케줄인 경우에만 입력됨. 히스토리는 입력 X")
+    @Column(name = "scheduled_date", nullable = true)
+    private LocalDate scheduledDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "daily_todo_id",nullable = false)
