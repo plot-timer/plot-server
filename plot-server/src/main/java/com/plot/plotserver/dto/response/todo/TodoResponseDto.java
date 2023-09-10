@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class TodoResponseDto {
 
-    private Long id;
+    private Long todo_id;
     private String title;
     private String subtitle;
     private String memo;
@@ -30,7 +30,7 @@ public class TodoResponseDto {
         CategoryGroup categoryGroup = category.getCategoryGroup();
 
         return TodoResponseDto.builder()
-                .id(todo.getId())
+                .todo_id(todo.getId())
                 .title(todo.getTitle())
                 .subtitle(todo.getSubTitle())
                 .memo(todo.getMemo())

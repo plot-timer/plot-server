@@ -14,7 +14,7 @@ import lombok.Getter;
 @Builder
 public class ScheduleResponseDto {
 
-    private Long id;
+    private Long record_id;
     private String start_date;
     private String end_date;
     private Long duration;
@@ -27,7 +27,7 @@ public class ScheduleResponseDto {
         ColorEnum color = todo.getCategory().getCategoryGroup().getColor();
 
         return ScheduleResponseDto.builder()
-                .id(schedule.getId())
+                .record_id(schedule.getId())
                 .start_date(schedule.getStartDate().toString())
                 .end_date(schedule.getEndDate().toString())
                 .duration(schedule.getDuration())

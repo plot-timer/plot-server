@@ -14,7 +14,7 @@ import lombok.Data;
 @Builder
 public class TodoResponseWithDailyTodoDto {
 
-    private Long id;
+    private Long todo_id;
     private String title;
     private String subtitle;
     private String memo;
@@ -33,7 +33,7 @@ public class TodoResponseWithDailyTodoDto {
         CategoryGroup categoryGroup = category.getCategoryGroup();
 
         return TodoResponseWithDailyTodoDto.builder()
-                .id(todo.getId())
+                .todo_id(todo.getId())
                 .title(todo.getTitle())
                 .subtitle(todo.getSubTitle())
                 .memo(todo.getMemo())
