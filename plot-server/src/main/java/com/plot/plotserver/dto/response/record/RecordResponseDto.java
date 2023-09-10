@@ -47,7 +47,7 @@ public class RecordResponseDto {
     @Data
     @Builder
     public static class InDailyTodo {//dailyTodo 상세 화면에 표시되는 record들
-        private Long id;
+        private Long record_id;
         private String start_date;
         private String end_date;
         private Long duration;
@@ -58,7 +58,7 @@ public class RecordResponseDto {
 
 
         return InDailyTodo.builder()
-                .id(record.getId())
+                .record_id(record.getId())
                 .start_date(record.getStartDate().toString())
                 .end_date(record.getEndDate().toString())
                 .duration(record.getDuration())
